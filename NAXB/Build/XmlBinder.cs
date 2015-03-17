@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using NAXB.Interfaces;
+using System.Reflection;
+using NAXB.Exceptions;
 
 namespace NAXB.Build
 {
@@ -49,9 +51,21 @@ namespace NAXB.Build
         {
             if (model != null)
             {
-                object propValue = property.GetPropertyValue(data, xPathProcessor, this); //All work happens in the Property
-                if (propValue != null)
-                    property.Set(model, propValue);
+                object propValue = null;
+                try
+                {
+                    propValue = property.GetPropertyValue(data, xPathProcessor, this); //All work happens in the Property
+                    if (propValue != null)
+                        property.Set(model, propValue);
+                }
+                catch (Exception e)
+                {
+                    if (e is InvalidCastException || e is TargetException)
+                    {
+                        throw new PropertyTypeMismatchException(property, propValue, e);
+                    }
+                    else throw e;
+                }
             }
         }
 
