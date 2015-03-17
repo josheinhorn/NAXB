@@ -6,14 +6,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using NAXB.Interfaces;
+using NAXB.Exceptions;
 
 namespace NAXB.BindingModel
 {
     public class XmlProperty : IXmlProperty
     {
-        protected IXPath compiledXpath;
+        protected IXPath compiledXPath;
         protected Func<IEnumerable<IXmlData>, IXmlModelBinder, IEnumerable> convertXmlListToEnumerable = null;
-        protected Func<string, object> convertSimpleXmlDataToValue = null;
+        protected Func<string, object> parseXmlValue = null;
         protected Func<IEnumerable, object> convertEnumerableToProperty = null;
         protected readonly Action<object, object> set;
         protected readonly Func<object, object> get;
@@ -51,9 +52,9 @@ namespace NAXB.BindingModel
         public void Initialize(IXmlBindingResolver resolver, IXPathProcessor xPathProcessor, INamespace[] namespaces) //Must be called before ComplexBinding property can be used
         {
             ComplexBinding = resolver.ResolveBinding(PropertyInfo.ElementType);
-            compiledXpath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces);
+            compiledXPath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces);
             //Build up the delegates that are used to get property value
-            BuildConvertSimpleXmlDataToValue();
+            BuildParseXmlValue();
             BuildConvertEnumerableToProperty();
             BuildConvertXmlListToEnumerable();
         }
@@ -69,7 +70,7 @@ namespace NAXB.BindingModel
             object result = null;
             if (xPathProcessor != null && data != null && binder != null)
             {
-                var xml = xPathProcessor.ProcessXPath(data, compiledXpath);
+                var xml = xPathProcessor.ProcessXPath(data, compiledXPath);
                 result = convertEnumerableToProperty(convertXmlListToEnumerable(xml, binder));
             }
             return result;
@@ -81,49 +82,55 @@ namespace NAXB.BindingModel
             if (ComplexBinding != null) //it's a complex type
             {
                 convertXmlListToEnumerable = (IEnumerable<IXmlData> data, IXmlModelBinder binder) =>
-                    data.Select(xml => binder.BindToModel(ComplexBinding, xml));
+                    data.Select(xml => binder.BindToModel(ComplexBinding, xml))
+                    .Where(value => value != null);
             }
             else //simple type
             {
                 convertXmlListToEnumerable = (IEnumerable<IXmlData> data, IXmlModelBinder binder) =>
-                    data.Select(xml => convertSimpleXmlDataToValue(xml.Value));
+                    data.Select(xml => 
+                        {
+                            try { return parseXmlValue(xml.Value); }
+                            catch (Exception) { return null; } //Just return null if the value couldn't be parsed
+                        })
+                        .Where(value => value != null); //filter out any values that couldn't be parsed
             }
         }
-        protected void BuildConvertSimpleXmlDataToValue()
+        protected void BuildParseXmlValue()
         {
             var elementType = PropertyInfo.ElementType;
             if (elementType == typeof(string))
-                convertSimpleXmlDataToValue = (string value) => value;
+                parseXmlValue = (string value) => value;
             else if (PropertyInfo.IsEnum)
-                convertSimpleXmlDataToValue = (string value) => Enum.Parse(elementType, value);
+                parseXmlValue = (string value) => Enum.Parse(elementType, value);
             else if (elementType == typeof(bool))
-                convertSimpleXmlDataToValue = (string value) => bool.Parse(value);
+                parseXmlValue = (string value) => bool.Parse(value);
             else if (elementType == typeof(byte))
-                convertSimpleXmlDataToValue = (string value) => byte.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => byte.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(sbyte))
-                convertSimpleXmlDataToValue = (string value) => sbyte.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => sbyte.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(short))
-                convertSimpleXmlDataToValue = (string value) => short.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => short.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(ushort))
-                convertSimpleXmlDataToValue = (string value) => ushort.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => ushort.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(int))
-                convertSimpleXmlDataToValue = (string value) => int.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => int.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(uint))
-                convertSimpleXmlDataToValue = (string value) => uint.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => uint.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(long))
-                convertSimpleXmlDataToValue = (string value) => long.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => long.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(ulong))
-                convertSimpleXmlDataToValue = (string value) => ulong.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => ulong.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(float))
-                convertSimpleXmlDataToValue = (string value) => float.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => float.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(double))
-                convertSimpleXmlDataToValue = (string value) => double.Parse(value, CultureInfo.InvariantCulture);
+                parseXmlValue = (string value) => double.Parse(value, CultureInfo.InvariantCulture);
             else if (elementType == typeof(DateTime))
-                convertSimpleXmlDataToValue = (string value) => DateTime.Parse(value); //Get Format from XmlData or from Attribute? e.g. IDateFormatProvider --> GetDateFormat(IXmlData xml);
+                parseXmlValue = (string value) => DateTime.Parse(value); //Get Format from XmlData or from Attribute? e.g. IDateFormatProvider --> GetDateFormat(IXmlData xml);
             else if (elementType == typeof(DateTimeOffset))
-                convertSimpleXmlDataToValue = (string value) => DateTimeOffset.Parse(value);//Format?
+                parseXmlValue = (string value) => DateTimeOffset.Parse(value);//Format?
             else if (elementType == typeof(Guid))
-                convertSimpleXmlDataToValue = (string value) => new Guid(value);
+                parseXmlValue = (string value) => new Guid(value);
 
         }
         protected void BuildConvertEnumerableToProperty()
@@ -131,7 +138,7 @@ namespace NAXB.BindingModel
             var elementType = PropertyInfo.ElementType;
             if (PropertyInfo.IsEnumerable)
             {
-                convertEnumerableToProperty = (IEnumerable values) => values;
+                convertEnumerableToProperty = (IEnumerable values) => values; //Almost certainly results in an invalid cast exception
             }
             else if (PropertyInfo.IsArray)
             {
@@ -139,7 +146,6 @@ namespace NAXB.BindingModel
             }
             else if (PropertyInfo.IsGenericCollection)
             {
-                //result = dependencyResolver.CreateInstance(PropertyInfo.PropertyType); //Use dependency resolver?
                 convertEnumerableToProperty = (IEnumerable values) =>
                     {
                         object result = ComplexBinding.CreateInstance();

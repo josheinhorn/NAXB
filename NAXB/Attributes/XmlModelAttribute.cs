@@ -16,7 +16,5 @@ namespace NAXB.Attributes
             get;
             set;
         }
-        public virtual string Namespace { get; set; }
-        public virtual string Prefix { get; set; }
     }
 }
