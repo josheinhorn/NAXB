@@ -13,27 +13,18 @@ namespace NAXB.Build
     public class XmlBinder : IXmlModelBinder
     {
         protected readonly IXmlBindingResolver bindingResolver;
-        //protected readonly IDependencyResolver dependencyResolver;
         protected readonly IReflector reflector;
         protected readonly IXPathProcessor xPathProcessor;
-        //protected readonly IXmlFactory factory;
         public XmlBinder(IXmlBindingResolver bindingResolver, 
             IXPathProcessor xPathProcessor, 
-            //IDependencyResolver dependencyResolver,
-            IReflector reflector
-            //, IXmlFactory factory
-            )
+            IReflector reflector)
         {
             if (bindingResolver == null) throw new ArgumentNullException("bindingResolver");
             if (xPathProcessor == null) throw new ArgumentNullException("xPathProcessor");
-            //if (dependencyResolver == null) throw new ArgumentNullException("dependencyResolver");
             if (reflector == null) throw new ArgumentNullException("reflector");
-            //if (factory == null) throw new ArgumentNullException("factory"); 
             this.bindingResolver = bindingResolver;
             this.xPathProcessor = xPathProcessor;
-            //this.dependencyResolver = dependencyResolver;
             this.reflector = reflector;
-            //this.factory = factory;
         }
         
         public object BindToModel(IXmlData xmlData)
@@ -55,7 +46,7 @@ namespace NAXB.Build
                 try
                 {
                     propValue = property.GetPropertyValue(data, xPathProcessor, this); //All work happens in the Property
-                    if (propValue != null)
+                    if (propValue != null) //Don't bother with null values
                         property.Set(model, propValue);
                 }
                 catch (Exception e)
