@@ -1,0 +1,7 @@
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XPathNavigator\bin\Debug\NAXB.XPathNavigator.dll
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XPathNavigator\bin\Debug\NAXB.XPathNavigator.pdb
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XPathNavigator\bin\Debug\NAXB.dll
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XPathNavigator\bin\Debug\NAXB.pdb
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XPathNavigator\obj\Debug\NAXB.XPathNavigator.csprojResolveAssemblyReference.cache
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XPathNavigator\obj\Debug\NAXB.XPathNavigator.dll
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XPathNavigator\obj\Debug\NAXB.XPathNavigator.pdb
