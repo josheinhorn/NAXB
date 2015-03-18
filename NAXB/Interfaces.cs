@@ -60,6 +60,7 @@ namespace NAXB.Interfaces
     public interface IPropertyInfo //TODO: Merge this entire interface into IXmlProperty
     {
         string Name { get; }
+        object CreateInstance(); //for collections
         bool IsArray { get; }
         bool IsGenericCollection { get; }
         bool IsEnumerable { get; }
@@ -73,7 +74,7 @@ namespace NAXB.Interfaces
         /// <remarks>This is necessary because the actual generic is unknown.</remarks>
         void PopulateCollection(IEnumerable enumerable, object collection); //it's actually To PropertyType : ICollection<T> but we don't know PropertyType or T
         /// <summary>
-        /// Gets a delegate that converts IEnumerable&lt;T&gt; to T[] where T is ElementType
+        /// Converts IEnumerable&lt;T&gt; to T[] where T is current ElementType
         /// </summary>
         /// <remarks>This is necessary because the actual generic is unknown.</remarks>
         Array ToArray(IEnumerable enumerable);
@@ -118,6 +119,26 @@ namespace NAXB.Interfaces
         void Initialize(IXmlBindingResolver resolver, IXPathProcessor xPathProcessor, INamespace[] namespaces); //Needs to be called to initialize complex binding and compiled XPath
 
         IXmlModelBinding ComplexBinding { get; } //returns null if it either hasn't been set yet, or the property type is not complex
+
+        ICustomFormatBinding CustomFormatBinding { get; }
+    }
+
+    public interface ICustomFormatBinding
+    {
+        //For custom formats and/or custom binding resolving
+        string Format { get; }
+        Type FormatProvider { get; } //Should be of type IFormatProvider -- but how to set the values? E.g. CultureInfo has many implementations
+        Type CustomResolver { get; } //ICustomBindingResolver - will override the actual GetPropertyValue
+        IFormatProvider GetFormatProvider(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
+        ICustomBindingResolver GetCustomResolver(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
+    }
+
+    public interface ICustomBindingResolver 
+    {
+        //Allows overriding the standard GetPropertyValue to convert values in non-standard way
+        //Example: convert "yes"/"no" to bool
+        object GetPropertyValue(IXmlData data, IXPathProcessor xPathProcessor, IXmlModelBinder binder);
+        bool TryGetPropertyValue(IXmlData data, IXPathProcessor xPathProcessor, IXmlModelBinder binder, out object propertyValue);
     }
 
     #region Reflection
@@ -236,24 +257,18 @@ namespace NAXB.Interfaces
     //}
     #endregion
 
-    //public interface INAXBPropertyBinding //Can't use generic because this will be used as Custom Attribute
-    //{
-    //    string ElementName { get; } //can refer to an Attribute or an XML Node
-    //    //INamespace Namespace { get; } //Can't do this -- Attributes are restricted to literals, typeof, and arrays 
-    //    //Should the binding be responsible for getting property values or should it all happen
-    //    //in the builder? If it happens in the builder, the framework isn't easily extensible
-    //    //IEnumerable<IXmlData> GetPropertyValues(IXmlData xmlData, IXPathEngine engine); //Do we also need the Property passed?
-    //}
-
     public interface INAXBPropertyBinding  //Can't use generic because this will be used as Custom Attribute
     {
         //Should compiled XPath be stored here? JSE: No, better off in the Property itself, not a binding which contains user input
         string XPath { get; }
+        bool IsAttribute { get; }
+        bool IsElement { get; }
     }
 
     public interface IXmlModelDescription
     {
         string RootXPath { get; }
+
     }
     public interface INamespace
     {

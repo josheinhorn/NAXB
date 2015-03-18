@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\XmlNamespaceDeclarationAttribute.cs" />
+    <Compile Include="Attributes\XmlAttributeAttribute.cs" />
+    <Compile Include="Attributes\XmlElementAttribute.cs" />
     <Compile Include="Build\Reflector.cs" />
     <Compile Include="Build\XmlBinder.cs" />
     <Compile Include="Build\XmlBindingResolver.cs" />
@@ -52,7 +54,7 @@
     <Compile Include="Attributes\XmlModelAttribute.cs" />
     <Compile Include="BindingModel\XmlModelBinding.cs" />
     <Compile Include="BindingModel\XmlProperty.cs" />
-    <Compile Include="Attributes\XPathPropertyAttribute.cs" />
+    <Compile Include="Attributes\XPathAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

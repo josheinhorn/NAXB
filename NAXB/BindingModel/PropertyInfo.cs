@@ -12,7 +12,7 @@ namespace NAXB.BindingModel
     {
         protected Action<System.Collections.IEnumerable, object> populateCollection;
         protected Func<System.Collections.IEnumerable, Array> toArray;
-
+        protected readonly Func<object> defaultConstructor;
         public XPropertyInfo(PropertyInfo property, IReflector reflector)
         {
             Name = property.Name;
@@ -38,6 +38,7 @@ namespace NAXB.BindingModel
             }
             IsEnum = ElementType.IsEnum;
             DeclaringType = property.DeclaringType;
+            defaultConstructor = reflector.BuildDefaultConstructor(PropertyType);
         }
         public string Name
         {
@@ -96,6 +97,12 @@ namespace NAXB.BindingModel
         {
             get;
             private set;
+        }
+
+
+        public object CreateInstance()
+        {
+            return defaultConstructor();
         }
     }
 }

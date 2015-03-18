@@ -16,5 +16,17 @@ namespace NAXB.Attributes
         {
             get; set;
         }
+
+
+        public bool IsAttribute
+        {
+            get;
+            set;
+        }
+
+        public bool IsElement
+        {
+            get { return !IsAttribute; }
+        }
     }
 }

@@ -148,7 +148,7 @@ namespace NAXB.BindingModel
             {
                 convertEnumerableToProperty = (IEnumerable values) =>
                     {
-                        object result = ComplexBinding.CreateInstance();
+                        object result = PropertyInfo.CreateInstance(); //create a new collection object of the property type
                         PropertyInfo.PopulateCollection(values, result);
                         return result;
                     };
