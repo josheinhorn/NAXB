@@ -253,7 +253,7 @@ namespace NAXB.Interfaces
 
     public interface IXmlModelDescription
     {
-        string RootElementName { get; }
+        string RootXPath { get; }
     }
     public interface INamespace
     {

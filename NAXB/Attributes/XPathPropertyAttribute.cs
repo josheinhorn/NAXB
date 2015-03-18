@@ -6,9 +6,12 @@ using NAXB.Interfaces;
 
 namespace NAXB.Attributes
 {
-
     public class XPathAttribute : Attribute, INAXBPropertyBinding
     {
+        public XPathAttribute(string xpath)
+        {
+            XPath = xpath;
+        }
         public string XPath
         {
             get; set;

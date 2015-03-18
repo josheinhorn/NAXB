@@ -52,7 +52,7 @@ namespace NAXB.BindingModel
         public void Initialize(IXmlBindingResolver resolver, IXPathProcessor xPathProcessor, INamespace[] namespaces) //Must be called before ComplexBinding property can be used
         {
             ComplexBinding = resolver.ResolveBinding(PropertyInfo.ElementType);
-            compiledXPath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces);
+            compiledXPath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
             //Build up the delegates that are used to get property value
             BuildParseXmlValue();
             BuildConvertEnumerableToProperty();

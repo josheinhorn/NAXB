@@ -46,7 +46,7 @@ namespace NAXB.BindingModel
             get; private set;
         }
 
-        public IXmlModelDescription Description
+        public IXmlModelDescription Description //TODO: Actually USE the root element name when evaluating XPaths
         {
             get; private set;
         }
@@ -60,7 +60,7 @@ namespace NAXB.BindingModel
 
         public object CreateInstance(params object[] ctorArgs)
         {
-            throw new NotImplementedException(); //Even if we have Ctors that accept args, how to decide which one to use? Type comparisons?
+            throw new NotImplementedException(); //Even if we have Ctors that accept args, how to decide which ctor to use? Type comparisons?
         }
     }
 }

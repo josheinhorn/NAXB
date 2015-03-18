@@ -11,7 +11,7 @@ namespace NAXB.Attributes
         public XmlModelAttribute()
         { }
 
-        public virtual string RootElementName
+        public virtual string RootXPath
         {
             get;
             set;

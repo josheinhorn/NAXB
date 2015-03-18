@@ -45,7 +45,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XBind\NAXB.csproj">
+    <ProjectReference Include="..\NAXB\NAXB.csproj">
       <Project>{eb0bd9eb-7d08-46ab-a27b-4310697a5292}</Project>
       <Name>NAXB</Name>
     </ProjectReference>
