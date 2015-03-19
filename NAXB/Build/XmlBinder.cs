@@ -10,7 +10,7 @@ using NAXB.Exceptions;
 
 namespace NAXB.Build
 {
-    public class XmlBinder : IXmlModelBinder
+    public virtual class XmlBinder : IXmlModelBinder
     {
         protected readonly IXmlBindingResolver bindingResolver;
         protected readonly IReflector reflector;
@@ -27,18 +27,18 @@ namespace NAXB.Build
             this.reflector = reflector;
         }
         
-        public object BindToModel(IXmlData xmlData)
+        public virtual object BindToModel(IXmlData xmlData)
         {
             throw new NotImplementedException();
         }
 
-        public object BindToModel(Type modelType, IXmlData xmlData)
+        public virtual object BindToModel(Type modelType, IXmlData xmlData)
         {
             var binding = bindingResolver.ResolveBinding(modelType);
             return BindToModel(binding, xmlData); 
         }
 
-        public void SetPropertyValue(object model, IXmlData data, IXmlProperty property)
+        public virtual void SetPropertyValue(object model, IXmlData data, IXmlProperty property)
         {
             if (model != null)
             {
@@ -60,12 +60,12 @@ namespace NAXB.Build
             }
         }
 
-        public T BindToModel<T>(IXmlData xmlData)
+        public virtual T BindToModel<T>(IXmlData xmlData)
         {
             return (T)BindToModel(typeof(T), xmlData);
         }
 
-        public void SetPropertyValue<TModel, TProp>(TModel model, IXmlData data, System.Linq.Expressions.Expression<Func<TModel, TProp>> propertyLambda)
+        public virtual void SetPropertyValue<TModel, TProp>(TModel model, IXmlData data, System.Linq.Expressions.Expression<Func<TModel, TProp>> propertyLambda)
         {
             var propertyName = reflector.GetPropertyInfo(propertyLambda).Name;
             var binding = bindingResolver.ResolveBinding<TModel>();
@@ -73,7 +73,7 @@ namespace NAXB.Build
             SetPropertyValue(model, data, xmlProp);
         }
 
-        public object BindToModel(IXmlModelBinding binding, IXmlData xmlData)
+        public virtual object BindToModel(IXmlModelBinding binding, IXmlData xmlData)
         {
             object model = binding.CreateInstance(); //Is it possible to ever use this with Ctor params as opposed to parameterless ctor?
             foreach (var property in binding.Properties)

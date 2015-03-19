@@ -10,9 +10,9 @@ using NAXB.Interfaces;
 
 namespace NAXB.Build
 {
-    public class Reflector : IReflector
+    public virtual class Reflector : IReflector
     {
-        public Action<object, object> BuildSetter(PropertyInfo propertyInfo)
+        public virtual Action<object, object> BuildSetter(PropertyInfo propertyInfo)
         {
             //Equivalent to:
             /*delegate (object i, object a)
@@ -26,7 +26,7 @@ namespace NAXB.Build
                                 Expression.Convert(argument, propertyInfo.PropertyType));
             return Expression.Lambda<Action<object, object>>(setterCall, instance, argument).Compile();
         }
-        public Func<object, object> BuildGetter(PropertyInfo propertyInfo)
+        public virtual Func<object, object> BuildGetter(PropertyInfo propertyInfo)
         {
             //Equivalent to:
             /*delegate (object obj)
@@ -40,7 +40,7 @@ namespace NAXB.Build
                             typeof(object));
             return Expression.Lambda<Func<object, object>>(getterCall, obj).Compile();
         }
-        public PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
+        public virtual PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
         {
             //Type type = typeof(TSource);
             if (propertyLambda == null) throw new ArgumentNullException("propertyLambda");
@@ -66,18 +66,18 @@ namespace NAXB.Build
 
             return propInfo;
         }
-        public PropertyInfo GetPropertyInfo<TSource, TProperty>(TSource source, Expression<Func<TSource, TProperty>> propertyLambda)
+        public virtual PropertyInfo GetPropertyInfo<TSource, TProperty>(TSource source, Expression<Func<TSource, TProperty>> propertyLambda)
         {
             return GetPropertyInfo<TSource, TProperty>(propertyLambda);
         }
 
-        public bool IsEnumerable(Type type)
+        public virtual bool IsEnumerable(Type type)
         {
             //It's IEnumerable but NOT a string (which is an enumerable of chars)
             return typeof(IEnumerable).IsAssignableFrom(type) && !typeof(string).IsAssignableFrom(type);
         }
 
-        public bool IsArray(Type type, out Type elementType)
+        public virtual bool IsArray(Type type, out Type elementType)
         {
             bool result = false;
             if (typeof(Array).IsAssignableFrom(type))
@@ -89,7 +89,7 @@ namespace NAXB.Build
             return result;
         }
 
-        public bool IsGenericCollection(Type type, out Type genericType)
+        public virtual bool IsGenericCollection(Type type, out Type genericType)
         {
             //This actually returns true for an array
             var generics = type.GetGenericArguments();
@@ -98,7 +98,7 @@ namespace NAXB.Build
                 && typeof(ICollection<>).MakeGenericType(genericType).IsAssignableFrom(type));
         }
 
-        public Func<IEnumerable, Array> BuildToArray(Type elementType)
+        public virtual Func<IEnumerable, Array> BuildToArray(Type elementType)
         {
             //This method doesn't cache the result, assumes the caller will take care of that
             var param = Expression.Parameter(typeof(IEnumerable), "source");
@@ -107,12 +107,12 @@ namespace NAXB.Build
             return Expression.Lambda<Func<IEnumerable, Array>>(toArray, param).Compile();
         }
 
-        public Action<IEnumerable, object> BuildPopulateCollection<TCollection>() where TCollection : ICollection
+        public virtual Action<IEnumerable, object> BuildPopulateCollection<TCollection>() where TCollection : ICollection
         {
             return BuildPopulateCollection(typeof(TCollection));
         }
    
-        public Action<IEnumerable, object> BuildPopulateCollection(Type collectionType)
+        public virtual Action<IEnumerable, object> BuildPopulateCollection(Type collectionType)
         {
             string methodName = "Add";
             Action<IEnumerable, object> result = null;
@@ -151,12 +151,12 @@ namespace NAXB.Build
             return result;
         }
 
-        public Func<IEnumerable, Array> BuildToArray<TElement>()
+        public virtual Func<IEnumerable, Array> BuildToArray<TElement>()
         {
             return BuildToArray(typeof(TElement));
         }
 
-        public Func<object> BuildDefaultConstructor(Type type)
+        public virtual Func<object> BuildDefaultConstructor(Type type)
         {
             //Create dynamic method with correct method signature:
             //type Create_typeName(object[] args) { }
@@ -177,8 +177,7 @@ namespace NAXB.Build
                 .CreateDelegate(typeof(Func<object>));
         }
 
-
-        public Func<object[], object> BuildConstructor(ConstructorInfo ctorInfo)
+        public virtual Func<object[], object> BuildConstructor(ConstructorInfo ctorInfo)
         {
             //Create dynamic method with correct method signature:
             //type Create_typeName(object[] args) { }
@@ -215,7 +214,6 @@ namespace NAXB.Build
             return (Func<object[], object>)dynamicMethod
                 .CreateDelegate(typeof(Func<object[], object>));
         }
-
       
     }
 }

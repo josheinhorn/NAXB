@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\CustomFormatAttribute.cs" />
     <Compile Include="Attributes\XmlNamespaceDeclarationAttribute.cs" />
     <Compile Include="Attributes\XmlAttributeAttribute.cs" />
     <Compile Include="Attributes\XmlElementAttribute.cs" />

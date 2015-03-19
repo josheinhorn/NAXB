@@ -28,37 +28,37 @@ namespace NAXB.BindingModel
         }
         public IList<IXmlProperty> Properties
         {
-            get; private set;
+            get; protected set;
         }
 
-        public object CreateInstance()
+        public virtual object CreateInstance()
         {
             return defaultConstructor();
         }
 
         public Type ModelType
         {
-            get; private set;
+            get; protected set;
         }
 
         public string Name
         {
-            get; private set;
+            get; protected set;
         }
 
         public IXmlModelDescription Description //TODO: Actually USE the root element name when evaluating XPaths
         {
-            get; private set;
+            get; protected set;
         }
 
         public INamespace[] Namespaces
         {
             get;
-            private set;
+            protected set;
         }
 
 
-        public object CreateInstance(params object[] ctorArgs)
+        public virtual object CreateInstance(params object[] ctorArgs)
         {
             throw new NotImplementedException(); //Even if we have Ctors that accept args, how to decide which ctor to use? Type comparisons?
         }

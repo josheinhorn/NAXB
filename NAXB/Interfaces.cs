@@ -126,19 +126,20 @@ namespace NAXB.Interfaces
     public interface ICustomFormatBinding
     {
         //For custom formats and/or custom binding resolving
-        string Format { get; }
-        Type FormatProvider { get; } //Should be of type IFormatProvider -- but how to set the values? E.g. CultureInfo has many implementations
-        Type CustomResolver { get; } //ICustomBindingResolver - will override the actual GetPropertyValue
+        string DateTimeFormat { get; }
+        bool IgnoreCase { get; }
+        //Type FormatProvider { get; } //Should be of type IFormatProvider -- but how to set the values? E.g. CultureInfo has many implementations
+        //Type CustomResolver { get; } //ICustomBindingResolver - will override the actual GetPropertyValue
         IFormatProvider GetFormatProvider(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
-        ICustomBindingResolver GetCustomResolver(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
+        ICustomBindingResolver GetCustomResolver(IReflector reflector); //Base implementation can hide delegate default constructor of Type, should return null if none exists
     }
 
     public interface ICustomBindingResolver 
     {
         //Allows overriding the standard GetPropertyValue to convert values in non-standard way
         //Example: convert "yes"/"no" to bool
-        object GetPropertyValue(IXmlData data, IXPathProcessor xPathProcessor, IXmlModelBinder binder);
-        bool TryGetPropertyValue(IXmlData data, IXPathProcessor xPathProcessor, IXmlModelBinder binder, out object propertyValue);
+        object GetPropertyValue(IEnumerable<IXmlData> data, IXmlModelBinder binder);
+        bool TryGetPropertyValue(IEnumerable<IXmlData> data, IXmlModelBinder binder, out object propertyValue);
     }
 
     #region Reflection

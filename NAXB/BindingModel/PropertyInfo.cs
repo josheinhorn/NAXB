@@ -43,46 +43,46 @@ namespace NAXB.BindingModel
         public string Name
         {
             get;
-            private set;
+            protected set;
         }
 
         public bool IsArray
         {
             get;
-            private set;
+            protected set;
         }
 
         public bool IsGenericCollection
         {
             get;
-            private set;
+            protected set;
         }
 
         public bool IsEnumerable
         {
             get;
-            private set;
+            protected set;
         }
 
         public Type PropertyType
         {
             get;
-            private set;
+            protected set;
         }
 
         public Type ElementType
         {
             get;
-            private set;
+            protected set;
         }
 
         public Type DeclaringType
         {
             get;
-            private set;
+            protected set;
         }
 
-        public void PopulateCollection(IEnumerable enumerable, object collection)
+        public virtual void PopulateCollection(IEnumerable enumerable, object collection)
         {
             populateCollection(enumerable, collection);
         }
@@ -96,11 +96,11 @@ namespace NAXB.BindingModel
         public bool IsEnum
         {
             get;
-            private set;
+            protected set;
         }
 
 
-        public object CreateInstance()
+        public virtual object CreateInstance()
         {
             return defaultConstructor();
         }
