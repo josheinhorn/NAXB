@@ -5,3 +5,10 @@ C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XmlDocum
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XmlDocument\obj\Debug\NAXB.XmlDOM.csprojResolveAssemblyReference.cache
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XmlDocument\obj\Debug\NAXB.XmlDOM.dll
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.XmlDocument\obj\Debug\NAXB.XmlDOM.pdb
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.XmlDocument\bin\Debug\NAXB.XmlDOM.dll
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.XmlDocument\bin\Debug\NAXB.XmlDOM.pdb
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.XmlDocument\bin\Debug\NAXB.dll
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.XmlDocument\bin\Debug\NAXB.pdb
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.XmlDocument\obj\Debug\NAXB.XmlDOM.csprojResolveAssemblyReference.cache
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.XmlDocument\obj\Debug\NAXB.XmlDOM.dll
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.XmlDocument\obj\Debug\NAXB.XmlDOM.pdb

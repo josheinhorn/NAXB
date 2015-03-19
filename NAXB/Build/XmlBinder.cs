@@ -10,7 +10,7 @@ using NAXB.Exceptions;
 
 namespace NAXB.Build
 {
-    public virtual class XmlBinder : IXmlModelBinder
+    public class XmlBinder : IXmlModelBinder
     {
         protected readonly IXmlBindingResolver bindingResolver;
         protected readonly IReflector reflector;

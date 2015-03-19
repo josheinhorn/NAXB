@@ -10,7 +10,7 @@ using NAXB.Interfaces;
 
 namespace NAXB.Build
 {
-    public virtual class Reflector : IReflector
+    public class Reflector : IReflector
     {
         public virtual Action<object, object> BuildSetter(PropertyInfo propertyInfo)
         {
