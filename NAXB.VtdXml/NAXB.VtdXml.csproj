@@ -37,8 +37,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VtdXml">
-      <HintPath>References\VtdXml.dll</HintPath>
+    <Reference Include="ximple-dev_csharp">
+      <HintPath>References\ximple-dev_csharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

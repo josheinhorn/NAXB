@@ -29,25 +29,25 @@ namespace NAXB.Attributes
 
         public string CultureName { get; set; }
 
-        public string DateTimeFormat
+        public virtual string DateTimeFormat
         {
             get;
             set;
         }
 
-        public bool IgnoreCase
+        public virtual bool IgnoreCase
         {
             get;
             set;
         }
 
-        public IFormatProvider GetFormatProvider()
+        public virtual IFormatProvider GetFormatProvider()
         {
             if (!String.IsNullOrEmpty(CultureName)) return CultureInfo.GetCultureInfo(CultureName);
             else return null;
         }
 
-        public ICustomBindingResolver GetCustomResolver(IReflector reflector)
+        public virtual ICustomBindingResolver GetCustomResolver(IReflector reflector)
         {
             //lazy load createResolver delegate
             if (createResolver == null)

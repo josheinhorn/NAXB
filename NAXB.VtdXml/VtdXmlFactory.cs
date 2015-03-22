@@ -35,7 +35,7 @@ namespace NAXB.VtdXml
         protected byte[] GetByteArrayFromStream(Stream stream)
         {
             var byteArray = new byte[stream.Length];
-            stream.Read(byteArray, 0, (int)stream.Length - 1);
+            stream.Read(byteArray, 0, (int)stream.Length);
             return byteArray;
         }
     }

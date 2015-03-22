@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<person>
+  <firstName>
+    Josh
+  </firstName>
+  <lastName>Einhorn</lastName>
+  <emails>
+    <email name="josh" domain="josheinhorn.com"/>
+    <email name="josh.einhorn" domain="gmail.com"/>
+  </emails>
+  <address type="mailing">
+    <line num="1">
+      123 Any Lane
+    </line>
+    <line num="2">
+      Anywhere, USA 12345
+    </line>
+  </address>
+  <address type="billing">
+    <line num="1">
+      123 Bill Lane
+    </line>
+    <line num="2">
+      Moneysville, USA 12345
+    </line>
+  </address>
+  <contacts>
+    <person role="assistant">
+      <firstName>Joe</firstName>
+      <lastName>Schmo</lastName>
+      <emails>
+        <email name="joeys" domain="josheinhorn.com"/>
+      </emails>
+      <mailingAddress></mailingAddress>
+    </person>
+    <person relationship="brother" role="bodyguard">
+      <firstName>Jimmy</firstName>
+      <lastName>Einhorn</lastName>
+      <emails>
+        <email name="jimmy" domain="josheinhorn.com"/>
+      </emails>
+      <mailingAddress></mailingAddress>
+      <contacts>
+        <person relationship="brother" role="boss" firstName ="Josh" lastName="Einhorn"/>
+        <person relationship="coworker" firstName="Joe" lastName="Schmo"/>
+      </contacts>
+    </person>
+  </contacts>
+</person>

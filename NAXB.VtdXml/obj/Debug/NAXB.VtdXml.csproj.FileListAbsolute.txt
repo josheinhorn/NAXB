@@ -9,8 +9,8 @@ C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\XBind\XBind.VtdXml\o
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\bin\Debug\NAXB.VtdXml.dll
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\bin\Debug\NAXB.VtdXml.pdb
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\bin\Debug\NAXB.dll
-C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\bin\Debug\VtdXml.dll
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\bin\Debug\NAXB.pdb
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\obj\Debug\NAXB.VtdXml.csprojResolveAssemblyReference.cache
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\obj\Debug\NAXB.VtdXml.dll
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\obj\Debug\NAXB.VtdXml.pdb
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.VtdXml\bin\Debug\ximple-dev_csharp.dll

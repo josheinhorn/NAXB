@@ -200,13 +200,13 @@ namespace NAXB.Build
                 ilgen.Emit(OpCodes.Ldarg_0); //Push Object array
                 ilgen.Emit(OpCodes.Ldc_I4, i); //Push the index to access
                 ilgen.Emit(OpCodes.Ldelem_Ref); //Push the element at the previously loaded index
-                ilgen.Emit(OpCodes.Castclass, ctorParams[i].ParameterType); //Cast the object to the appropriate Ctor Parameter Type (what happens for primitives?)
-                ilgen.Emit(OpCodes.Stloc, i); //Pop the casted object off the stack and set local variable to it
+                CastOrBox(ilgen, ctorParams[i].ParameterType); //Cast or Box the object to the appropriate Ctor Parameter Type
+                //ilgen.Emit(OpCodes.Stloc, i); //Pop the casted object off the stack and set local variable to it
             }
-            for (int i = 0; i < ctorParams.Length; i++)
-            {
-                ilgen.Emit(OpCodes.Ldloc, i); //Push the casted local variables onto the stack to be passed to the Ctor
-            }
+            //for (int i = 0; i < ctorParams.Length; i++)
+            //{
+            //    ilgen.Emit(OpCodes.Ldloc, i); //Push the casted local variables onto the stack to be passed to the Ctor
+            //}
             ilgen.Emit(OpCodes.Newobj, ctorInfo); //Call the Ctor, all values on the stack are passed to the Ctor
             ilgen.Emit(OpCodes.Ret); //Return the new object
 
@@ -215,5 +215,46 @@ namespace NAXB.Build
                 .CreateDelegate(typeof(Func<object[], object>));
         }
       
+        public virtual Action<object, object> BuildSetField(FieldInfo field)
+        {
+            //Define dynamic method that takes 2 objects as arguments
+            DynamicMethod dynamicMethod =
+                new DynamicMethod("Set_" + field.Name,
+                null, new Type[] { typeof(object), typeof(object) });
+            
+            // Generate the intermediate language.       
+            ILGenerator ilgen = dynamicMethod.GetILGenerator();
+            ilgen.Emit(OpCodes.Ldarg_0); //Assumes we are using an instance Field, not static
+            CastOrBox(ilgen, field.DeclaringType);
+            ilgen.Emit(OpCodes.Ldarg_1);
+            CastOrBox(ilgen, field.FieldType);
+            ilgen.Emit(OpCodes.Stfld, field);
+            ilgen.Emit(OpCodes.Ret);
+            return (Action<object, object>)dynamicMethod.CreateDelegate(typeof(Action<object, object>));
+        }
+
+        public virtual Func<object, object> BuildGetField(FieldInfo field)
+        {
+            //Define dynamic method that takes 2 objects as arguments
+            DynamicMethod dynamicMethod =
+                new DynamicMethod("Get_" + field.Name,
+                field.FieldType, new Type[] { typeof(object) });
+
+            // Generate the intermediate language.       
+            ILGenerator ilgen = dynamicMethod.GetILGenerator();
+            ilgen.Emit(OpCodes.Ldarg_0); //Assumes we are using an instance Field, not static
+            CastOrBox(ilgen, field.DeclaringType);
+            ilgen.Emit(OpCodes.Ldfld, field);
+            ilgen.Emit(OpCodes.Ret);
+            return (Func<object, object>)dynamicMethod.CreateDelegate(typeof(Func<object, object>));
+        }
+
+        protected void CastOrBox(ILGenerator ilgen, Type type)
+        {
+            if (type.IsValueType)
+                ilgen.Emit(OpCodes.Box, type);
+            else
+                ilgen.Emit(OpCodes.Castclass, type);
+        }
     }
 }

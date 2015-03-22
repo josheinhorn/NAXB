@@ -238,6 +238,10 @@ namespace NAXB.Interfaces
         /// <typeparam name="TElement">Single element type of the array</param>
         /// <returns>Function for converting an IEnumerable to an Array of TElement</returns>
         Func<IEnumerable, Array> BuildToArray<TElement>();
+
+        Action<object, object> BuildSetField(FieldInfo field);
+
+        Func<object, object> BuildGetField(FieldInfo field);
     }
     //public interface IMethodSignature
     //{

@@ -16,6 +16,11 @@ namespace NAXB.VtdXml
         private string xmlString;
         private string value;
         private Encoding encoding;
+        private string attributeName = null;
+        public VtdXmlData(BookMark bookMark, string attributeName) : this(bookMark)
+        {
+            this.attributeName = attributeName;
+        }
 
         public VtdXmlData(BookMark bookMark)
         {
@@ -72,7 +77,7 @@ namespace NAXB.VtdXml
                     if (VTDBookMark.setCursorPosition())
                     {
                         var elementToken = nav.getElementFragment();
-                        int length = (int)elementToken >> 32;
+                        int length = (int)(elementToken >> 32);
                         int offset = (int)elementToken;
                         nav.getXML().getBytes(offset, length);
                     }
@@ -89,7 +94,12 @@ namespace NAXB.VtdXml
                 if (xmlString == null)
                 {
                     if (VTDBookMark.setCursorPosition())
-                        xmlString = nav.toString(nav.getCurrentIndex());
+                    {
+                        long elementToken = nav.getElementFragment();
+                        int length = (int)(elementToken >> 32);
+                        int offset = (int)elementToken;
+                        xmlString = nav.toString(offset, length);
+                    }
                     else xmlString = string.Empty;
                 }
                 return xmlString;
@@ -104,10 +114,15 @@ namespace NAXB.VtdXml
                 {
                     if (VTDBookMark.setCursorPosition())
                     {
-                        var innerTextToken = nav.getContentFragment(); //TODO: How to deal with Attributes? This method seems to be for elements?
-                        int length = (int)innerTextToken >> 32;
-                        int offset = (int)innerTextToken;
-                        value = nav.toString(offset, length); //or .toRawString ??
+                        int index = -1;
+                        if ((index = nav.getText()) == -1) //no text, assumed an attribute
+                        {
+                            var name = nav.toString(nav.getCurrentIndex());
+                            index = nav.getAttrVal(name);
+                        }
+                        //If index is still -1, there is no value (e.g. self closing element)
+                        if (index != -1) value = nav.toNormalizedString(index).Trim();
+                        else value = string.Empty;
                     }
                     else value = String.Empty;
                 }

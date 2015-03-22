@@ -17,7 +17,9 @@ namespace NAXB.BindingModel
             if (reflector == null) throw new ArgumentNullException("reflector");
             ModelType = type;
             Name = ModelType.Name;
-            Properties = ModelType.GetProperties().Select(property => new XmlProperty(property, reflector) as IXmlProperty).ToList();
+            Properties = ModelType.GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public)
+                .Where(property => property.GetCustomAttributes(typeof(INAXBPropertyBinding), false).Any())
+                .Select(property => new XmlProperty(property, reflector) as IXmlProperty).ToList();
             Description = ModelType.GetCustomAttributes(typeof(IXmlModelDescription), true).Cast<IXmlModelDescription>().FirstOrDefault();
             defaultConstructor = reflector.BuildDefaultConstructor(type);
             //Get namespaces from Type's Custom Attributes
