@@ -52,9 +52,10 @@ namespace NAXB.BindingModel
             protected set;
         }
 
-        public IPropertyInfo PropertyInfo 
+        public IPropertyInfo PropertyInfo
         {
-            get; protected set;
+            get;
+            protected set;
         }
 
         public virtual object Get(object obj)
@@ -65,23 +66,25 @@ namespace NAXB.BindingModel
         {
             set(obj, value);
         }
-      
+
 
         public virtual void Initialize(IXmlBindingResolver resolver, IXPathProcessor xPathProcessor, INamespace[] namespaces) //Must be called before ComplexBinding property can be used
         {
             ComplexBinding = resolver.ResolveBinding(PropertyInfo.ElementType);
-            compiledXPath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
             //Build up the delegates that are used to get property value
             BuildParseXmlValue();
             BuildConvertEnumerableToProperty();
             BuildConvertXmlListToEnumerable();
             BuildConvertXmlToProperty();
+
+            compiledXPath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces, Type); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
             isInitialized = true;
         }
 
         public IXmlModelBinding ComplexBinding
         {
-            get; protected set;
+            get;
+            protected set;
         }
 
         public virtual object GetPropertyValue(IXmlData data, IXPathProcessor xPathProcessor, IXmlModelBinder binder)
@@ -102,10 +105,17 @@ namespace NAXB.BindingModel
             protected set;
         }
 
+        public PropertyType Type
+        {
+            get;
+            protected set;
+        }
+
+
         protected void BuildConvertXmlToProperty()
         {
             ICustomBindingResolver resolver = null;
-            if (CustomFormatBinding != null &&  (resolver = CustomFormatBinding.GetCustomResolver()) != null)
+            if (CustomFormatBinding != null && (resolver = CustomFormatBinding.GetCustomResolver()) != null)
             {
                 convertXmlToProperty = (IEnumerable<IXmlData> data, IXmlModelBinder binder) =>
                     {
@@ -121,7 +131,7 @@ namespace NAXB.BindingModel
                     convertEnumerableToProperty(convertXmlListToEnumerable(data, binder));
             }
         }
-        
+
         protected void BuildConvertXmlListToEnumerable()
         {
             if (ComplexBinding != null) //it's a complex type
@@ -129,11 +139,12 @@ namespace NAXB.BindingModel
                 convertXmlListToEnumerable = (IEnumerable<IXmlData> data, IXmlModelBinder binder) =>
                     data.Select(xml => binder.BindToModel(ComplexBinding, xml))
                     .Where(value => value != null);
+                Type = PropertyType.Complex;
             }
             else //simple type
             {
                 convertXmlListToEnumerable = (IEnumerable<IXmlData> data, IXmlModelBinder binder) =>
-                    data.Select(xml => 
+                    data.Select(xml =>
                         {
                             try { return parseXmlValue(xml.Value); }
                             catch (Exception) { return null; } //Just return null if the value couldn't be parsed
@@ -146,7 +157,7 @@ namespace NAXB.BindingModel
             IFormatProvider formatProvider = CultureInfo.InvariantCulture;
             string dateTimeFormat = null;
             bool ignoreCase = false;
-            if (CustomFormatBinding !=null)
+            if (CustomFormatBinding != null)
             {
                 formatProvider = CustomFormatBinding.GetFormatProvider() ?? CultureInfo.InvariantCulture;
                 dateTimeFormat = CustomFormatBinding.DateTimeFormat;
@@ -154,45 +165,89 @@ namespace NAXB.BindingModel
             }
             var elementType = PropertyInfo.ElementType;
             if (elementType == typeof(string))
+            {
                 parseXmlValue = (string value) => value;
+                Type = PropertyType.Text;
+            }
             else if (PropertyInfo.IsEnum)
+            {
                 parseXmlValue = (string value) => Enum.Parse(elementType, value, ignoreCase);
+                Type = PropertyType.Enum;
+            }
             else if (elementType == typeof(bool))
-                parseXmlValue = (string value) => bool.Parse(value); //no format
+            {
+                parseXmlValue = (string value) => bool.Parse(value);
+                Type = PropertyType.Bool;
+            }//no format
             else if (elementType == typeof(byte))
+            {
                 parseXmlValue = (string value) => byte.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(sbyte))
+            {
                 parseXmlValue = (string value) => sbyte.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(short))
+            {
                 parseXmlValue = (string value) => short.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(ushort))
+            {
                 parseXmlValue = (string value) => ushort.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(int))
+            {
                 parseXmlValue = (string value) => int.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(uint))
+            {
                 parseXmlValue = (string value) => uint.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(long))
+            {
                 parseXmlValue = (string value) => long.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(ulong))
+            {
                 parseXmlValue = (string value) => ulong.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(float))
+            {
                 parseXmlValue = (string value) => float.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(double))
+            {
                 parseXmlValue = (string value) => double.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(DateTime))
             {
+                Type = PropertyType.DateTime;
                 if (String.IsNullOrEmpty(dateTimeFormat))
                     parseXmlValue = (string value) => DateTime.Parse(value, formatProvider);
                 else parseXmlValue = (string value) => DateTime.ParseExact(value, dateTimeFormat, formatProvider);
             }
             else if (elementType == typeof(DateTimeOffset))
             {
+                Type = PropertyType.DateTime;
                 if (String.IsNullOrEmpty(dateTimeFormat))
                     parseXmlValue = (string value) => DateTimeOffset.Parse(value, formatProvider);
                 else parseXmlValue = (string value) => DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider);
             }
             else if (elementType == typeof(Guid))
+            {
                 parseXmlValue = (string value) => new Guid(value); //No format for this
+                Type = PropertyType.Text;
+            }
 
         }
         protected void BuildConvertEnumerableToProperty()
@@ -221,6 +276,8 @@ namespace NAXB.BindingModel
             }
         }
 
-        
+
+
+
     }
 }

@@ -16,10 +16,10 @@ namespace NAXB.VtdXml
         private string xmlString;
         private string value;
         private Encoding encoding;
-        private string attributeName = null;
-        public VtdXmlData(BookMark bookMark, string attributeName) : this(bookMark)
+        public VtdXmlData(string evaluatedValue)
         {
-            this.attributeName = attributeName;
+            this.value = evaluatedValue;
+            this.xmlString = evaluatedValue;
         }
 
         public VtdXmlData(BookMark bookMark)

@@ -85,7 +85,7 @@ namespace NAXB.Interfaces
         Type ElementType { get; }
         void AddToCollection(object item);
     }
-    public enum ElementType //Where to use this...
+    public enum PropertyType //Where to use this...
     {
         Text, //string (maybe also StringBuilder?)
         Number, //short, int, long, float, double, byte, sbyte, decimal, ushort, uint, ulong
@@ -122,6 +122,8 @@ namespace NAXB.Interfaces
         IXmlModelBinding ComplexBinding { get; } //returns null if it either hasn't been set yet, or the property type is not complex
 
         ICustomFormatBinding CustomFormatBinding { get; }
+
+        PropertyType Type { get; }
     }
 
     public interface ICustomFormatBinding
@@ -296,7 +298,7 @@ namespace NAXB.Interfaces
     { 
         IEnumerable<IXmlData> ProcessXPath(IXmlData data, IXPath xpath);
         //void LoadProperties(IEnumerable<IXmlProperty> properties, IEnumerable<INamespace> namespaces);
-        IXPath CompileXPath(string xpath, INamespace[] namespaces); 
+        IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType); 
     }
 
     public interface IXPath //really can just be a string right?
@@ -304,6 +306,14 @@ namespace NAXB.Interfaces
         string XPathAsString { get; }
         object UnderlyingObject { get; } //e.g. AutoPilot, XPathExpression, etc.
         INamespace[] Namespaces { get; }
+        XPathType Type { get; }
+        bool IsFunction { get; set; }
+    }
+    public enum XPathType
+    {
+        Text,
+        Boolean,
+        Numeric
     }
 
     public interface IXmlData

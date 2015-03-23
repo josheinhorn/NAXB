@@ -32,7 +32,7 @@ namespace NAXB.Navigator
             return result;
         }
 
-        public IXPath CompileXPath(string xpath, INamespace[] namespaces)
+        public IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType)
         {
             var xpe = GetCompiledXPathExpression(xpath, namespaces);
             return new DefaultXPath

@@ -74,5 +74,25 @@ namespace NAXB.UnitTests
 
             Assert.IsTrue(person.Contacts.Length > 0);
         }
+
+        [TestMethod]
+        public void Test_SetPropertyValue_XPathFunction_NumberOfContacts()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.NumberOfContacts);
+
+            Assert.IsTrue(person.NumberOfContacts > 0);
+        }
+        [TestMethod]
+        public void Test_SetPropertyValue_XPathFunction_ContactsEqualToEmails()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.ContactsEqualToEmails);
+
+            Assert.IsTrue(person.ContactsEqualToEmails);
+        }
+        
     }
 }

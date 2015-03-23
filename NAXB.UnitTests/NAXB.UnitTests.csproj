@@ -54,7 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BindingResolverTestBase.cs" />
+    <Compile Include="TestBases\BindingResolverTestBase.cs" />
     <Compile Include="BindingResolverWithVtdTests.cs" />
     <Compile Include="Mockups\MockConstants.cs" />
     <Compile Include="Mockups\MockXmlProvider.cs" />
@@ -69,22 +69,14 @@
     <Compile Include="VtdXmlBinderTests.cs" />
     <Compile Include="VtdXmlFactoryTests.cs" />
     <Compile Include="VtdXPathProcessorTests.cs" />
-    <Compile Include="XmlBinderTestBase.cs" />
-    <Compile Include="XmlFactoryTestBase.cs" />
-    <Compile Include="XPathProcessorTestBase.cs" />
+    <Compile Include="TestBases\XmlBinderTestBase.cs" />
+    <Compile Include="TestBases\XmlFactoryTestBase.cs" />
+    <Compile Include="TestBases\XPathProcessorTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NAXB.VtdXml\NAXB.VtdXml.csproj">
       <Project>{bbd87615-4ddc-44a0-824d-4b7c0a9dd843}</Project>
       <Name>NAXB.VtdXml</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NAXB.XmlDocument\NAXB.XmlDOM.csproj">
-      <Project>{99597553-aff1-486d-9fee-714f977e57da}</Project>
-      <Name>NAXB.XmlDOM</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NAXB.XPathNavigator\NAXB.XPathNavigator.csproj">
-      <Project>{d08f860d-f07b-4776-bdb3-ac2deb111c48}</Project>
-      <Name>NAXB.XPathNavigator</Name>
     </ProjectReference>
     <ProjectReference Include="..\NAXB\NAXB.csproj">
       <Project>{eb0bd9eb-7d08-46ab-a27b-4310697a5292}</Project>

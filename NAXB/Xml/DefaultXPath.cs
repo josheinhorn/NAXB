@@ -23,5 +23,19 @@ namespace NAXB.Xml
         {
             get; set;
         }
+
+
+        public XPathType Type
+        {
+            get;
+            set;
+        }
+
+
+        public bool IsFunction
+        {
+            get;
+            set;
+        }
     }
 }

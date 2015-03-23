@@ -6,9 +6,5 @@ C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\obj\Debug\NAXB.UnitTests.dll
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\obj\Debug\NAXB.UnitTests.pdb
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\bin\Debug\NAXB.VtdXml.dll
-C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\bin\Debug\NAXB.XmlDOM.dll
-C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\bin\Debug\NAXB.XPathNavigator.dll
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\bin\Debug\NAXB.VtdXml.pdb
-C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\bin\Debug\NAXB.XmlDOM.pdb
-C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\bin\Debug\NAXB.XPathNavigator.pdb
 C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB.UnitTests\bin\Debug\ximple-dev_csharp.dll

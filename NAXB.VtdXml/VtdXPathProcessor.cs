@@ -35,13 +35,43 @@ namespace NAXB.VtdXml
                 //Answer -- it is relative to the current Cursor position:
                 //"If the navigation you want to perform is more complicated, you can in fact nest XPath queries" - http://www.codeproject.com/Articles/28237/Programming-XPath-with-VTD-XML
                 
-                while (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
+                if (!xpath.IsFunction)
                 {
-                    //nav.push(); //push the new cursor position onto the internal stack
-                    BookMark bookMark = new BookMark(nav);
-                    bookMark.recordCursorPosition(); //Which cursor position is it getting here? Theoretically should be the position navigated to by the AutoPilot
-                    result.Add(new VtdXmlData(bookMark));
-                    //nav.pop(); //reset the cursor position (is this even necessary since the VtdXmlData Ctor isn't actually doing any navigation?)
+                    try
+                    {
+                        while (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
+                        {
+                            BookMark bookMark = new BookMark(nav);
+                            bookMark.recordCursorPosition(); //Which cursor position is it getting here? Theoretically should be the position navigated to by the AutoPilot
+                            result.Add(new VtdXmlData(bookMark));
+                        }
+                    }
+                    catch (XPathEvalException)
+                    {
+                        xpath.IsFunction = true;
+                    }
+                }
+                if (xpath.IsFunction)
+                {
+                    string evaluatedValue = ap.evalXPathToString(); //Always evaluate to string, parse to real property value later
+
+                    //Switch isn't necessary because we parse the value later, a string will suffice for now!
+                    //switch (xpath.Type) 
+                    //{
+                    //    case XPathType.Text:
+                    //        evaluatedValue = ap.evalXPathToString();
+                    //        break;
+                    //    case XPathType.Boolean:
+                    //        evaluatedValue = ap.evalXPathToBoolean();
+                    //        break;
+                    //    case XPathType.Numeric:
+                    //        evaluatedValue = ap.evalXPathToNumber();
+                    //        break;
+                    //    default:
+                    //        evaluatedValue = string.Empty;
+                    //        break;
+                    //}
+                    result.Add(new VtdXmlData(evaluatedValue));
                 }
                 ap.resetXPath();
             }
@@ -54,16 +84,46 @@ namespace NAXB.VtdXml
                 ap.declareXPathNameSpace(ns.Prefix, ns.Uri);
             }
         }
-        public IXPath CompileXPath(string xpath, INamespace[] namespaces)
+        public IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType)
         {
             var ap = new AutoPilot();
             AddNamespaces(ap, namespaces);
             ap.selectXPath(xpath);
+            //XPath type not actually necessary, just using Text always works!
+            XPathType type;
+            switch (propertyType)
+            {
+                case PropertyType.Text:
+                    type = XPathType.Text;
+                    break;
+                case PropertyType.Number:
+                    type = XPathType.Numeric;
+                    break;
+                case PropertyType.Bool:
+                    type = XPathType.Boolean;
+                    break;
+                case PropertyType.DateTime:
+                    type = XPathType.Text;
+                    break;
+                case PropertyType.Enum:
+                    type = XPathType.Text;
+                    break;
+                case PropertyType.Complex:
+                    type = XPathType.Text;
+                    break;
+                case PropertyType.XmlFragment:
+                    type = XPathType.Text;
+                    break;
+                default:
+                    type = XPathType.Text;
+                    break;
+            }
             return new DefaultXPath
             {
-               UnderlyingObject = ap,
-               XPathAsString = xpath,
-               Namespaces = namespaces
+                UnderlyingObject = ap,
+                XPathAsString = xpath,
+                Namespaces = namespaces,
+                Type = type
             };
         }
     }
