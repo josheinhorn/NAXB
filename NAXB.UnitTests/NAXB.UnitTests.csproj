@@ -54,7 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BindingResolverTests.cs" />
+    <Compile Include="BindingResolverTestBase.cs" />
     <Compile Include="BindingResolverWithVtdTests.cs" />
     <Compile Include="Mockups\MockConstants.cs" />
     <Compile Include="Mockups\MockXmlProvider.cs" />
@@ -69,8 +69,8 @@
     <Compile Include="VtdXmlBinderTests.cs" />
     <Compile Include="VtdXmlFactoryTests.cs" />
     <Compile Include="VtdXPathProcessorTests.cs" />
-    <Compile Include="XmlBinderTests.cs" />
-    <Compile Include="XmlFactoryTests.cs" />
+    <Compile Include="XmlBinderTestBase.cs" />
+    <Compile Include="XmlFactoryTestBase.cs" />
     <Compile Include="XPathProcessorTestBase.cs" />
   </ItemGroup>
   <ItemGroup>

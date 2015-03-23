@@ -126,11 +126,10 @@ namespace NAXB.Interfaces
 
     public interface ICustomFormatBinding
     {
+        //TODO: Find a good way to get DateTimeFormat/IgnoreCase from the XML itself
         //For custom formats and/or custom binding resolving
         string DateTimeFormat { get; }
         bool IgnoreCase { get; }
-        //Type FormatProvider { get; } //Should be of type IFormatProvider -- but how to set the values? E.g. CultureInfo has many implementations
-        //Type CustomResolver { get; } //ICustomBindingResolver - will override the actual GetPropertyValue
         IFormatProvider GetFormatProvider(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
         ICustomBindingResolver GetCustomResolver(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
         void Initialize(IReflector reflector); //Initialize ctor of resolver or other stuff -- alternative to ctor since this is an attribute

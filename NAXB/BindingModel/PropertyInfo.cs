@@ -25,6 +25,7 @@ namespace NAXB.BindingModel
             {
                 ElementType = temp;
                 toArray = reflector.BuildToArray(ElementType);
+                
             }
             else if (IsGenericCollection = reflector.IsGenericCollection(PropertyType, out temp))
             {
@@ -41,6 +42,8 @@ namespace NAXB.BindingModel
                 IsEnumerable = reflector.IsEnumerable(PropertyType);
                 ElementType = PropertyType; //The individual Element is the same as the Property (even if it is IEnumerable?? Highly complex List implementations will break)
             }
+            //Note: Don't need to check that the Element of Array or Collection is a nullable type -- this is not allowed by the compiler
+
             IsEnum = ElementType.IsEnum;
             DeclaringType = property.DeclaringType;
             try

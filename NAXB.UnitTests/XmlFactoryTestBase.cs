@@ -68,7 +68,6 @@ namespace NAXB.UnitTests
         public void Test_XmlFactory_CreateXml_Value()
         {
             var factory = GetXmlFactory();
-            var expected = XmlProvider.ExpectedValue;
 
             var data = factory.CreateXmlData(XmlProvider.XmlAsString, XmlProvider.Encoding, GetNamespaces());
 

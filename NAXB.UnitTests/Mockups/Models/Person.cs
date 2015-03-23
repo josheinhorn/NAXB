@@ -29,7 +29,7 @@ namespace NAXB.UnitTests.Mockups.Models
         public List<string> BillingAddressLines { get; set; }
 
         [XPath("contacts/person")]
-        public List<Person> Contacts { get; set; }
+        public Person[] Contacts { get; set; }
 
         [XmlAttribute("role")]
         public string Role { get; set; }

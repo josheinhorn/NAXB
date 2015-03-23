@@ -19,17 +19,6 @@ namespace NAXB.UnitTests.Mockups
                 fs.Read(XmlAsByteArray, 0, (int)fs.Length);
             }
             XmlAsString = Encoding.GetString(XmlAsByteArray);
-
-            //Is this even necessary?
-            var doc = new XmlDocument();
-            doc.Load(FileName);
-            ExpectedValue = doc.Value; //Better way to get this? maybe don't even need it?
-        }
-
-        public string ExpectedValue
-        {
-            get;
-            private set;
         }
 
         public string FileName { get; private set; }

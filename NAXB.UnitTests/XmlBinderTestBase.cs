@@ -64,5 +64,15 @@ namespace NAXB.UnitTests
 
             Assert.IsTrue(person.Brothers.Count > 0);
         }
+
+        [TestMethod]
+        public void Test_SetPropertyValue_Contacts()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.Contacts);
+
+            Assert.IsTrue(person.Contacts.Length > 0);
+        }
     }
 }
