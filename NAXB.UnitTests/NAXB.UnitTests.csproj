@@ -66,8 +66,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectorTests.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="VtdXmlBinderTests.cs" />
     <Compile Include="VtdXmlFactoryTests.cs" />
     <Compile Include="VtdXPathProcessorTests.cs" />
+    <Compile Include="XmlBinderTests.cs" />
     <Compile Include="XmlFactoryTests.cs" />
     <Compile Include="XPathProcessorTestBase.cs" />
   </ItemGroup>

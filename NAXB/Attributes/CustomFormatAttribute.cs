@@ -11,7 +11,7 @@ namespace NAXB.Attributes
     {
         protected Func<ICustomBindingResolver> createResolver = null;
         protected Type customBindingResolverType = null;
-
+        bool isInitialized = false;
         public Type CustomBindingResolverType
         {
             get
@@ -47,15 +47,23 @@ namespace NAXB.Attributes
             else return null;
         }
 
-        public virtual ICustomBindingResolver GetCustomResolver(IReflector reflector)
+        public virtual ICustomBindingResolver GetCustomResolver() //Perhaps turn this into an initialize method?
         {
             //lazy load createResolver delegate
-            if (createResolver == null)
+            if (!isInitialized) throw new InvalidOperationException("GetCustomResolver cannot be called before the Initialize method is called on this object.");
+            else if (createResolver != null)
+                return createResolver();
+            else return null;
+        }
+
+        public virtual void Initialize(IReflector reflector)
+        {
+            if (!isInitialized && CustomBindingResolverType != null)
             {
                 var defaultCtor = reflector.BuildDefaultConstructor(CustomBindingResolverType);
                 createResolver = () => (ICustomBindingResolver)defaultCtor();
             }
-            return createResolver();
+            isInitialized = true;
         }
     }
 }

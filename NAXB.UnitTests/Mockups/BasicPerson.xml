@@ -4,6 +4,7 @@
     Josh
   </firstName>
   <lastName>Einhorn</lastName>
+  <middleName>Samuel</middleName>
   <emails>
     <email name="josh" domain="josheinhorn.com"/>
     <email name="josh.einhorn" domain="gmail.com"/>
@@ -24,6 +25,9 @@
       Moneysville, USA 12345
     </line>
   </address>
+  <DOB>
+    31-01-1900
+  </DOB>
   <contacts>
     <person role="assistant">
       <firstName>Joe</firstName>

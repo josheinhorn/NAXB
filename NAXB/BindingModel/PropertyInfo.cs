@@ -31,6 +31,11 @@ namespace NAXB.BindingModel
                 ElementType = temp;
                 populateCollection = reflector.BuildPopulateCollection(PropertyType);
             }
+            else if (IsNullableType = reflector.IsNullableType(PropertyType, out temp))
+            {
+                ElementType = temp;
+                //Do we need a casting func or anything??
+            }
             else
             {
                 IsEnumerable = reflector.IsEnumerable(PropertyType);
@@ -106,6 +111,11 @@ namespace NAXB.BindingModel
             protected set;
         }
 
+        public bool IsNullableType
+        {
+            get;
+            protected set;
+        }
 
         public virtual object CreateInstance()
         {

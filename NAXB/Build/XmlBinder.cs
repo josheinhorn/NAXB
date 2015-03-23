@@ -67,7 +67,7 @@ namespace NAXB.Build
 
         public virtual void SetPropertyValue<TModel, TProp>(TModel model, IXmlData data, System.Linq.Expressions.Expression<Func<TModel, TProp>> propertyLambda)
         {
-            var propertyName = reflector.GetPropertyInfo(propertyLambda).Name;
+            var propertyName = reflector.GetPropertyOrFieldInfo(propertyLambda).Name;
             var binding = bindingResolver.ResolveBinding<TModel>();
             var xmlProp = binding.Properties.FirstOrDefault(prop => prop.PropertyInfo.Name == propertyName);
             SetPropertyValue(model, data, xmlProp);

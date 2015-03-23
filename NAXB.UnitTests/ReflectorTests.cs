@@ -102,11 +102,23 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
+        public void Test_Reflector_BuildSetField_Person_DateOfBirth()
+        {
+            var expected = DateTime.Now;
+            var person = new Person();
+
+            var set = reflector.BuildSetField(person.GetType().GetField("DateOfBirth"));
+            set(person, expected);
+            
+            Assert.AreEqual(expected, person.DateOfBirth);
+        }
+
+        [TestMethod]
         public void Test_Reflector_GetPropertyInfo_Person_FirstName()
         {
             var expected = typeof(Person).GetProperty("FirstName");
 
-            var actual = reflector.GetPropertyInfo<Person, string>(person => person.FirstName);
+            var actual = reflector.GetPropertyOrFieldInfo<Person, string>(person => person.FirstName);
 
             Assert.AreEqual(expected, actual);
         }
@@ -216,6 +228,36 @@ namespace NAXB.UnitTests
             var result = reflector.IsEnumerable(test.GetType());
 
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Test_Reflector_IsNullableType_NullableDateTime_True()
+        {
+            var test = typeof(DateTime?);
+            Type temp;
+            var result = reflector.IsNullableType(test, out temp);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Test_Reflector_IsNullableType_NullableDateTime_Out_DateTime()
+        {
+            var test = typeof(DateTime?);
+            Type actual;
+            var result = reflector.IsNullableType(test, out actual);
+
+            Assert.AreEqual(typeof(DateTime), actual);
+        }
+
+        [TestMethod]
+        public void Test_Reflector_IsNullableType_Int_False()
+        {
+            var test = typeof(int);
+            Type actual;
+            var result = reflector.IsNullableType(test, out actual);
+
+            Assert.IsFalse(result);
         }
     }
 }

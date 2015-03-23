@@ -132,7 +132,8 @@ namespace NAXB.Interfaces
         //Type FormatProvider { get; } //Should be of type IFormatProvider -- but how to set the values? E.g. CultureInfo has many implementations
         //Type CustomResolver { get; } //ICustomBindingResolver - will override the actual GetPropertyValue
         IFormatProvider GetFormatProvider(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
-        ICustomBindingResolver GetCustomResolver(IReflector reflector); //Base implementation can hide delegate default constructor of Type, should return null if none exists
+        ICustomBindingResolver GetCustomResolver(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
+        void Initialize(IReflector reflector); //Initialize ctor of resolver or other stuff -- alternative to ctor since this is an attribute
     }
 
     public interface ICustomBindingResolver 
@@ -181,7 +182,7 @@ namespace NAXB.Interfaces
         /// <typeparam name="TProperty">The property Type</typeparam>
         /// <param name="propertyLambda">Lambda Expression representing a Property of the source Type</param>
         /// <returns>Property Info</returns>
-        PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda);
+        MemberInfo GetPropertyOrFieldInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda);
         /// <summary>
         /// Gets the PropertyInfo for a Lambda Expression
         /// </summary>
@@ -190,7 +191,7 @@ namespace NAXB.Interfaces
         /// <typeparam name="TProperty">The property Type</typeparam>
         /// <param name="propertyLambda">Lambda Expression representing a Property of the source Type</param>
         /// <returns>Property Info</returns>
-        PropertyInfo GetPropertyInfo<TSource, TProperty>(TSource source, Expression<Func<TSource, TProperty>> propertyLambda);
+        MemberInfo GetPropertyOrFieldInfo<TSource, TProperty>(TSource source, Expression<Func<TSource, TProperty>> propertyLambda);
         /// <summary>
         /// Builds a delegate that will populate and existing collection of the specified type with values from an Enumerable. 
         /// The input Type must implement ICollection&lt;&gt;
@@ -212,6 +213,7 @@ namespace NAXB.Interfaces
         /// <param name="genericType">Returns the Generic type T for ICollection&lt;T&gt;, otherwise it is null</param>
         /// <returns>True if this is a generic collection</returns>
         bool IsGenericCollection(Type type, out Type genericType);
+        bool IsNullableType(Type type, out Type elementType);
         /// <summary>
         /// Determines if a type is an Array
         /// </summary>

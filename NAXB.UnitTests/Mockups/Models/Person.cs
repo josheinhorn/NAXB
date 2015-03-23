@@ -16,9 +16,10 @@ namespace NAXB.UnitTests.Mockups.Models
         [XPath("lastName")]
         public string LastName { get; set; }
 
+        [XmlElement("middleName")]
         public string MiddleName;
 
-        [XPath("emails")]
+        [XPath("emails/email")]
         public List<Email> Emails { get; set; }
 
         [XPath("address[@type=\"mailing\"]/line")]
@@ -27,14 +28,18 @@ namespace NAXB.UnitTests.Mockups.Models
         [XPath("address[@type=\"billing\"]/line")]
         public List<string> BillingAddressLines { get; set; }
 
-        [XPath("contacts")]
+        [XPath("contacts/person")]
         public List<Person> Contacts { get; set; }
 
         [XmlAttribute("role")]
         public string Role { get; set; }
 
-        [XmlAttribute("contacts/person[@relationship=\"brother\"]")]
+        [XPath("contacts/person[@relationship=\"brother\"]")]
         public List<Person> Brothers { get; set; }
+
+        [XmlElement("DOB")]
+        [CustomFormat(DateTimeFormat = "dd-MM-yyyy")]
+        public DateTime? DateOfBirth;
     }
 
    

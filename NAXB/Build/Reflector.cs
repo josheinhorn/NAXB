@@ -40,7 +40,7 @@ namespace NAXB.Build
                             typeof(object));
             return Expression.Lambda<Func<object, object>>(getterCall, obj).Compile();
         }
-        public virtual PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
+        public virtual MemberInfo GetPropertyOrFieldInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
         {
             //Type type = typeof(TSource);
             if (propertyLambda == null) throw new ArgumentNullException("propertyLambda");
@@ -50,11 +50,12 @@ namespace NAXB.Build
                     "Expression '{0}' refers to a method, not a property.",
                     propertyLambda.ToString()));
 
-            PropertyInfo propInfo = member.Member as PropertyInfo;
-            if (propInfo == null)
-                throw new ArgumentException(string.Format(
-                    "Expression '{0}' refers to a field, not a property.",
-                    propertyLambda.ToString()));
+            MemberInfo result = member.Member as PropertyInfo;
+            if (result == null)
+                result = member.Member as FieldInfo;
+                //throw new ArgumentException(string.Format(
+                //    "Expression '{0}' refers to a field, not a property.",
+                //    propertyLambda.ToString()));
 
             //Commented this out because it uses reflection
             //if (type != propInfo.ReflectedType &&
@@ -64,11 +65,11 @@ namespace NAXB.Build
             //        propertyLambda.ToString(),
             //        type));
 
-            return propInfo;
+            return result;
         }
-        public virtual PropertyInfo GetPropertyInfo<TSource, TProperty>(TSource source, Expression<Func<TSource, TProperty>> propertyLambda)
+        public virtual MemberInfo GetPropertyOrFieldInfo<TSource, TProperty>(TSource source, Expression<Func<TSource, TProperty>> propertyLambda)
         {
-            return GetPropertyInfo<TSource, TProperty>(propertyLambda);
+            return GetPropertyOrFieldInfo<TSource, TProperty>(propertyLambda);
         }
 
         public virtual bool IsEnumerable(Type type)
@@ -96,6 +97,14 @@ namespace NAXB.Build
             genericType = generics.Length > 0 ? generics[0] : null;
             return (genericType != null
                 && typeof(ICollection<>).MakeGenericType(genericType).IsAssignableFrom(type));
+        }
+
+        public virtual bool IsNullableType(Type type, out Type elementType)
+        {
+            var generics = type.GetGenericArguments();
+            elementType = generics.Length > 0 ? generics[0] : null;
+            return (elementType != null
+               && typeof(Nullable<>).MakeGenericType(elementType).IsAssignableFrom(type));
         }
 
         public virtual Func<IEnumerable, Array> BuildToArray(Type elementType)
@@ -200,7 +209,7 @@ namespace NAXB.Build
                 ilgen.Emit(OpCodes.Ldarg_0); //Push Object array
                 ilgen.Emit(OpCodes.Ldc_I4, i); //Push the index to access
                 ilgen.Emit(OpCodes.Ldelem_Ref); //Push the element at the previously loaded index
-                CastOrBox(ilgen, ctorParams[i].ParameterType); //Cast or Box the object to the appropriate Ctor Parameter Type
+                CastOrUnbox(ilgen, ctorParams[i].ParameterType); //Cast or Box the object to the appropriate Ctor Parameter Type
                 //ilgen.Emit(OpCodes.Stloc, i); //Pop the casted object off the stack and set local variable to it
             }
             //for (int i = 0; i < ctorParams.Length; i++)
@@ -225,9 +234,9 @@ namespace NAXB.Build
             // Generate the intermediate language.       
             ILGenerator ilgen = dynamicMethod.GetILGenerator();
             ilgen.Emit(OpCodes.Ldarg_0); //Assumes we are using an instance Field, not static
-            CastOrBox(ilgen, field.DeclaringType);
+            CastOrUnbox(ilgen, field.DeclaringType);
             ilgen.Emit(OpCodes.Ldarg_1);
-            CastOrBox(ilgen, field.FieldType);
+            CastOrUnbox(ilgen, field.FieldType);
             ilgen.Emit(OpCodes.Stfld, field);
             ilgen.Emit(OpCodes.Ret);
             return (Action<object, object>)dynamicMethod.CreateDelegate(typeof(Action<object, object>));
@@ -238,12 +247,12 @@ namespace NAXB.Build
             //Define dynamic method that takes 2 objects as arguments
             DynamicMethod dynamicMethod =
                 new DynamicMethod("Get_" + field.Name,
-                field.FieldType, new Type[] { typeof(object) });
+                typeof(object), new Type[] { typeof(object) });
 
             // Generate the intermediate language.       
             ILGenerator ilgen = dynamicMethod.GetILGenerator();
             ilgen.Emit(OpCodes.Ldarg_0); //Assumes we are using an instance Field, not static
-            CastOrBox(ilgen, field.DeclaringType);
+            CastOrUnbox(ilgen, field.DeclaringType);
             ilgen.Emit(OpCodes.Ldfld, field);
             ilgen.Emit(OpCodes.Ret);
             return (Func<object, object>)dynamicMethod.CreateDelegate(typeof(Func<object, object>));
@@ -263,10 +272,10 @@ namespace NAXB.Build
             return result;
         }
 
-        protected void CastOrBox(ILGenerator ilgen, Type type)
+        protected void CastOrUnbox(ILGenerator ilgen, Type type)
         {
             if (type.IsValueType)
-                ilgen.Emit(OpCodes.Box, type);
+                ilgen.Emit(OpCodes.Unbox_Any, type);
             else
                 ilgen.Emit(OpCodes.Castclass, type);
         }

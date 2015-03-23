@@ -43,6 +43,7 @@ namespace NAXB.BindingModel
             //Get the first Property Binding attribute
             Binding = property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Cast<INAXBPropertyBinding>().FirstOrDefault();
             CustomFormatBinding = property.GetCustomAttributes(typeof(ICustomFormatBinding), true).Cast<ICustomFormatBinding>().FirstOrDefault();
+            if (CustomFormatBinding != null) CustomFormatBinding.Initialize(reflector);
         }
 
         public INAXBPropertyBinding Binding
@@ -104,7 +105,7 @@ namespace NAXB.BindingModel
         protected void BuildConvertXmlToProperty()
         {
             ICustomBindingResolver resolver = null;
-            if (CustomFormatBinding != null &&  (resolver = CustomFormatBinding.GetCustomResolver(reflector)) != null)
+            if (CustomFormatBinding != null &&  (resolver = CustomFormatBinding.GetCustomResolver()) != null)
             {
                 convertXmlToProperty = (IEnumerable<IXmlData> data, IXmlModelBinder binder) =>
                     {
