@@ -8,29 +8,26 @@ namespace NAXB.Attributes
 {
     public class XmlAttributeAttribute : Attribute, INAXBPropertyBinding
     {
-
         public XmlAttributeAttribute(string attributeName)
         {
             AttributeName = attributeName;
+            XPath = "@" + attributeName;
         }
         public string XPath
         {
-            get
-            {
-                return "@" + AttributeName;
-            }
+           get; private set;
         }
 
-        public string AttributeName { get; set; }
+        public string AttributeName { get; protected set; }
 
-        public bool IsAttribute
-        {
-            get { return true; }
-        }
+        //public bool IsAttribute
+        //{
+        //    get { return true; }
+        //}
 
-        public bool IsElement
-        {
-            get { return false; }
-        }
+        //public bool IsElement
+        //{
+        //    get { return false; }
+        //}
     }
 }

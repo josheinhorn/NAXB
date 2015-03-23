@@ -18,15 +18,15 @@ namespace NAXB.Attributes
         }
 
 
-        public bool IsAttribute
-        {
-            get;
-            set;
-        }
+        //public bool IsAttribute
+        //{
+        //    get;
+        //    set;
+        //}
 
-        public bool IsElement
-        {
-            get { return !IsAttribute; }
-        }
+        //public bool IsElement
+        //{
+        //    get { return !IsAttribute; }
+        //}
     }
 }

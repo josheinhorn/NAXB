@@ -21,17 +21,28 @@ namespace NAXB.BindingModel
         protected readonly Func<object, object> get;
         protected bool isInitialized = false;
         protected IReflector reflector;
-        public XmlProperty(PropertyInfo property, IReflector reflector)
+
+        public XmlProperty(MemberInfo property, IReflector reflector)
         {
             if (property == null) throw new ArgumentNullException("property");
             if (reflector == null) throw new ArgumentNullException("reflector");
             this.reflector = reflector;
             PropertyInfo = new XPropertyInfo(property, reflector);
-            set = reflector.BuildSetter(property);
-            get = reflector.BuildGetter(property);
+            if (property is PropertyInfo)
+            {
+                var propInfo = property as PropertyInfo;
+                set = reflector.BuildSetter(propInfo);
+                get = reflector.BuildGetter(propInfo);
+            }
+            else if (property is FieldInfo)
+            {
+                var fieldInfo = property as FieldInfo;
+                set = reflector.BuildSetField(fieldInfo);
+                get = reflector.BuildGetField(fieldInfo);
+            }
             //Get the first Property Binding attribute
-            Binding = PropertyInfo.PropertyType.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Cast<INAXBPropertyBinding>().FirstOrDefault();
-            CustomFormatBinding = PropertyInfo.PropertyType.GetCustomAttributes(typeof(ICustomFormatBinding), true).Cast<ICustomFormatBinding>().FirstOrDefault();
+            Binding = property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Cast<INAXBPropertyBinding>().FirstOrDefault();
+            CustomFormatBinding = property.GetCustomAttributes(typeof(ICustomFormatBinding), true).Cast<ICustomFormatBinding>().FirstOrDefault();
         }
 
         public INAXBPropertyBinding Binding

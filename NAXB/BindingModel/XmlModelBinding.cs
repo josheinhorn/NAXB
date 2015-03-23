@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NAXB.Interfaces;
 using NAXB.Xml;
+using System.Reflection;
 
 namespace NAXB.BindingModel
 {
@@ -17,8 +18,9 @@ namespace NAXB.BindingModel
             if (reflector == null) throw new ArgumentNullException("reflector");
             ModelType = type;
             Name = ModelType.Name;
-            Properties = ModelType.GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public)
-                .Where(property => property.GetCustomAttributes(typeof(INAXBPropertyBinding), false).Any())
+            //Get all Field and Properties with a NAXB Property Attribute and creating Property objects
+            Properties = ModelType.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+                .Where(property => (property is PropertyInfo || property is FieldInfo) && property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Any())
                 .Select(property => new XmlProperty(property, reflector) as IXmlProperty).ToList();
             Description = ModelType.GetCustomAttributes(typeof(IXmlModelDescription), true).Cast<IXmlModelDescription>().FirstOrDefault();
             defaultConstructor = reflector.BuildDefaultConstructor(type);

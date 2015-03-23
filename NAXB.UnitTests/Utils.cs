@@ -13,8 +13,10 @@ namespace NAXB.UnitTests
             bool equal = true;
             //try
             //{
-                var arr1 = x.ToArray();
-                var arr2 = y.ToArray();
+            var arr1 = x.ToArray();
+            var arr2 = y.ToArray();
+            if (arr1.Length == arr2.Length)
+            {
                 for (int i = 0; i < arr1.Length; i++)
                 {
                     if (!arr2[i].Equals(arr1[i]))
@@ -23,6 +25,8 @@ namespace NAXB.UnitTests
                         break;
                     }
                 }
+            }
+            else equal = false;
             //}
             //catch (Exception)
             //{

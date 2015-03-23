@@ -103,18 +103,29 @@ namespace NAXB.UnitTests
         {
             IXmlData parent = XmlData;
             List<string> results = new List<string>();
-            RecurseXPaths(results, parent, new Stack<XPathTest>(XPathProvider.NestedMultipleElements.Reverse<XPathTest>()));
+            RecurseXPaths(results, parent, new Queue<XPathTest>(XPathProvider.NestedMultipleElements));
             Assert.IsTrue(TestUtils.EnumerablesAreEqual(
                 (IEnumerable<string>)XPathProvider.NestedMultipleElements.LastOrDefault().ExpectedValue
                 , results));
         }
 
-        protected void RecurseXPaths(List<string> results, IXmlData parent, Stack<XPathTest> xpts)
+        [TestMethod]
+        public void Test_XPathProcessor_ProcessXPath_NestedMultipleAttributes()
+        {
+            IXmlData parent = XmlData;
+            List<string> results = new List<string>();
+            RecurseXPaths(results, parent, new Queue<XPathTest>(XPathProvider.NestedMultipleAttributes));
+            Assert.IsTrue(TestUtils.EnumerablesAreEqual(
+                (IEnumerable<string>)XPathProvider.NestedMultipleAttributes.LastOrDefault().ExpectedValue
+                , results));
+        }
+
+        protected void RecurseXPaths(List<string> results, IXmlData parent, Queue<XPathTest> xpts)
         {
             if (xpts.Count == 1)
             {
                 //the last one
-                var xpt = xpts.Pop();
+                var xpt = xpts.Dequeue();
                 var compiled = Processor.CompileXPath(xpt.XPath, Namespaces);
                 var processed = Processor.ProcessXPath(parent, compiled);
                 results.AddRange(processed.Select(x => x.Value));
@@ -122,12 +133,12 @@ namespace NAXB.UnitTests
             }
             else if (xpts.Count != 0)
             {
-                var xpt = xpts.Pop();
+                var xpt = xpts.Dequeue();
                 var compiled = Processor.CompileXPath(xpt.XPath, Namespaces);
                 var processed = Processor.ProcessXPath(parent, compiled);
                 foreach (var xml in processed)
                 {
-                    RecurseXPaths(results, xml, new Stack<XPathTest>(xpts));
+                    RecurseXPaths(results, xml, new Queue<XPathTest>(xpts));
                 }
             }
         }

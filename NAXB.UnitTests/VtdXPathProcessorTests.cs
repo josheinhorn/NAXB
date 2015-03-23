@@ -74,6 +74,21 @@ namespace NAXB.UnitTests
                                 "Moneysville, USA 12345"
                             }
                         }
+                    },
+                    NestedMultipleAttributes = new List<XPathTest>
+                    {
+                        new XPathTest { XPath = "contacts"},
+                        new XPathTest { XPath = "person"},
+                        new XPathTest { XPath = "contacts"},
+                        new XPathTest { XPath = "person[@relationship]" },
+                        new XPathTest { XPath = "@firstName"
+                            , ExpectedValue = new List<string>
+                            {
+                                "Carol",
+                                "Josh",
+                                "Joe"
+                            }
+                        }
                     }
                 };
         }

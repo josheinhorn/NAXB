@@ -2,6 +2,7 @@
 using NAXB.Build;
 using NAXB.Interfaces;
 using NAXB.UnitTests.Mockups;
+using NAXB.UnitTests.Mockups.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

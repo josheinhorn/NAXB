@@ -20,16 +20,16 @@ namespace NAXB.Attributes
             }
         }
 
-        public string ElementName { get; set; }
+        public string ElementName { get; protected set; }
 
-        public bool IsAttribute
-        {
-            get { return false; }
-        }
+        //public bool IsAttribute
+        //{
+        //    get { return false; }
+        //}
 
-        public bool IsElement
-        {
-            get { return true; }
-        }
+        //public bool IsElement
+        //{
+        //    get { return true; }
+        //}
     }
 }

@@ -249,6 +249,20 @@ namespace NAXB.Build
             return (Func<object, object>)dynamicMethod.CreateDelegate(typeof(Func<object, object>));
         }
 
+        public Type GetFieldOrPropertyType(MemberInfo member)
+        {
+            Type result = null;
+            if (member is PropertyInfo)
+            {
+                result = (member as PropertyInfo).PropertyType;
+            }
+            else if (member is FieldInfo)
+            {
+                result = (member as FieldInfo).FieldType;
+            }
+            return result;
+        }
+
         protected void CastOrBox(ILGenerator ilgen, Type type)
         {
             if (type.IsValueType)

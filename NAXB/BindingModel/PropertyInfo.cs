@@ -13,10 +13,10 @@ namespace NAXB.BindingModel
         protected Action<System.Collections.IEnumerable, object> populateCollection;
         protected Func<System.Collections.IEnumerable, Array> toArray;
         protected readonly Func<object> defaultConstructor;
-        public XPropertyInfo(PropertyInfo property, IReflector reflector)
+        public XPropertyInfo(MemberInfo property, IReflector reflector)
         {
             Name = property.Name;
-            PropertyType = property.PropertyType;
+            PropertyType = reflector.GetFieldOrPropertyType(property); //Null if this is a Method
             IsEnumerable = false;
             IsArray = false;
             IsGenericCollection = false;
@@ -29,16 +29,23 @@ namespace NAXB.BindingModel
             else if (IsGenericCollection = reflector.IsGenericCollection(PropertyType, out temp))
             {
                 ElementType = temp;
-                populateCollection = reflector.BuildPopulateCollection(ElementType);
+                populateCollection = reflector.BuildPopulateCollection(PropertyType);
             }
             else
             {
                 IsEnumerable = reflector.IsEnumerable(PropertyType);
-                ElementType = PropertyType; //The individual Element is the same as the Property (even if it is IEnumerable! Highly complex List implementations will break)
+                ElementType = PropertyType; //The individual Element is the same as the Property (even if it is IEnumerable?? Highly complex List implementations will break)
             }
             IsEnum = ElementType.IsEnum;
             DeclaringType = property.DeclaringType;
-            defaultConstructor = reflector.BuildDefaultConstructor(PropertyType);
+            try
+            {
+                defaultConstructor = reflector.BuildDefaultConstructor(PropertyType);
+            }
+            catch (Exception)
+            {
+                //No parameterless ctor!
+            }
         }
         public string Name
         {
@@ -102,7 +109,7 @@ namespace NAXB.BindingModel
 
         public virtual object CreateInstance()
         {
-            return defaultConstructor();
+            return defaultConstructor == null ? null : defaultConstructor();
         }
     }
 }

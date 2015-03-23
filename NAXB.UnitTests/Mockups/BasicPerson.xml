@@ -31,7 +31,10 @@
       <emails>
         <email name="joeys" domain="josheinhorn.com"/>
       </emails>
-      <mailingAddress></mailingAddress>
+      <contacts>
+        <person relationship="wife" firstName="Carol" lastName="Schmo"/>
+      </contacts>
+      <address type="mailing"></address>
     </person>
     <person relationship="brother" role="bodyguard">
       <firstName>Jimmy</firstName>
@@ -39,7 +42,7 @@
       <emails>
         <email name="jimmy" domain="josheinhorn.com"/>
       </emails>
-      <mailingAddress></mailingAddress>
+      <address type="mailing"></address>
       <contacts>
         <person relationship="brother" role="boss" firstName ="Josh" lastName="Einhorn"/>
         <person relationship="coworker" firstName="Joe" lastName="Schmo"/>

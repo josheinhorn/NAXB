@@ -2,25 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NAXB.Attributes;
 
-namespace NAXB.UnitTests.Mockups
+namespace NAXB.UnitTests.Mockups.Models
 {
-    public class Person
-    {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string MiddleName;
-
-        public List<Email> Emails { get; set; }
-
-    }
-
+    [XmlModel]
+    [NamespaceDeclaration(Uri = "http://josheinhorn.com", Prefix = "jse")]
     public class Email
     {
+        [XPath("@domain")]
         public string Domain { get; set; }
-        public string Name { get; set; }
+        [XmlAttribute("name")]
+        internal string Name { get; set; }
 
         public string FullAddress
         {

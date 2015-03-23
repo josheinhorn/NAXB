@@ -54,10 +54,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BindingResolverTests.cs" />
+    <Compile Include="BindingResolverWithVtdTests.cs" />
     <Compile Include="Mockups\MockConstants.cs" />
     <Compile Include="Mockups\MockXmlProvider.cs" />
     <Compile Include="Mockups\MockXPathProvider.cs" />
-    <Compile Include="Mockups\Person.cs" />
+    <Compile Include="Mockups\Models\Email.cs" />
+    <Compile Include="Mockups\Models\Person.cs" />
     <Compile Include="Mockups\XmlStrings.cs" />
     <Compile Include="Mockups\XPathTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

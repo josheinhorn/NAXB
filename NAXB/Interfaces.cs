@@ -54,6 +54,7 @@ namespace NAXB.Interfaces
     public interface IXmlBindingResolver
     {
         //Should hold a record of all the bindings for lookup
+        void LoadBindings(params Assembly[] assemblies);
         IXmlModelBinding ResolveBinding<T>();
         IXmlModelBinding ResolveBinding(Type type); //If you don't have the generic type you can use this
     }
@@ -242,6 +243,8 @@ namespace NAXB.Interfaces
         Action<object, object> BuildSetField(FieldInfo field);
 
         Func<object, object> BuildGetField(FieldInfo field);
+
+        Type GetFieldOrPropertyType(MemberInfo member);
     }
     //public interface IMethodSignature
     //{
@@ -266,8 +269,9 @@ namespace NAXB.Interfaces
     {
         //Should compiled XPath be stored here? JSE: No, better off in the Property itself, not a binding which contains user input
         string XPath { get; }
-        bool IsAttribute { get; }
-        bool IsElement { get; }
+        //Are the below 2 necessary?
+        //bool IsAttribute { get; }
+        //bool IsElement { get; }
     }
 
     public interface IXmlModelDescription
