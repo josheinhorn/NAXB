@@ -23,17 +23,8 @@ namespace NAXB.BindingModel
                 .Where(property => (property is PropertyInfo || property is FieldInfo) && property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Any())
                 .Select(property => new XmlProperty(property, reflector) as IXmlProperty).ToList();
             Description = ModelType.GetCustomAttributes(typeof(IXmlModelDescription), true).Cast<IXmlModelDescription>().FirstOrDefault();
-
-            try
-            {
-                defaultConstructor = reflector.BuildDefaultConstructor(type);
-            }
-            catch (Exception e)
-            {
-                throw new TargetException(
-                    String.Format("Failed to create a parameterless constructor for Type '{0}'." +
-                    "See inner exception for more details", ModelType.FullName), e);
-            }
+            //Try to create the ctor -- will throw exception if doesn't work
+            defaultConstructor = reflector.BuildDefaultConstructor(type);
             //Get namespaces from Type's Custom Attributes
             Namespaces = ModelType.GetCustomAttributes(typeof(INamespaceBinding), true)
                 .Cast<INamespaceBinding>()
@@ -42,7 +33,8 @@ namespace NAXB.BindingModel
         }
         public IList<IXmlProperty> Properties
         {
-            get; protected set;
+            get;
+            protected set;
         }
 
         public virtual object CreateInstance()
@@ -52,17 +44,20 @@ namespace NAXB.BindingModel
 
         public Type ModelType
         {
-            get; protected set;
+            get;
+            protected set;
         }
 
         public string Name
         {
-            get; protected set;
+            get;
+            protected set;
         }
 
         public IXmlModelDescription Description //TODO: Actually USE the root element name when evaluating XPaths
         {
-            get; protected set;
+            get;
+            protected set;
         }
 
         public INamespace[] Namespaces

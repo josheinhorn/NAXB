@@ -61,6 +61,7 @@ namespace NAXB.Interfaces
     public interface IPropertyInfo //TODO: Merge this entire interface into IXmlProperty
     {
         string Name { get; }
+        string FullName { get; }
         object CreateInstance(); //for collections
         bool IsArray { get; }
         bool IsGenericCollection { get; }
@@ -298,7 +299,7 @@ namespace NAXB.Interfaces
     { 
         IEnumerable<IXmlData> ProcessXPath(IXmlData data, IXPath xpath);
         //void LoadProperties(IEnumerable<IXmlProperty> properties, IEnumerable<INamespace> namespaces);
-        IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType); 
+        IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isMultiValue); 
     }
 
     public interface IXPath //really can just be a string right?
@@ -308,6 +309,7 @@ namespace NAXB.Interfaces
         INamespace[] Namespaces { get; }
         XPathType Type { get; }
         bool IsFunction { get; set; }
+        bool IsMultiValue { get; }
     }
     public enum XPathType
     {

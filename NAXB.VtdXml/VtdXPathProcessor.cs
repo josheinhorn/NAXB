@@ -30,11 +30,12 @@ namespace NAXB.VtdXml
                     ap.selectXPath(xpath.XPathAsString);
                 }
                 ap.bind(nav);
-
                 //Question -- is the XPath evaluated relative to the current Cursor location or relative to the entire document?
                 //Answer -- it is relative to the current Cursor position:
                 //"If the navigation you want to perform is more complicated, you can in fact nest XPath queries" - http://www.codeproject.com/Articles/28237/Programming-XPath-with-VTD-XML
                 
+                //Note: attempted to just use IsMultiValue and only use evalXPathToString when not multivalue instead of try/catch, 
+                //but this breaks for single nested types where a BookMark is needed
                 if (!xpath.IsFunction)
                 {
                     try
@@ -42,7 +43,9 @@ namespace NAXB.VtdXml
                         while (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
                         {
                             BookMark bookMark = new BookMark(nav);
-                            bookMark.recordCursorPosition(); //Which cursor position is it getting here? Theoretically should be the position navigated to by the AutoPilot
+                            //Record the current position navigated to by the AutoPilot
+                            bookMark.recordCursorPosition();
+                            //Add new XML Data with the recorded position
                             result.Add(new VtdXmlData(bookMark));
                         }
                     }
@@ -50,12 +53,13 @@ namespace NAXB.VtdXml
                     {
                         //We assume it failed because it's actually a function expression
                         //There doesn't appear to be any way to tell if it is a function without trying to eval
-                        xpath.IsFunction = true;
+                        xpath.IsFunction = true; //Set to true so all future attempts will go straight to function evaluation
                     }
                 }
                 if (xpath.IsFunction)
                 {
-                    string evaluatedValue = ap.evalXPathToString(); //Always evaluate to string, parse to real property value later
+                    //XPath is actually a function, evaluate to single string
+                    string evaluatedValue = ap.evalXPathToString(); //Always evaluate to string, parse to real property type later
 
                     //Switch isn't necessary because we parse the value later, a string will suffice for now!
                     //switch (xpath.Type) 
@@ -86,7 +90,7 @@ namespace NAXB.VtdXml
                 ap.declareXPathNameSpace(ns.Prefix, ns.Uri);
             }
         }
-        public IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType)
+        public IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isMultiValue)
         {
             var ap = new AutoPilot();
             AddNamespaces(ap, namespaces);
@@ -125,7 +129,8 @@ namespace NAXB.VtdXml
                 UnderlyingObject = ap,
                 XPathAsString = xpath,
                 Namespaces = namespaces,
-                Type = type
+                Type = type,
+                IsMultiValue = isMultiValue
             };
         }
     }

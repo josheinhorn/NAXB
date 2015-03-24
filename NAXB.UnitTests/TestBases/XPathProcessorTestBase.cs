@@ -19,7 +19,7 @@ namespace NAXB.UnitTests
         [TestMethod]
         public void Test_CompileXPath_ElementXPath()
         {
-            var compiled = Processor.CompileXPath(XPathProvider.SingleElement.XPath, Namespaces, PropertyType.Text);
+            var compiled = Processor.CompileXPath(XPathProvider.SingleElement.XPath, Namespaces, PropertyType.Text, false);
 
             Assert.AreEqual(XPathProvider.SingleElement.XPath, compiled.XPathAsString);
         }
@@ -27,7 +27,7 @@ namespace NAXB.UnitTests
         [TestMethod]
         public void Test_ProcessXPath_SingleElement()
         {
-            var compiled = Processor.CompileXPath(XPathProvider.SingleElement.XPath, Namespaces, PropertyType.Text);
+            var compiled = Processor.CompileXPath(XPathProvider.SingleElement.XPath, Namespaces, PropertyType.Text, false);
 
             var result = Processor.ProcessXPath(XmlData, compiled);
 
@@ -37,7 +37,7 @@ namespace NAXB.UnitTests
         [TestMethod]
         public void Test_ProcessXPath_SingleAttribute()
         {
-            var compiled = Processor.CompileXPath(XPathProvider.SingleAttribute.XPath, Namespaces, PropertyType.Text);
+            var compiled = Processor.CompileXPath(XPathProvider.SingleAttribute.XPath, Namespaces, PropertyType.Text, false);
 
             var result = Processor.ProcessXPath(XmlData, compiled);
 
@@ -47,7 +47,7 @@ namespace NAXB.UnitTests
         [TestMethod]
         public void Test_ProcessXPath_MultipleElements()
         {
-            var compiled = Processor.CompileXPath(XPathProvider.MultipleElements.XPath, Namespaces, PropertyType.Text);
+            var compiled = Processor.CompileXPath(XPathProvider.MultipleElements.XPath, Namespaces, PropertyType.Text, true);
 
             var result = Processor.ProcessXPath(XmlData, compiled);
             Assert.IsTrue(TestUtils.EnumerablesAreEqual((IEnumerable<string>)XPathProvider.MultipleElements.ExpectedValue
@@ -57,7 +57,7 @@ namespace NAXB.UnitTests
         [TestMethod]
         public void Test_ProcessXPath_MultipleAttributes()
         {
-            var compiled = Processor.CompileXPath(XPathProvider.MultipleAttributes.XPath, Namespaces, PropertyType.Text);
+            var compiled = Processor.CompileXPath(XPathProvider.MultipleAttributes.XPath, Namespaces, PropertyType.Text, true);
 
             var result = Processor.ProcessXPath(XmlData, compiled);
             Assert.IsTrue(TestUtils.EnumerablesAreEqual((IEnumerable<string>)XPathProvider.MultipleAttributes.ExpectedValue
@@ -71,7 +71,7 @@ namespace NAXB.UnitTests
             IEnumerable<IXmlData> result = null;
             foreach (var xpt in XPathProvider.NestedSingleElement)
             {
-                var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text);
+                var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text, false);
                 
                 result = Processor.ProcessXPath(parent, compiled);
 
@@ -88,7 +88,7 @@ namespace NAXB.UnitTests
             IEnumerable<IXmlData> result = null;
             foreach (var xpt in XPathProvider.NestedSingleAttribute)
             {
-                var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text);
+                var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text, false);
 
                 result = Processor.ProcessXPath(parent, compiled);
 
@@ -126,7 +126,7 @@ namespace NAXB.UnitTests
             {
                 //the last one
                 var xpt = xpts.Dequeue();
-                var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text);
+                var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text, true);
                 var processed = Processor.ProcessXPath(parent, compiled);
                 results.AddRange(processed.Select(x => x.Value));
                 //Stop recursing
@@ -134,7 +134,7 @@ namespace NAXB.UnitTests
             else if (xpts.Count != 0)
             {
                 var xpt = xpts.Dequeue();
-                var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text);
+                var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text, true);
                 var processed = Processor.ProcessXPath(parent, compiled);
                 foreach (var xml in processed)
                 {

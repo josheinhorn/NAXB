@@ -16,19 +16,24 @@ namespace NAXB.BindingModel
         public XPropertyInfo(MemberInfo property, IReflector reflector)
         {
             Name = property.Name;
+            DeclaringType = property.DeclaringType;
+            FullName = DeclaringType.FullName + "." + Name;
             PropertyType = reflector.GetFieldOrPropertyType(property); //Null if this is a Method
             IsEnumerable = false;
             IsArray = false;
             IsGenericCollection = false;
+            
             Type temp;
             if (IsArray = reflector.IsArray(PropertyType, out temp))
             {
+                IsEnumerable = true;
                 ElementType = temp;
                 toArray = reflector.BuildToArray(ElementType);
                 
             }
             else if (IsGenericCollection = reflector.IsGenericCollection(PropertyType, out temp))
             {
+                IsEnumerable = true;
                 ElementType = temp;
                 populateCollection = reflector.BuildPopulateCollection(PropertyType);
             }
@@ -43,16 +48,17 @@ namespace NAXB.BindingModel
                 ElementType = PropertyType; //The individual Element is the same as the Property (even if it is IEnumerable?? Highly complex List implementations will break)
             }
             //Note: Don't need to check that the Element of Array or Collection is a nullable type -- this is not allowed by the compiler
-
             IsEnum = ElementType.IsEnum;
-            DeclaringType = property.DeclaringType;
+
             try
             {
+                //Just need default ctor for generic collections?
                 defaultConstructor = reflector.BuildDefaultConstructor(PropertyType);
             }
-            catch (Exception)
+            catch
             {
-                //No parameterless ctor!
+                //No parameterless ctor -- could be non-complex type (e.g. String) 
+                //or could be custom resolved (e.g. MvcHtmlString)
             }
         }
         public string Name
@@ -123,6 +129,13 @@ namespace NAXB.BindingModel
         public virtual object CreateInstance()
         {
             return defaultConstructor == null ? null : defaultConstructor();
+        }
+
+
+        public string FullName
+        {
+            get;
+            protected set;
         }
     }
 }

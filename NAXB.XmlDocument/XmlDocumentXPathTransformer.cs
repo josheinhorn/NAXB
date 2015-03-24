@@ -36,7 +36,7 @@ namespace NAXB.XmlDOM
             return result;
         }
 
-        public IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType)
+        public IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isMultiValue)
         {
             return new DefaultXPath
             {

@@ -37,5 +37,12 @@ namespace NAXB.Xml
             get;
             set;
         }
+
+
+        public bool IsMultiValue
+        {
+            get;
+            set;
+        }
     }
 }

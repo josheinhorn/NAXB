@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NAXB.Interfaces;
 using System.Globalization;
+using System.Reflection;
 
 namespace NAXB.Attributes
 {

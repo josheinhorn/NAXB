@@ -67,7 +67,6 @@ namespace NAXB.BindingModel
             set(obj, value);
         }
 
-
         public virtual void Initialize(IXmlBindingResolver resolver, IXPathProcessor xPathProcessor, INamespace[] namespaces) //Must be called before ComplexBinding property can be used
         {
             //Get complex binding, if any
@@ -77,10 +76,9 @@ namespace NAXB.BindingModel
             BuildConvertEnumerableToProperty();
             BuildConvertXmlListToEnumerable();
             BuildConvertXmlToProperty();
-
             try
             {
-                compiledXPath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces, Type); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
+                compiledXPath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces, Type, PropertyInfo.IsEnumerable); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
             }
             catch (Exception)
             {
@@ -101,7 +99,15 @@ namespace NAXB.BindingModel
             object result = null;
             if (xPathProcessor != null && data != null && binder != null)
             {
-                var xml = xPathProcessor.ProcessXPath(data, compiledXPath);
+                IEnumerable<IXmlData> xml;
+                try
+                {
+                    xml = xPathProcessor.ProcessXPath(data, compiledXPath);
+                }
+                catch (Exception e)
+                {
+                    throw new XPathEvaluationException(this, compiledXPath, e);
+                }
                 result = convertXmlToProperty(xml, binder);
             }
             return result;
@@ -118,7 +124,6 @@ namespace NAXB.BindingModel
             get;
             protected set;
         }
-
 
         protected void BuildConvertXmlToProperty()
         {
@@ -261,11 +266,8 @@ namespace NAXB.BindingModel
         protected void BuildConvertEnumerableToProperty()
         {
             var elementType = PropertyInfo.ElementType;
-            if (PropertyInfo.IsEnumerable)
-            {
-                convertEnumerableToProperty = (IEnumerable values) => values; //Almost certainly results in an invalid cast exception
-            }
-            else if (PropertyInfo.IsArray)
+          
+            if (PropertyInfo.IsArray)
             {
                 convertEnumerableToProperty = (IEnumerable values) => PropertyInfo.ToArray(values);
             }
@@ -274,18 +276,25 @@ namespace NAXB.BindingModel
                 convertEnumerableToProperty = (IEnumerable values) =>
                     {
                         object result = PropertyInfo.CreateInstance(); //create a new collection object of the property type
+                        if (result == null)
+                        {
+                            throw new InvalidOperationException(
+                                String.Format("Cannot create new instance of Generic Collection '{0}' for Property '{1}'. Please ensure a parameterless constructor exists."
+                                , PropertyInfo.PropertyType.FullName, PropertyInfo.FullName));
+                        }
                         PropertyInfo.PopulateCollection(values, result);
                         return result;
                     };
+            }
+            else if (PropertyInfo.IsEnumerable)
+            {
+                convertEnumerableToProperty = (IEnumerable values) => values; //Almost certainly results in an invalid cast exception
             }
             else //it's a single value, just return the first one (should really only be one thing but you never know)
             {
                 convertEnumerableToProperty = (IEnumerable values) => values.Cast<object>().FirstOrDefault();
             }
         }
-
-
-
 
     }
 }

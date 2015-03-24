@@ -167,23 +167,35 @@ namespace NAXB.Build
 
         public virtual Func<object> BuildDefaultConstructor(Type type)
         {
+            Func<object> result = null;
             //Create dynamic method with correct method signature:
             //type Create_typeName(object[] args) { }
             DynamicMethod dynamicMethod =
                 new DynamicMethod("Create_" + type.Name,
                 type, new Type[0]);
-            // Get the default constructor of the plugin type
-            ConstructorInfo ctor = type.GetConstructor(new Type[0]); //Get parameterless constructor -- there better be one!
+            // Get the default constructor, public or non public
+            ConstructorInfo ctor = type.GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null, new Type[0], null); //Get parameterless constructor -- there better be one!
 
             // Generate the intermediate language.       
             ILGenerator ilgen = dynamicMethod.GetILGenerator();
-            //Do nothing with the object array right now -- in the future could process them and choose an appropriate constructor
-            ilgen.Emit(OpCodes.Newobj, ctor);
-            ilgen.Emit(OpCodes.Ret);
-
-            //Create delegate, cast and return
-            return (Func<object>)dynamicMethod
-                .CreateDelegate(typeof(Func<object>));
+            try
+            {
+                //Do nothing with the object array right now -- in the future could process them and choose an appropriate constructor
+                ilgen.Emit(OpCodes.Newobj, ctor);
+                ilgen.Emit(OpCodes.Ret);
+                //Create delegate, cast and return
+                result = (Func<object>)dynamicMethod
+                    .CreateDelegate(typeof(Func<object>));
+            }
+            catch (Exception e)
+            {
+                throw new TargetException(
+                String.Format("Failed to create a parameterless constructor for Type '{0}'." +
+                "See inner exception for more details", type.FullName), e);
+            }
+            return result;
         }
 
         public virtual Func<object[], object> BuildConstructor(ConstructorInfo ctorInfo)
