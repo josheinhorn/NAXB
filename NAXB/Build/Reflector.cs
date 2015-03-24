@@ -53,9 +53,9 @@ namespace NAXB.Build
             MemberInfo result = member.Member as PropertyInfo;
             if (result == null)
                 result = member.Member as FieldInfo;
-                //throw new ArgumentException(string.Format(
-                //    "Expression '{0}' refers to a field, not a property.",
-                //    propertyLambda.ToString()));
+            //throw new ArgumentException(string.Format(
+            //    "Expression '{0}' refers to a field, not a property.",
+            //    propertyLambda.ToString()));
 
             //Commented this out because it uses reflection
             //if (type != propInfo.ReflectedType &&
@@ -120,7 +120,7 @@ namespace NAXB.Build
         {
             return BuildPopulateCollection(typeof(TCollection));
         }
-   
+
         public virtual Action<IEnumerable, object> BuildPopulateCollection(Type collectionType)
         {
             string methodName = "Add";
@@ -130,14 +130,14 @@ namespace NAXB.Build
             {
                 var collectionParam = Expression.Parameter(typeof(object), "collection");
                 var itemParam = Expression.Parameter(typeof(object), "item");
-                
+
                 MethodInfo addMethod = collectionType.GetMethod(methodName, new Type[] { genericType }); //The Add method for ICollection<T>
-                
+
                 //Build the Call which casts the inputs to the appropriate type and calls the add method expression
                 var addCall = Expression.Call(
                                     Expression.Convert(collectionParam, collectionType), addMethod,
                                     Expression.Convert(itemParam, genericType));
-              
+
                 var addToCollection = Expression.Lambda<Action<object, object>>(addCall, collectionParam, itemParam).Compile();
                 //addToCollection equivalent to:
                 /*delegate (object collection, object item)
@@ -209,10 +209,10 @@ namespace NAXB.Build
             DynamicMethod dynamicMethod =
                 new DynamicMethod("Create_" + ctorInfo.Name,
                 ctorInfo.DeclaringType, new Type[] { typeof(object[]) });
-           
+
             // Generate the intermediate language.       
             ILGenerator ilgen = dynamicMethod.GetILGenerator();
-            
+
             //Cast each argument of the input object array to the appropriate type -- the order of objects should match the order set by the Ctor
             //It is also assumed the length of object array args is same length as Ctor args. 
             //Exceptions for the delegate that mean the above weren't satisfied: InvalidCastException, IndexOutOfRangeException
@@ -222,27 +222,32 @@ namespace NAXB.Build
                 ilgen.Emit(OpCodes.Ldc_I4, i); //Push the index to access
                 ilgen.Emit(OpCodes.Ldelem_Ref); //Push the element at the previously loaded index
                 CastOrUnbox(ilgen, ctorParams[i].ParameterType); //Cast or Box the object to the appropriate Ctor Parameter Type
-                //ilgen.Emit(OpCodes.Stloc, i); //Pop the casted object off the stack and set local variable to it
             }
-            //for (int i = 0; i < ctorParams.Length; i++)
-            //{
-            //    ilgen.Emit(OpCodes.Ldloc, i); //Push the casted local variables onto the stack to be passed to the Ctor
-            //}
-            ilgen.Emit(OpCodes.Newobj, ctorInfo); //Call the Ctor, all values on the stack are passed to the Ctor
-            ilgen.Emit(OpCodes.Ret); //Return the new object
-
-            //Create delegate, cast and return
-            return (Func<object[], object>)dynamicMethod
+            Func<object[], object> result = null;
+            try
+            {
+                ilgen.Emit(OpCodes.Newobj, ctorInfo); //Call the Ctor, all values on the stack are passed to the Ctor
+                ilgen.Emit(OpCodes.Ret); //Return the new object
+                result = (Func<object[], object>)dynamicMethod
                 .CreateDelegate(typeof(Func<object[], object>));
+            }
+            catch (Exception e)
+            {
+                throw new TargetException(
+                    String.Format("Failed to create the specified constructor for Type '{0}'." +
+                    "See inner exception for more details", ctorInfo.DeclaringType.FullName), e);
+            }
+            //Create delegate, cast and return
+            return result;
         }
-      
+
         public virtual Action<object, object> BuildSetField(FieldInfo field)
         {
             //Define dynamic method that takes 2 objects as arguments
             DynamicMethod dynamicMethod =
                 new DynamicMethod("Set_" + field.Name,
                 null, new Type[] { typeof(object), typeof(object) });
-            
+
             // Generate the intermediate language.       
             ILGenerator ilgen = dynamicMethod.GetILGenerator();
             ilgen.Emit(OpCodes.Ldarg_0); //Assumes we are using an instance Field, not static

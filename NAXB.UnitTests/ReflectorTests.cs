@@ -53,6 +53,18 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
+        public void Test_BuildConstructor_StringFromCharArray()
+        {
+            Type expectedType = typeof(String);
+            var ctorInfo = expectedType.GetConstructor(new Type[] { typeof(char[]) });
+
+            var ctor = reflector.BuildConstructor(ctorInfo);
+            var instance = ctor(new object[] { new char[] { 'a', 'b', 'c' } });
+
+            Assert.IsInstanceOfType(instance, expectedType);
+        }
+
+        [TestMethod]
         public void Test_BuildSetter_Person_FirstName()
         {
             string testValue = "Joe";
@@ -68,7 +80,7 @@ namespace NAXB.UnitTests
         [TestMethod]
         public void Test_BuildGetter_Person_FirstName()
         {
-            var expected =  "Josh";
+            var expected = "Josh";
             var person = new Person { FirstName = expected };
 
             var get = reflector.BuildGetter(person.GetType().GetProperty("FirstName"));
@@ -109,7 +121,7 @@ namespace NAXB.UnitTests
 
             var set = reflector.BuildSetField(person.GetType().GetField("DateOfBirth"));
             set(person, expected);
-            
+
             Assert.AreEqual(expected, person.DateOfBirth);
         }
 
@@ -132,7 +144,7 @@ namespace NAXB.UnitTests
             var buildCollection = reflector.BuildPopulateCollection(emailList.GetType());
             buildCollection(emails, emailList);
 
-            Assert.IsTrue(TestUtils.EnumerablesAreEqual(emails, emailList)); 
+            Assert.IsTrue(TestUtils.EnumerablesAreEqual(emails, emailList));
         }
 
         [TestMethod]

@@ -279,7 +279,8 @@ namespace NAXB.BindingModel
                         if (result == null)
                         {
                             throw new InvalidOperationException(
-                                String.Format("Cannot create new instance of Generic Collection '{0}' for Property '{1}'. Please ensure a parameterless constructor exists."
+                                String.Format("Failed to create new instance of Generic Collection '{0}' for Property '{1}'." +
+                                " Please ensure a parameterless constructor exists."
                                 , PropertyInfo.PropertyType.FullName, PropertyInfo.FullName));
                         }
                         PropertyInfo.PopulateCollection(values, result);
