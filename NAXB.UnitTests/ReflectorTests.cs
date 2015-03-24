@@ -42,7 +42,7 @@ namespace NAXB.UnitTests
 
 
         [TestMethod]
-        public void Test_Reflector_BuildDefaultConstructor_StringList()
+        public void Test_BuildDefaultConstructor_StringList()
         {
             Type expectedType = typeof(List<string>);
 
@@ -53,7 +53,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_BuildSetter_Person_FirstName()
+        public void Test_BuildSetter_Person_FirstName()
         {
             string testValue = "Joe";
             var person = new Person();
@@ -66,7 +66,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_BuildGetter_Person_FirstName()
+        public void Test_BuildGetter_Person_FirstName()
         {
             var expected =  "Josh";
             var person = new Person { FirstName = expected };
@@ -78,7 +78,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_BuildGetField_Person_MiddleName()
+        public void Test_BuildGetField_Person_MiddleName()
         {
             var expected = "Samuel";
             var person = new Person { MiddleName = expected };
@@ -90,7 +90,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_BuildSetField_Person_MiddleName()
+        public void Test_BuildSetField_Person_MiddleName()
         {
             var expected = "Samuel";
             var person = new Person();
@@ -102,7 +102,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_BuildSetField_Person_DateOfBirth()
+        public void Test_BuildSetField_Person_DateOfBirth()
         {
             var expected = DateTime.Now;
             var person = new Person();
@@ -114,7 +114,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_GetPropertyInfo_Person_FirstName()
+        public void Test_GetPropertyInfo_Person_FirstName()
         {
             var expected = typeof(Person).GetProperty("FirstName");
 
@@ -124,7 +124,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_BuildPopulateCollection_EmailList()
+        public void Test_BuildPopulateCollection_EmailList()
         {
             var emails = GetEmailEnumerable();
             var emailList = new List<Email>();
@@ -136,7 +136,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_BuildToArray_EmailArray()
+        public void Test_BuildToArray_EmailArray()
         {
             var emails = GetEmailEnumerable();
 
@@ -147,7 +147,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsGenericCollection_EmailList_True()
+        public void Test_IsGenericCollection_EmailList_True()
         {
             var emails = GetEmailEnumerable().ToList();
 
@@ -158,7 +158,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsGenericCollection_EmailList_OutParam()
+        public void Test_IsGenericCollection_EmailList_OutParam()
         {
             var emails = GetEmailEnumerable().ToList();
 
@@ -168,7 +168,7 @@ namespace NAXB.UnitTests
             Assert.AreEqual(typeof(Email), generic);
         }
         [TestMethod]
-        public void Test_Reflector_IsGenericCollection_EmailArr_False()
+        public void Test_IsGenericCollection_EmailArr_False()
         {
             var emails = GetEmailEnumerable().ToArray();
 
@@ -179,7 +179,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsArray_EmailArr_OutParam()
+        public void Test_IsArray_EmailArr_OutParam()
         {
             var emails = GetEmailEnumerable().ToArray();
 
@@ -190,7 +190,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsArray_EmailArr_True()
+        public void Test_IsArray_EmailArr_True()
         {
             var emails = GetEmailEnumerable().ToArray();
 
@@ -201,7 +201,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsArray_EmailList_False()
+        public void Test_IsArray_EmailList_False()
         {
             var emails = GetEmailEnumerable().ToList();
 
@@ -212,7 +212,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsEnumerable_String_False()
+        public void Test_IsEnumerable_String_False()
         {
             var test = "This is a test";
 
@@ -221,7 +221,7 @@ namespace NAXB.UnitTests
             Assert.IsFalse(result);
         }
         [TestMethod]
-        public void Test_Reflector_IsEnumerable_EmailEnumerable_True()
+        public void Test_IsEnumerable_EmailEnumerable_True()
         {
             var test = GetEmailEnumerable();
 
@@ -231,7 +231,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsNullableType_NullableDateTime_True()
+        public void Test_IsNullableType_NullableDateTime_True()
         {
             var test = typeof(DateTime?);
             Type temp;
@@ -241,7 +241,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsNullableType_NullableDateTime_Out_DateTime()
+        public void Test_IsNullableType_NullableDateTime_Out_DateTime()
         {
             var test = typeof(DateTime?);
             Type actual;
@@ -251,7 +251,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_Reflector_IsNullableType_Int_False()
+        public void Test_IsNullableType_Int_False()
         {
             var test = typeof(int);
             Type actual;

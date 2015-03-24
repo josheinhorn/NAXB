@@ -7,6 +7,7 @@ using NAXB.Interfaces;
 using NAXB.Build;
 using System.Reflection;
 using NAXB.UnitTests.Mockups.Models;
+using NAXB.Exceptions;
 
 namespace NAXB.UnitTests
 {
@@ -15,17 +16,9 @@ namespace NAXB.UnitTests
     {
         private IXmlBindingResolver resolver;
 
-        public BindingResolverTestBase(IXPathProcessor processor)
+        public BindingResolverTestBase(IXPathProcessor processor, Assembly[] bindingAssemblies)
         {
-            resolver = new XmlBindingResolver(new Reflector(), processor);
-        }
-
-        protected abstract Assembly[] BindingAssemblies { get; }
-        
-        [TestInitialize]
-        public void LoadBindings()
-        {
-            resolver.LoadBindings(BindingAssemblies);
+            resolver = new XmlBindingResolver(new Reflector(), processor, bindingAssemblies);
         }
 
         [TestMethod]
@@ -36,5 +29,6 @@ namespace NAXB.UnitTests
 
             Assert.AreEqual(expectedType.Name, binding.Name); //find a better assertion
         }
+
     }
 }

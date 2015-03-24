@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Mockups\Models\RoleEnum.cs" />
     <Compile Include="TestBases\BindingResolverTestBase.cs" />
     <Compile Include="BindingResolverWithVtdTests.cs" />
     <Compile Include="Mockups\MockConstants.cs" />

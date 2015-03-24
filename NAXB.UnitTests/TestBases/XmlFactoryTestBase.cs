@@ -20,7 +20,7 @@ namespace NAXB.UnitTests
         protected abstract MockXmlProvider XmlProvider { get; }
 
         [TestMethod]
-        public void Test_XmlFactory_CreateXml_FomString()
+        public void Test_CreateXml_FomString()
         {
             var factory = GetXmlFactory();
             var expected = XmlProvider.XmlAsString;
@@ -32,7 +32,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XmlFactory_CreateXml_FromStream()
+        public void Test_CreateXml_FromStream()
         {
             var factory = GetXmlFactory();
             IXmlData data;
@@ -44,7 +44,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XmlFactory_CreateXml_FomBytes()
+        public void Test_CreateXml_FomBytes()
         {
             var factory = GetXmlFactory();
             var expected = XmlProvider.XmlAsByteArray;
@@ -55,7 +55,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XmlFactory_CreateXml_FomFile()
+        public void Test_CreateXml_FomFile()
         {
             var factory = GetXmlFactory();
 
@@ -65,7 +65,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XmlFactory_CreateXml_Value()
+        public void Test_CreateXml_Value()
         {
             var factory = GetXmlFactory();
 

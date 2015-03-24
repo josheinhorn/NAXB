@@ -13,12 +13,8 @@ namespace NAXB.UnitTests
     public class BindingResolverWithVtdTests : BindingResolverTestBase
     {
         public BindingResolverWithVtdTests()
-            : base(new VtdXPathProcessor())
+            : base(new VtdXPathProcessor(), new Assembly[] {typeof(Person).Assembly})
         { }
 
-        protected override Assembly[] BindingAssemblies
-        {
-            get { return new Assembly[] { typeof(Person).Assembly }; }
-        }
     }
 }

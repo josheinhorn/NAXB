@@ -6,6 +6,7 @@ using System.Text;
 using NAXB.Build;
 using NAXB.Interfaces;
 using NAXB.UnitTests.Mockups.Models;
+using NAXB.Exceptions;
 
 namespace NAXB.UnitTests
 {
@@ -26,6 +27,16 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(BindingNotFoundException))]
+        public void Test_BindToModel_Throw_BindingNotFoundException()
+        {
+            var type = typeof(XmlBinderTestBase);
+
+            var model = Binder.BindToModel(type, PersonXmlData);
+        }
+
+
+        [TestMethod]
         public void Test_SetPropertyValue_DateOfBirth()
         {
             var person = new Person();
@@ -42,7 +53,7 @@ namespace NAXB.UnitTests
 
             Binder.SetPropertyValue(person, PersonXmlData, p => p.MiddleName);
 
-            Assert.IsNotNull(person.MiddleName);
+            Assert.AreEqual("Samuel", person.MiddleName);
         }
 
         [TestMethod]
@@ -52,7 +63,7 @@ namespace NAXB.UnitTests
 
             Binder.SetPropertyValue(person, PersonXmlData, p => p.MailingAddressLines);
 
-            Assert.IsTrue(person.MailingAddressLines.Count > 0);
+            Assert.IsTrue(person.MailingAddressLines.Count == 2);
         }
 
         [TestMethod]
@@ -62,7 +73,7 @@ namespace NAXB.UnitTests
 
             Binder.SetPropertyValue(person, PersonXmlData, p => p.Brothers);
 
-            Assert.IsTrue(person.Brothers.Count > 0);
+            Assert.IsTrue(person.Brothers.Count == 1);
         }
 
         [TestMethod]
@@ -72,7 +83,7 @@ namespace NAXB.UnitTests
 
             Binder.SetPropertyValue(person, PersonXmlData, p => p.Contacts);
 
-            Assert.IsTrue(person.Contacts.Length > 0);
+            Assert.IsTrue(person.Contacts.Length == 2);
         }
 
         [TestMethod]
@@ -82,7 +93,7 @@ namespace NAXB.UnitTests
 
             Binder.SetPropertyValue(person, PersonXmlData, p => p.NumberOfContacts);
 
-            Assert.IsTrue(person.NumberOfContacts > 0);
+            Assert.AreEqual(2, person.NumberOfContacts);
         }
         [TestMethod]
         public void Test_SetPropertyValue_XPathFunction_ContactsEqualToEmails()
@@ -91,7 +102,17 @@ namespace NAXB.UnitTests
 
             Binder.SetPropertyValue(person, PersonXmlData, p => p.ContactsEqualToEmails);
 
-            Assert.IsTrue(person.ContactsEqualToEmails);
+            Assert.IsTrue((bool)person.ContactsEqualToEmails);
+        }
+
+        [TestMethod]
+        public void Test_SetPropertyValue_Enum_Role()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.Role);
+
+            Assert.AreEqual(Role.Boss, person.Role);
         }
         
     }

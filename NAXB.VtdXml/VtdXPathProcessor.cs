@@ -46,8 +46,10 @@ namespace NAXB.VtdXml
                             result.Add(new VtdXmlData(bookMark));
                         }
                     }
-                    catch (XPathEvalException)
+                    catch (XPathEvalException) 
                     {
+                        //We assume it failed because it's actually a function expression
+                        //There doesn't appear to be any way to tell if it is a function without trying to eval
                         xpath.IsFunction = true;
                     }
                 }

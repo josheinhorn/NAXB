@@ -17,7 +17,7 @@ namespace NAXB.UnitTests
         protected abstract IXmlData XmlData { get; }
 
         [TestMethod]
-        public void Test_XPathProcessor_CompileXPath_ElementXPath()
+        public void Test_CompileXPath_ElementXPath()
         {
             var compiled = Processor.CompileXPath(XPathProvider.SingleElement.XPath, Namespaces, PropertyType.Text);
 
@@ -25,7 +25,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XPathProcessor_ProcessXPath_SingleElement()
+        public void Test_ProcessXPath_SingleElement()
         {
             var compiled = Processor.CompileXPath(XPathProvider.SingleElement.XPath, Namespaces, PropertyType.Text);
 
@@ -35,7 +35,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XPathProcessor_ProcessXPath_SingleAttribute()
+        public void Test_ProcessXPath_SingleAttribute()
         {
             var compiled = Processor.CompileXPath(XPathProvider.SingleAttribute.XPath, Namespaces, PropertyType.Text);
 
@@ -45,7 +45,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XPathProcessor_ProcessXPath_MultipleElements()
+        public void Test_ProcessXPath_MultipleElements()
         {
             var compiled = Processor.CompileXPath(XPathProvider.MultipleElements.XPath, Namespaces, PropertyType.Text);
 
@@ -55,7 +55,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XPathProcessor_ProcessXPath_MultipleAttributes()
+        public void Test_ProcessXPath_MultipleAttributes()
         {
             var compiled = Processor.CompileXPath(XPathProvider.MultipleAttributes.XPath, Namespaces, PropertyType.Text);
 
@@ -65,7 +65,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XPathProcessor_ProcessXPath_NestedSingleElement()
+        public void Test_ProcessXPath_NestedSingleElement()
         {
             IXmlData parent = XmlData;
             IEnumerable<IXmlData> result = null;
@@ -82,7 +82,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XPathProcessor_ProcessXPath_NestedSingleAttribute()
+        public void Test_ProcessXPath_NestedSingleAttribute()
         {
             IXmlData parent = XmlData;
             IEnumerable<IXmlData> result = null;
@@ -99,7 +99,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XPathProcessor_ProcessXPath_NestedMultipleElements()
+        public void Test_ProcessXPath_NestedMultipleElements()
         {
             IXmlData parent = XmlData;
             List<string> results = new List<string>();
@@ -110,7 +110,7 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
-        public void Test_XPathProcessor_ProcessXPath_NestedMultipleAttributes()
+        public void Test_ProcessXPath_NestedMultipleAttributes()
         {
             IXmlData parent = XmlData;
             List<string> results = new List<string>();

@@ -14,7 +14,7 @@ namespace NAXB.UnitTests.Mockups.Models
         public int NumberOfContacts { get; set; }
 
         [XPath("count(contacts/person)=count(emails/email)")]
-        public bool ContactsEqualToEmails;
+        public bool? ContactsEqualToEmails;
 
         [XPath("firstName")]
         public string FirstName { get; set; }
@@ -38,7 +38,8 @@ namespace NAXB.UnitTests.Mockups.Models
         public Person[] Contacts { get; set; }
 
         [XmlAttribute("role")]
-        public string Role { get; set; }
+        [CustomFormat(IgnoreCase=true)]
+        public Role? Role { get; set; }
 
         [XPath("contacts/person[@relationship=\"brother\"]")]
         public List<Person> Brothers { get; set; }

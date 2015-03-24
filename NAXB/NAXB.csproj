@@ -46,7 +46,9 @@
     <Compile Include="Build\Reflector.cs" />
     <Compile Include="Build\XmlBinder.cs" />
     <Compile Include="Build\XmlBindingResolver.cs" />
+    <Compile Include="Exceptions\BindingNotFoundException.cs" />
     <Compile Include="Exceptions\PropertyTypeMismatchException.cs" />
+    <Compile Include="Exceptions\XPathParseException.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Xml\DefaultXPath.cs" />
     <Compile Include="Xml\XmlNamespace.cs" />

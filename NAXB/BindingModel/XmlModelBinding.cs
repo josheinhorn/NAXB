@@ -23,7 +23,17 @@ namespace NAXB.BindingModel
                 .Where(property => (property is PropertyInfo || property is FieldInfo) && property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Any())
                 .Select(property => new XmlProperty(property, reflector) as IXmlProperty).ToList();
             Description = ModelType.GetCustomAttributes(typeof(IXmlModelDescription), true).Cast<IXmlModelDescription>().FirstOrDefault();
-            defaultConstructor = reflector.BuildDefaultConstructor(type);
+
+            try
+            {
+                defaultConstructor = reflector.BuildDefaultConstructor(type);
+            }
+            catch (Exception e)
+            {
+                throw new TargetException(
+                    String.Format("Failed to create a parameterless constructor for Type '{0}'." +
+                    "See inner exception for more details", ModelType.FullName), e);
+            }
             //Get namespaces from Type's Custom Attributes
             Namespaces = ModelType.GetCustomAttributes(typeof(INamespaceBinding), true)
                 .Cast<INamespaceBinding>()

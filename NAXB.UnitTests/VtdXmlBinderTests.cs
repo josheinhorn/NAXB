@@ -21,8 +21,7 @@ namespace NAXB.UnitTests
             var factory = new VtdXmlFactory();
             personXmlData = factory.CreateXmlData(MockConstants.PersonXmlFilePath);
             var reflector = new Reflector();
-            var resolver = new XmlBindingResolver(reflector, processor);
-            resolver.LoadBindings(this.GetType().Assembly);
+            var resolver = new XmlBindingResolver(reflector, processor, this.GetType().Assembly);
             binder = new XmlBinder(resolver, processor, reflector);
         }
         

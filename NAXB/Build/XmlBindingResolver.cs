@@ -13,21 +13,20 @@ namespace NAXB.Build
         protected readonly IReflector reflector;
         protected readonly IXPathProcessor xPathProcessor;
         protected readonly Dictionary<Type, IXmlModelBinding> bindings = new Dictionary<Type, IXmlModelBinding>(); //Is Dictionary the most effective data structure?
-        public XmlBindingResolver(IReflector reflector, IXPathProcessor xPathProcessor)
+        public XmlBindingResolver(IReflector reflector, IXPathProcessor xPathProcessor
+            , params Assembly[] assemblies)
         {
             if (reflector == null) throw new ArgumentNullException("reflector");
             if (xPathProcessor == null) throw new ArgumentNullException("xPathProcessor");
             this.reflector = reflector;
             this.xPathProcessor = xPathProcessor;
+            LoadBindings(assemblies);
         }
 
-        public void LoadBindings(params Assembly[] assemblies)
+        protected virtual void LoadBindings(params Assembly[] assemblies)
         {
             foreach (var assembly in assemblies)
             {
-                //if (!loadedAssemblies.Contains(assembly))
-                //{
-                //loadedAssemblies.Add(assembly);
                 foreach (var type in assembly.GetTypes())
                 {
                     //It is an XML Model and it hasn't yet been added
@@ -67,25 +66,6 @@ namespace NAXB.Build
         {
             IXmlModelBinding result = null;
             bindings.TryGetValue(type, out result);
-            //if (!bindings.TryGetValue(type, out result))
-            //{
-            //    lock (bindings)
-            //    {
-            //        if (!bindings.TryGetValue(type, out result))
-            //        {
-            //            //lazy load
-            //            result = new XmlModelBinding(type, reflector); //What if the type is not complex? e.g. string, int, etc.
-            //            if (result.Description != null)
-            //            {
-            //                foreach (var prop in result.Properties)
-            //                {
-            //                    prop.Initialize(this, xPathProcessor, result.Namespaces); //Set complex binding, compile xpath
-            //                }
-            //            }
-            //            bindings.Add(type, result);
-            //        }
-            //    }
-            //}
             return result;
         }
     }

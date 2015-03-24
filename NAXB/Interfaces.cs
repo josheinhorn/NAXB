@@ -54,7 +54,7 @@ namespace NAXB.Interfaces
     public interface IXmlBindingResolver
     {
         //Should hold a record of all the bindings for lookup
-        void LoadBindings(params Assembly[] assemblies);
+        //void LoadBindings(params Assembly[] assemblies);
         IXmlModelBinding ResolveBinding<T>();
         IXmlModelBinding ResolveBinding(Type type); //If you don't have the generic type you can use this
     }
