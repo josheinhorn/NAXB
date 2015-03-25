@@ -83,7 +83,7 @@ A couple of things to note about using NAXB:
 The below are supported "out of the box" types. NAXB can be extended using a Custom Resolver (discussed later).
 +	Nested NAXB models
 +	Concrete implementations of `ICollection<T>` (e.g. `List<T>`, `SortedList<T>`)
-+	Arrays (e.g. `Person[]`, `Automobiles[]`)
++	Arrays (e.g. `Person[]`, `Automobile[]`)
 +	Nullable types (e.g. `bool?`, `Nullable<int>`)
 +	Enums
 +	Primitive types (e.g. `string`, `int`, `bool`)
@@ -131,10 +131,16 @@ public class Automobile
 ### Custom Formatting and Resolving
 There are multiple options for custom formats and even custom property resolving. The interface `ICustomFormatBinding` can be implemented to override default format or resolving settings. This interface provides the application with one or more of the following:
 +	System.IFormatProvider
-+	Date Time format string (see [Custom Date and Time Format Strings guide](https://msdn.microsoft.com/en-us/library/8kb3ddd4%28v=vs.110%29.aspx) for more info)
++	Date/time format string (see [Custom Date and Time Format Strings guide](https://msdn.microsoft.com/en-us/library/8kb3ddd4%28v=vs.110%29.aspx) for more info)
 +	Ignore case setting (for parsing enums)
 +	ICustomBindingResolver (see below)
 
+Example:
+````C#
+[XmlElement("DOB")]
+[CustomFormat(DateTimeFormat = "dd-MM-yyyy")]
+public DateTime DateOfBirth;
+````
 The out of the box implementation of this interface is `CustomFormatAttribute`. This implementation allows for setting of the `IFormatProvider` via a Culture Name string and the `System.Globalization.CultureInfo` class. To set a custom binding resolver, the Type can be specified e.g. `CustomBindingResolverType = typeof(MyResolver)`. The Type specified must have a parameterless constructor and must implement `ICustomBindingResolver`.
 
 #### Custom Binding Resolver
@@ -159,7 +165,7 @@ IXmlBindingResolver resolver =
 //You'll want to have a singleton of the binder instance to take advantage of optimizations
 IXmlModelBinder binder = new XmlBinder(resolver, processor, reflector);
 
-//Multiple methods for creating XML Data are supported
+//There are multiple overloads for CreateXmlData taking various inputs
 IXmlData personXmlData = factory.CreateXmlData("path/to/person.xml"); 
 Person model = Binder.BindToModel<Person>(personXmlData);
 //Do something with the model
