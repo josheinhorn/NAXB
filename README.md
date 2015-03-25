@@ -119,6 +119,16 @@ public class Unicorn
     ...
 }
 ````
+**WARNING**: If a root document reference is used here (leading slash), a stack overflow exception might occur if a model is recursively nested within itself. For example, the below will cause a stack overflow because it is a circular reference. This can be avoided by either assuring there is no circular reference, or not using a leading slash ("/") on the circularly referenced class.
+````C#
+[XmlModelBinding(RootXPath = "/person")] //A reference to the root of the document
+public class Person
+{
+	//Circular reference that perpetually calls the root of the document
+    [XPath("contacts/person")]
+    public Person[] Contacts { get; set; } 
+}
+````
 ### Namespaces
 Namespaces are supported by NAXB and are added to each class using the `NamespaceDeclarationAttribute`. This attribute may be used multiple times on a single class:
 ````C#
