@@ -6,8 +6,8 @@ using NAXB.Attributes;
 
 namespace NAXB.UnitTests.Mockups.Models
 {
-    [XmlModel]
-    [NamespaceDeclaration(Uri = "http://josheinhorn.com", Prefix = "jse")]
+    [XmlModelBinding]
+    [NamespaceDeclaration(Uri = "http://example.com", Prefix = "ex")]
     public class Email
     {
         [XPath("@domain")]

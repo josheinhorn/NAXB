@@ -22,7 +22,7 @@ namespace NAXB.UnitTests
             var type = typeof(Person);
 
             var model = Binder.BindToModel(type, PersonXmlData);
-
+            
             Assert.IsInstanceOfType(model, type);
         }
 

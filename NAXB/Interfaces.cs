@@ -127,23 +127,53 @@ namespace NAXB.Interfaces
         PropertyType Type { get; }
     }
 
+    /// <summary>
+    /// A Custom Formatting for an XML Property
+    /// </summary>
     public interface ICustomFormatBinding
     {
         //TODO: Find a good way to get DateTimeFormat/IgnoreCase from the XML itself
         //For custom formats and/or custom binding resolving
+        /// <summary>
+        /// Custom Date Time Format
+        /// </summary>
         string DateTimeFormat { get; }
+        /// <summary>
+        /// Ignore case when parsing values in to Enums
+        /// </summary>
         bool IgnoreCase { get; }
+        /// <summary>
+        /// Get a Format Provider for parsing values
+        /// </summary>
+        /// <returns>Format Provider</returns>
         IFormatProvider GetFormatProvider(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
+        /// <summary>
+        /// Get a Custom Resolver for processing XML
+        /// </summary>
+        /// <returns>Custom Resolver</returns>
         ICustomBindingResolver GetCustomResolver(); //Base implementation can hide delegate default constructor of Type, should return null if none exists
+        /// <summary>
+        /// Initialize this Custom Formatting for use
+        /// </summary>
+        /// <param name="reflector">Reflector to help initialization</param>
         void Initialize(IReflector reflector); //Initialize ctor of resolver or other stuff -- alternative to ctor since this is an attribute
     }
 
+    /// <summary>
+    /// Custom Binding Resolver used to resolve XML Data into the final property/field value
+    /// </summary>
     public interface ICustomBindingResolver 
     {
         //Allows overriding the standard GetPropertyValue to convert values in non-standard way
         //Example: convert "yes"/"no" to bool
-        object GetPropertyValue(IEnumerable<IXmlData> data, IXmlModelBinder binder);
-        bool TryGetPropertyValue(IEnumerable<IXmlData> data, IXmlModelBinder binder, out object propertyValue);
+        /// <summary>
+        /// Resolve the XML Data into the final property value
+        /// </summary>
+        /// <param name="data">XML Data</param>
+        /// <param name="binder">Model Binder</param>
+        /// <returns>Property value</returns>
+        object GetPropertyValue(IEnumerable<IXmlData> data, IXmlModelBinder binder); //Should IXmlProperty be passed?
+        bool TryGetPropertyValue(IEnumerable<IXmlData> data, IXmlModelBinder binder, out object propertyValue);  //Should IXmlProperty be passed?
     }
 
     #region Reflection
@@ -162,9 +192,7 @@ namespace NAXB.Interfaces
         /// <returns>A delegate that creates a new instance of the specified type taking arguments of the Types specified in the Constructor Info.</returns>
         /// <remarks>When using the delegate, the order and number of arguments supplied in the object array must exactly match the 
         /// Parameters of the supplied Constructor Info.</remarks>
-        Func<object[], object> BuildConstructor(ConstructorInfo ctorInfo); //Should maybe just return Func<object> but I like the possibility of allowing even more flexible implementations in the future
-        //Func<Type[], object[], object> BuildGenericConstructor(ConstructorInfo ctorInfo); //Allow generic types too?
-
+        Func<object[], object> BuildConstructor(ConstructorInfo ctorInfo);
         /// <summary>
         /// Builds a Setter delegate for the given Property
         /// </summary>
@@ -298,7 +326,6 @@ namespace NAXB.Interfaces
     public interface IXPathProcessor
     { 
         IEnumerable<IXmlData> ProcessXPath(IXmlData data, IXPath xpath);
-        //void LoadProperties(IEnumerable<IXmlProperty> properties, IEnumerable<INamespace> namespaces);
         IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isMultiValue); 
     }
 

@@ -6,6 +6,7 @@ using NAXB.VtdXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace NAXB.UnitTests
@@ -21,7 +22,7 @@ namespace NAXB.UnitTests
             var factory = new VtdXmlFactory();
             personXmlData = factory.CreateXmlData(MockConstants.PersonXmlFilePath);
             var reflector = new Reflector();
-            var resolver = new XmlBindingResolver(reflector, processor, this.GetType().Assembly);
+            var resolver = new XmlBindingResolver(reflector, processor, new Assembly[] { this.GetType().Assembly});
             binder = new XmlBinder(resolver, processor, reflector);
         }
         

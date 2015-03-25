@@ -6,8 +6,15 @@ using NAXB.Interfaces;
 
 namespace NAXB.Attributes
 {
+    /// <summary>
+    /// Marks a Property/Field to be bound to an XML Attribute of the current node.
+    /// </summary>
     public class XmlAttributeAttribute : Attribute, INAXBPropertyBinding
     {
+        /// <summary>
+        /// Marks a Property/Field to be bound to an XML Attribute of the current node.
+        /// </summary>
+        /// <param name="attributeName">Attribute Name</param>
         public XmlAttributeAttribute(string attributeName)
         {
             AttributeName = attributeName;

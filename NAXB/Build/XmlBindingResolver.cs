@@ -14,7 +14,7 @@ namespace NAXB.Build
         protected readonly IXPathProcessor xPathProcessor;
         protected readonly Dictionary<Type, IXmlModelBinding> bindings = new Dictionary<Type, IXmlModelBinding>(); //Is Dictionary the most effective data structure?
         public XmlBindingResolver(IReflector reflector, IXPathProcessor xPathProcessor
-            , params Assembly[] assemblies)
+            , Assembly[] assemblies)
         {
             if (reflector == null) throw new ArgumentNullException("reflector");
             if (xPathProcessor == null) throw new ArgumentNullException("xPathProcessor");
@@ -23,7 +23,7 @@ namespace NAXB.Build
             LoadBindings(assemblies);
         }
 
-        protected virtual void LoadBindings(params Assembly[] assemblies)
+        protected virtual void LoadBindings(Assembly[] assemblies)
         {
             foreach (var assembly in assemblies)
             {

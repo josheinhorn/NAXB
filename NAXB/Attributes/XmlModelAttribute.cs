@@ -6,11 +6,20 @@ using NAXB.Interfaces;
 
 namespace NAXB.Attributes
 {
-    public class XmlModelAttribute : Attribute, IXmlModelDescription
+    /// <summary>
+    /// Marks a Model that can be bound to XML
+    /// </summary>
+    public class XmlModelBindingAttribute : Attribute, IXmlModelDescription
     {
-        public XmlModelAttribute()
+        /// <summary>
+        /// Marks a Model that can be bound to XML
+        /// </summary>
+        public XmlModelBindingAttribute()
         { }
 
+        /// <summary>
+        /// The root XPath for all properties/fields of this model
+        /// </summary>
         public virtual string RootXPath
         {
             get;

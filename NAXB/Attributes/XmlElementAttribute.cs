@@ -6,8 +6,15 @@ using NAXB.Interfaces;
 
 namespace NAXB.Attributes
 {
+    /// <summary>
+    /// Marks a property/field to be bound to a direct XML child element of the current context.
+    /// </summary>
     public class XmlElementAttribute : Attribute, INAXBPropertyBinding
     {
+        /// <summary>
+        /// Marks a property/field to be bound to a direct XML child element of the current context.
+        /// </summary>
+        /// <param name="elementName">Element name</param>
         public XmlElementAttribute(string elementName)
         {
             ElementName = elementName;
