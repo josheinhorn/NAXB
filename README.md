@@ -82,13 +82,13 @@ A couple of things to note about using NAXB:
 ### Supported Property/Field Types
 The below are supported "out of the box" types. NAXB can be extended using a Custom Resolver (discussed later).
 +	Nested NAXB models
-+	Concrete implementations of `ICollection<T>` (e.g. `List<T>`, `SortedList<T>`, etc.)
-+	Arrays
-+	Nullable types
++	Concrete implementations of `ICollection<T>` (e.g. `List<T>`, `SortedList<T>`)
++	Arrays (e.g. `Person[]`, `Automobiles[]`)
++	Nullable types (e.g. `bool?`, `Nullable<int>`)
 +	Enums
-+	Primitive types
-+	DateTime and DateTimeOffset
-+	Guid
++	Primitive types (e.g. `string`, `int`, `bool`)
++	`DateTime` and `DateTimeOffset`
++	`Guid`
 
 ### XPath Attribute
 The XPath attribute is the primary reason for using NAXB. It takes a single string argument representing an XPath expression. The XPath expression may be a node set selection or a function expression.
