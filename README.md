@@ -11,7 +11,7 @@ To remain competitive with serialization performance, NAXB parses XML and evalua
 ## Use Cases
 The most typical use case of this library is to reduce the amount of time it takes for developers to bind semi-arbitrary XML to CLR objects. More specifically, it allows for using XML data without full control over or even full knowledge of the XML schema. More succinctly, it aids in developing loosely coupled applications.
 
-An example of this may be developing an application that consumes an external web services that outputs data as XML. Your application has no control over the schema of that XML but may wish to bind to it in specific ways. With NAXB, your application can consume the XML with only cursory knowledge of the structure.
+An example of this may be developing an application that consumes an external web service that outputs data as XML. Your application has no control over the schema of that XML but may wish to bind to it in specific ways. With NAXB, your application can consume the XML with only cursory knowledge of the structure.
 
 Another equally important use of NAXB is the ability to flatten, filter, and/or process source data using nothing but XPath statements. This feature is akin to using XSLT, but NAXB streamlines the process and makes it more familiar to .NET developers. For example, the following property is mapped only to contacts that are brothers of the current person:
 ````C#
@@ -20,7 +20,7 @@ public List<Person> Brothers { get; set; }
 ````
 An additional use case is the ability to use XPath functions to perform business logic on the XML data instead of writing many lines of code to do the same thing. For example, the following property tells us the total number of coworker contacts:
 ````C#
-[XPath("count(contacts/person[@relationship=\"coworkers\")")]
+[XPath("count(contacts/person[@relationship=\"coworker\")")]
 public int NumberOfCoworkers { get; set; }
 ````
 
@@ -71,7 +71,7 @@ public class Person
 }
 ````
 A couple of things to note about using NAXB:
-+	No need for specify how each property should be parsed -- this is inferred based on the Type of the property or field
++	No need to specify how each property should be parsed -- this is inferred based on the Type of the property or field
 +	Currently, the NAXB decorated class and all property/field Types must have parameterless constructors
   +	Constructor does not need to be public
   +	Doesn't apply to value types such as string, int, bool, etc.

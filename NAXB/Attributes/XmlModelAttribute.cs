@@ -20,6 +20,7 @@ namespace NAXB.Attributes
         /// <summary>
         /// The root XPath for all properties/fields of this model
         /// </summary>
+        [Obsolete("Not currently used. Semantic only. May be included in future versions.")]
         public virtual string RootXPath
         {
             get;

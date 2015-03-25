@@ -19,10 +19,11 @@ namespace NAXB.BindingModel
             ModelType = type;
             Name = ModelType.Name;
             //Get all Field and Properties with a NAXB Property Attribute and creating Property objects
+            Description = ModelType.GetCustomAttributes(typeof(IXmlModelDescription), true).Cast<IXmlModelDescription>().FirstOrDefault();
+            //string xpath = Description == null ? null : Description.RootXPath;
             Properties = ModelType.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                 .Where(property => (property is PropertyInfo || property is FieldInfo) && property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Any())
                 .Select(property => new XmlProperty(property, reflector) as IXmlProperty).ToList();
-            Description = ModelType.GetCustomAttributes(typeof(IXmlModelDescription), true).Cast<IXmlModelDescription>().FirstOrDefault();
             //Try to create the ctor -- will throw exception if doesn't work
             defaultConstructor = reflector.BuildDefaultConstructor(type);
             //Get namespaces from Type's Custom Attributes

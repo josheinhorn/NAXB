@@ -21,6 +21,41 @@ namespace NAXB.BindingModel
         protected readonly Func<object, object> get;
         protected bool isInitialized = false;
         protected IReflector reflector;
+        protected string xpath = null;
+
+        private string CombineXPaths(string root, string xpath)
+        {
+            string result = null;
+            if (!String.IsNullOrEmpty(root) && String.IsNullOrEmpty(xpath)) //xpath is empty but root isn't
+            {
+                result = root;
+            }
+            else if (String.IsNullOrEmpty(root) && !String.IsNullOrEmpty(xpath)) //root is empty but xpath isn't
+            {
+                result = xpath;
+            }
+            else if (!String.IsNullOrEmpty(root) && !String.IsNullOrEmpty(xpath)) //neither are empty
+            {
+                if (root.Last().Equals('/') && xpath.First().Equals('/'))
+                {
+                    //Both root ends in / and xpath starts with /
+                    result = root + xpath.Substring(1);
+                }
+                else if (root.Last().Equals('/') || xpath.First().Equals('/'))
+                {
+                    //Only one starts/ends with /
+                    result = root + xpath;
+                }
+                else
+                {
+                    //neither starts/ends with /, add it
+                    result = root + "/" + xpath;
+                }
+            }
+            //else both are null or empty
+            
+            return result;
+        }
 
         public XmlProperty(MemberInfo property, IReflector reflector)
         {
@@ -42,6 +77,17 @@ namespace NAXB.BindingModel
             }
             //Get the first Property Binding attribute
             Binding = property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Cast<INAXBPropertyBinding>().FirstOrDefault();
+            if (Binding != null)
+            {
+                //if (rootXPath != null)
+                //{
+                //    this.xpath = CombineXPaths(rootXPath, Binding.XPath);
+                //}
+                //else 
+                //{
+                    this.xpath = Binding.XPath;
+                //}
+            }
             CustomFormatBinding = property.GetCustomAttributes(typeof(ICustomFormatBinding), true).Cast<ICustomFormatBinding>().FirstOrDefault();
             if (CustomFormatBinding != null) CustomFormatBinding.Initialize(reflector);
         }
@@ -70,7 +116,7 @@ namespace NAXB.BindingModel
         public virtual void Initialize(IXmlBindingResolver resolver, IXPathProcessor xPathProcessor, INamespace[] namespaces) //Must be called before ComplexBinding property can be used
         {
             //Get complex binding, if any
-            ComplexBinding = resolver.ResolveBinding(PropertyInfo.ElementType); 
+            ComplexBinding = resolver.ResolveBinding(PropertyInfo.ElementType);
             //Build up the delegates that are used to get property value
             BuildParseXmlValue();
             BuildConvertEnumerableToProperty();
@@ -78,7 +124,7 @@ namespace NAXB.BindingModel
             BuildConvertXmlToProperty();
             try
             {
-                compiledXPath = xPathProcessor.CompileXPath(this.Binding.XPath, namespaces, Type, PropertyInfo.IsEnumerable); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
+                compiledXPath = xPathProcessor.CompileXPath(xpath, namespaces, Type, PropertyInfo.IsEnumerable); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
             }
             catch (Exception)
             {
@@ -266,7 +312,7 @@ namespace NAXB.BindingModel
         protected void BuildConvertEnumerableToProperty()
         {
             var elementType = PropertyInfo.ElementType;
-          
+
             if (PropertyInfo.IsArray)
             {
                 convertEnumerableToProperty = (IEnumerable values) => PropertyInfo.ToArray(values);
