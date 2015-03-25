@@ -10,10 +10,10 @@ namespace NAXB.UnitTests.Mockups.Models
     [NamespaceDeclaration(Uri = "http://example.com", Prefix = "ex")]
     public class Person
     {
-        [XPath("count(contacts/person)")]
+        [XPath("count(contacts/person)", IsFunction = true)]
         public int NumberOfContacts { get; set; }
 
-        [XPath("count(contacts/person)=count(emails/email)")]
+        [XPath("count(contacts/person)=count(emails/email)", IsFunction = true)]
         public bool? ContactsEqualToEmails;
 
         [XPath("firstName")]

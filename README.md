@@ -31,10 +31,10 @@ The below is a simple example of a class decorated with NAXB attributes:
 [NamespaceDeclaration(Uri = "http://example.com", Prefix = "ex")]
 public class Person
 {
-    [XPath("count(contacts/person)")]
+    [XPath("count(contacts/person)", IsFunction = true)]
     public int NumberOfContacts { get; set; }
 
-    [XPath("count(contacts/person)=count(emails/email)")]
+    [XPath("count(contacts/person)=count(emails/email)", IsFunction = true)]
     public bool? ContactsEqualToEmails; //Nullable type
 
     [XPath("firstName")]
@@ -91,10 +91,13 @@ The below are supported "out of the box" types. NAXB can be extended using a Cus
 +	`Guid`
 
 ### XPath Attribute
-The XPath attribute is the primary reason for using NAXB. It takes a single string argument representing an XPath expression. The XPath expression may be a node set selection or a function expression.
+The XPath attribute is the primary reason for using NAXB. It takes a single string argument representing an XPath expression that may be a node set selection or a function expression. If the XPath is a function expression, you *must* specify this by using the `IsFunction` property of the attribute, or an exception will be thrown at run time.
 ````C#
 [XPath("xpath/goes/here")]
 protected string XPathedProperty { get; set; }
+
+[XPath("count(some/stuff)", IsFunction = true)]
+protected string FunctionExpression { get; set; }
 ````
 
 ### XmlElement and XmlAttribute Attributes
@@ -108,10 +111,10 @@ public string Attribute;
 ````
 
 ### XmlModelBinding Attribute
-To declare that a class can be bound to XML using NAXB, you must include the `XmlModelBindingAttribute`.
+To declare that a class can be bound to XML using NAXB, you must include the `XmlModelBindingAttribute`. Optionally, you can use the `RootXPath` property to specify an XPath that will be appended to the beginning of all the XPaths of the class's properties/fields. This is useful to cut down on repetitive XPaths.
 ````C#
-[XmlModelBinding]
-public class TrapperKeeper
+[XmlModelBinding(RootXPath = "common/xpath/for/properties")]
+public class Unicorn
 {
     ...
 }

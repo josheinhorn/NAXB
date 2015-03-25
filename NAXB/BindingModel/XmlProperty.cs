@@ -53,11 +53,11 @@ namespace NAXB.BindingModel
                 }
             }
             //else both are null or empty
-            
+
             return result;
         }
 
-        public XmlProperty(MemberInfo property, IReflector reflector)
+        public XmlProperty(MemberInfo property, IReflector reflector, string rootXPath)
         {
             if (property == null) throw new ArgumentNullException("property");
             if (reflector == null) throw new ArgumentNullException("reflector");
@@ -77,16 +77,15 @@ namespace NAXB.BindingModel
             }
             //Get the first Property Binding attribute
             Binding = property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Cast<INAXBPropertyBinding>().FirstOrDefault();
-            if (Binding != null)
+            if (Binding == null) throw new BindingNotFoundException(this);
+
+            if (!Binding.IsFunction && rootXPath != null)
             {
-                //if (rootXPath != null)
-                //{
-                //    this.xpath = CombineXPaths(rootXPath, Binding.XPath);
-                //}
-                //else 
-                //{
-                    this.xpath = Binding.XPath;
-                //}
+                this.xpath = CombineXPaths(rootXPath, Binding.XPath);
+            }
+            else
+            {
+                this.xpath = Binding.XPath;
             }
             CustomFormatBinding = property.GetCustomAttributes(typeof(ICustomFormatBinding), true).Cast<ICustomFormatBinding>().FirstOrDefault();
             if (CustomFormatBinding != null) CustomFormatBinding.Initialize(reflector);
@@ -124,7 +123,7 @@ namespace NAXB.BindingModel
             BuildConvertXmlToProperty();
             try
             {
-                compiledXPath = xPathProcessor.CompileXPath(xpath, namespaces, Type, PropertyInfo.IsEnumerable); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
+                compiledXPath = xPathProcessor.CompileXPath(xpath, namespaces, Type, Binding.IsFunction); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
             }
             catch (Exception)
             {

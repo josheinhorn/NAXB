@@ -6,8 +6,14 @@
   <lastName>Einhorn</lastName>
   <middleName>Samuel</middleName>
   <emails>
-    <email name="josh" domain="josheinhorn.com"/>
-    <email name="josh.einhorn" domain="gmail.com"/>
+    <email>
+      <emailAddress name="josh" domain="josheinhorn.com"/>
+      <provider name="Josh Einhorn"/>
+    </email>
+    <email>
+      <emailAddress name="josh.einhorn" domain="gmail.com"/>
+      <provider name="Google"/>
+    </email> 
   </emails>
   <address type="mailing">
     <line num="1">

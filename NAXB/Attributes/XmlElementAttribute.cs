@@ -38,5 +38,11 @@ namespace NAXB.Attributes
         //{
         //    get { return true; }
         //}
+
+
+        public bool IsFunction
+        {
+            get { return false; }
+        }
     }
 }

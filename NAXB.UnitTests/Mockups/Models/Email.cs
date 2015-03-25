@@ -6,7 +6,7 @@ using NAXB.Attributes;
 
 namespace NAXB.UnitTests.Mockups.Models
 {
-    [XmlModelBinding]
+    [XmlModelBinding(RootXPath = "emailAddress")]
     [NamespaceDeclaration(Uri = "http://example.com", Prefix = "ex")]
     public class Email
     {

@@ -301,6 +301,7 @@ namespace NAXB.Interfaces
     {
         //Should compiled XPath be stored here? JSE: No, better off in the Property itself, not a binding which contains user input
         string XPath { get; }
+        bool IsFunction { get; }
         //Are the below 2 necessary?
         //bool IsAttribute { get; }
         //bool IsElement { get; }
@@ -326,7 +327,7 @@ namespace NAXB.Interfaces
     public interface IXPathProcessor
     { 
         IEnumerable<IXmlData> ProcessXPath(IXmlData data, IXPath xpath);
-        IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isMultiValue); 
+        IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isFunction); 
     }
 
     public interface IXPath //really can just be a string right?

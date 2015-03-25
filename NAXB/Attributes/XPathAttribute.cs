@@ -28,5 +28,12 @@ namespace NAXB.Attributes
         {
             get; set;
         }
+
+
+        public bool IsFunction
+        {
+            get;
+            set;
+        }
     }
 }

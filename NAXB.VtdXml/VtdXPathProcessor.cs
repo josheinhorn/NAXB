@@ -36,10 +36,10 @@ namespace NAXB.VtdXml
                 
                 //Note: attempted to just use IsMultiValue and only use evalXPathToString when not multivalue instead of try/catch, 
                 //but this breaks for single nested types where a BookMark is needed
-                if (!xpath.IsFunction)
+                if (!xpath.IsFunction) //It's a node set
                 {
-                    try
-                    {
+                    //try
+                    //{
                         while (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
                         {
                             BookMark bookMark = new BookMark(nav);
@@ -48,15 +48,16 @@ namespace NAXB.VtdXml
                             //Add new XML Data with the recorded position
                             result.Add(new VtdXmlData(bookMark));
                         }
-                    }
-                    catch (XPathEvalException) 
-                    {
-                        //We assume it failed because it's actually a function expression
-                        //There doesn't appear to be any way to tell if it is a function without trying to eval
-                        xpath.IsFunction = true; //Set to true so all future attempts will go straight to function evaluation
-                    }
+                    //}
+                    //catch (XPathEvalException) 
+                    //{
+                    //    //We assume it failed because it's actually a function expression
+                    //    //There doesn't appear to be any way to tell if it is a function without trying to eval
+                    //    xpath.IsFunction = true; //Set to true so all future attempts will go straight to function evaluation
+                    //}
                 }
-                if (xpath.IsFunction)
+                //if (xpath.IsFunction)
+                else //it is a function!
                 {
                     //XPath is actually a function, evaluate to single string
                     string evaluatedValue = ap.evalXPathToString(); //Always evaluate to string, parse to real property type later
@@ -90,7 +91,7 @@ namespace NAXB.VtdXml
                 ap.declareXPathNameSpace(ns.Prefix, ns.Uri);
             }
         }
-        public IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isMultiValue)
+        public IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isFunction)
         {
             var ap = new AutoPilot();
             AddNamespaces(ap, namespaces);
@@ -130,7 +131,7 @@ namespace NAXB.VtdXml
                 XPathAsString = xpath,
                 Namespaces = namespaces,
                 Type = type,
-                IsMultiValue = isMultiValue
+                IsFunction = isFunction
             };
         }
     }
