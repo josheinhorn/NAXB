@@ -6,7 +6,7 @@ This project aims to solve a problem that has been solved many ways: how to effi
 
 In .NET, the go-to solution is most often XML Serialization. This has the unfortunate side effect of coupling implementations to the XML structure. NAXB will allow developers to create fully de-coupled solutions that rely solely on relative XPaths to map data to CLR Objects.
 
-To remain competitive with serialization performance, NAXB parses XML and evaluates XPaths using [VTD XML](http://vtd-xml.sourceforge.net/), a highly efficient byte-based XML Processing framework. Additionally, NAXB takes advantage of a number of optimization techniques using the System.Reflection.Emit and System.Linq.Expressions namespaces instead of relying on repeated run-time reflection to process objects (e.g. create new instances, get custom attributes, set property/field values, etc.).
+To remain competitive with serialization performance, NAXB parses XML and evaluates XPaths using [VTD XML](http://vtd-xml.sourceforge.net/), a highly efficient byte-based XML Processing framework. Additionally, NAXB takes advantage of a number of optimization techniques using the `System.Reflection.Emit` and `System.Linq.Expressions` namespaces instead of relying on repeated run-time reflection to process objects (e.g. create new instances, get custom attributes, set property/field values, etc.).
 
 ## Use Cases
 The most typical use case of this library is to reduce the amount of time it takes for developers to bind semi-arbitrary XML to CLR objects. More specifically, it allows for using XML data without full control over or even full knowledge of the XML schema. More succinctly, it aids in developing loosely coupled applications.
@@ -82,7 +82,7 @@ A couple of things to note about using NAXB:
 ### Supported Property/Field Types
 The below are supported "out of the box" types. NAXB can be extended using a Custom Resolver (discussed later).
 +	Nested NAXB models
-+	Concrete implementations of ICollection<T> (e.g. List<T>, ArrayList<T>, etc.)
++	Concrete implementations of `ICollection<T>` (e.g. `List<T>`, `ArrayList<T>`, etc.)
 +	Arrays
 +	Nullable types
 +	Enums
@@ -108,7 +108,7 @@ public string Attribute;
 ````
 
 ### XmlModelBinding Attribute
-To declare a class can be bound to XML using NAXB, you must include the `XmlModelBindingAttribute`.
+To declare that a class can be bound to XML using NAXB, you must include the `XmlModelBindingAttribute`.
 ````C#
 [XmlModelBinding]
 public class TrapperKeeper
@@ -117,7 +117,7 @@ public class TrapperKeeper
 }
 ````
 ### Namespaces
-Namespaces are supported by NAXB and are added to each class using the NamespaceDeclarationAttribute. Multiple NamespaceDeclarationAttributes may be used on a single class:
+Namespaces are supported by NAXB and are added to each class using the `NamespaceDeclarationAttribute`. This attribute may be used multiple times on a single class:
 ````C#
 [XmlModelBinding]
 [NamespaceDeclaration(Uri = "http://example.com", Prefix = "ex")]
@@ -135,10 +135,10 @@ There are multiple options for custom formats and even custom property resolving
 +	Ignore case setting (for parsing enums)
 +	ICustomBindingResolver (see below)
 
-The out of the box implementation of this interface is `CustomFormatAttribute`. This implementation allows for setting of the IFormatProvider via a Culture Name string and the System.Globalization.CultureInfo class. To set a custom binding resolver, the Type can be specified e.g. `CustomBindingResolverType = typeof(MyResolver)`. The Type specified must have a parameterless constructor and must implement ICustomBindingResolver.
+The out of the box implementation of this interface is `CustomFormatAttribute`. This implementation allows for setting of the `IFormatProvider` via a Culture Name string and the `System.Globalization.CultureInfo` class. To set a custom binding resolver, the Type can be specified e.g. `CustomBindingResolverType = typeof(MyResolver)`. The Type specified must have a parameterless constructor and must implement `ICustomBindingResolver`.
 
 #### Custom Binding Resolver
-In order to completely override the base functionality for resolving a single property/field, you can provide a custom binding resolver by implementing ICustomBindingResolver. 
+In order to completely override the base functionality for resolving a single property/field, you can provide a custom binding resolver by implementing `ICustomBindingResolver`. 
 
 An example for a reason to do this is to read XML "Yes"/"No" values into boolean values since the base implementation uses strict boolean parsing so only "true"/"false" would be converted to `true` and `false` out of the box.
 
@@ -149,20 +149,23 @@ So after you've properly decorated your class, you need to actually generate you
 using NAXB.Build;
 using NAXB.Interfaces;
 using NAXB.VtdXml;
-
 ...
+
 IXPathProcessor processor = new VtdXPathProcessor();
 IXmlFactory factory = new VtdXmlFactory();
 IReflector reflector = new Reflector();
-IXmlBindingResolver resolver = new XmlBindingResolver(reflector, processor, new Assembly[] { this.GetType().Assembly });
-IXmlModelBinder binder = new XmlBinder(resolver, processor, reflector); //You'll want to have a singleton of this instance to take advantage of optimizations
+IXmlBindingResolver resolver = 
+	new XmlBindingResolver(reflector, processor, new Assembly[] { this.GetType().Assembly });
+//You'll want to have a singleton of the binder instance to take advantage of optimizations
+IXmlModelBinder binder = new XmlBinder(resolver, processor, reflector);
 
-IXmlData personXmlData = factory.CreateXmlData("path/to/person.xml"); //other methods for creating XML Data are supported
+//Multiple methods for creating XML Data are supported
+IXmlData personXmlData = factory.CreateXmlData("path/to/person.xml"); 
 Person model = Binder.BindToModel<Person>(personXmlData);
 //Do something with the model
 ...
 ````
-So as you can see, you need to pass in an array of Assemblies. These Assemblies must contain all the NAXB Models that you wish to use (such as `Person` and `Email` in the examples). The Binding Resolver processes all the Types in the Assemblies and assembles the NAXB bindings based on the attributes discussed earlier. Note that this is a very CPU intensive process and is the source of all runtime optimizations, so a **singleton instance is high encouraged**.
+So as you can see, you need to pass in an array of Assemblies. These Assemblies must contain all the NAXB Models that you wish to use (such as `Person` and `Email` in the examples). The Binding Resolver processes all the Types in the Assemblies and assembles the NAXB bindings based on the attributes discussed earlier. Note that this is a very CPU intensive process and is the source of all runtime optimizations, so a **singleton instance of the XML Binder object is high encouraged**.
 
 
 
