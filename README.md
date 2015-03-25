@@ -73,8 +73,8 @@ public class Person
 A couple of things to note about using NAXB:
 +	No need for specify how each property should be parsed -- this is inferred based on the Type of the property or field
 +	Currently, the NAXB decorated class and all property/field Types must have parameterless constructors
-++	Constructor does not need to be public
-++	Doesn't apply to value types such as string, int, bool, etc.
+  +	Constructor does not need to be public
+  +	Doesn't apply to value types such as string, int, bool, etc.
 +	Properties must have a `set` method
 +	Properties/fields do not need to be public
 +	Custom property resolvers and formats can be specified
