@@ -40,12 +40,11 @@ namespace NAXB.BindingModel
             else if (IsNullableType = reflector.IsNullableType(PropertyType, out temp))
             {
                 ElementType = temp;
-                //Do we need a casting func or anything??
             }
             else
             {
                 IsEnumerable = reflector.IsEnumerable(PropertyType);
-                ElementType = PropertyType; //The individual Element is the same as the Property (even if it is IEnumerable?? Highly complex List implementations will break)
+                ElementType = PropertyType; //The individual Element is the same as the Property (even if it is non-generic IEnumerable -- Highly complex List implementations will break)
             }
             //Note: Don't need to check that the Element of Array or Collection is a nullable type -- this is not allowed by the compiler
             IsEnum = ElementType.IsEnum;
@@ -57,8 +56,8 @@ namespace NAXB.BindingModel
             }
             catch
             {
-                //No parameterless ctor -- could be non-complex type (e.g. String) 
-                //or could be custom resolved (e.g. MvcHtmlString)
+                //No parameterless ctor
+                //Could be custom resolved (e.g. MvcHtmlString)
             }
         }
         public string Name

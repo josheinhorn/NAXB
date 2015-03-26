@@ -68,6 +68,16 @@ namespace NAXB.UnitTests
         }
 
         [TestMethod]
+        public void Test_SetPropertyValue_StringCtor_FirstNameAsHtml()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.FirstNameAsHtml);
+
+            Assert.AreEqual("Josh", person.FirstNameAsHtml.ToHtmlString());
+        }
+
+        [TestMethod]
         public void Test_SetPropertyValue_MailingAddressLines()
         {
             var person = new Person();

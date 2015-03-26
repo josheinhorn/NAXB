@@ -79,11 +79,18 @@ namespace NAXB.BindingModel
             Binding = property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Cast<INAXBPropertyBinding>().FirstOrDefault();
             if (Binding == null) throw new BindingNotFoundException(this);
             CustomFormatBinding = property.GetCustomAttributes(typeof(ICustomFormatBinding), true).Cast<ICustomFormatBinding>().FirstOrDefault();
-            if (CustomFormatBinding != null) CustomFormatBinding.Initialize(reflector);
-
-            Type = PropertyType.XmlFragment; //Initialize Type
-            BuildParseXmlValue(); //Build the parse simple XML delegate and also set the Property Type
-            isFunction = !PropertyInfo.IsEnumerable 
+            PropertyType temp;
+            if (CustomFormatBinding != null && CustomFormatBinding.InitializeResolver(reflector, out temp))
+            {
+                Type = temp;
+            }
+            else
+            {
+                Type = PropertyType.XmlFragment; //Initialize Type
+            }
+            BuildParseXmlValue(); //Build the parse XML delegate and set the Property Type
+            //Evaluate as function is it is a single text, number, or boolean value -- could easily break for custom binding resolvers though
+            isFunction = !PropertyInfo.IsEnumerable
                 && (Type == PropertyType.Text || Type == PropertyType.Number || Type == PropertyType.Bool);
 
             if (!isFunction && rootXPath != null)
@@ -96,7 +103,7 @@ namespace NAXB.BindingModel
                 //It's either a function or there's no root XPath
                 this.xpath = Binding.XPath;
             }
-            
+
         }
 
         public INAXBPropertyBinding Binding
@@ -130,7 +137,7 @@ namespace NAXB.BindingModel
             BuildConvertXmlToProperty();
             try
             {
-                compiledXPath = xPathProcessor.CompileXPath(xpath, namespaces, Type,  isFunction); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
+                compiledXPath = xPathProcessor.CompileXPath(xpath, namespaces, Type, isFunction);
             }
             catch (Exception)
             {
@@ -203,7 +210,7 @@ namespace NAXB.BindingModel
             {
                 convertXmlListToEnumerable = (IEnumerable<IXmlData> data, IXmlModelBinder binder) =>
                     data.Select(xml => binder.BindToModel(ComplexBinding, xml))
-                    .Where(value => value != null);
+                    .Where(value => value != null); //filter nulls or not? Seems strange to return null values
                 Type = PropertyType.Complex;
             }
             else //simple type
@@ -222,6 +229,7 @@ namespace NAXB.BindingModel
             IFormatProvider formatProvider = CultureInfo.InvariantCulture;
             string dateTimeFormat = null;
             bool ignoreCase = false;
+            ConstructorInfo ctor = null;
             if (CustomFormatBinding != null)
             {
                 formatProvider = CustomFormatBinding.GetFormatProvider() ?? CultureInfo.InvariantCulture;
@@ -231,7 +239,12 @@ namespace NAXB.BindingModel
             var elementType = PropertyInfo.ElementType;
             if (elementType == typeof(string))
             {
-                parseXmlValue = (string value) => value;
+                parseXmlValue = (string value) => value; //no format
+                Type = PropertyType.Text;
+            }
+            else if (elementType == typeof(char))
+            {
+                parseXmlValue = (string value) => char.Parse(value); //no format
                 Type = PropertyType.Text;
             }
             else if (PropertyInfo.IsEnum)
@@ -241,9 +254,9 @@ namespace NAXB.BindingModel
             }
             else if (elementType == typeof(bool))
             {
-                parseXmlValue = (string value) => bool.Parse(value);
+                parseXmlValue = (string value) => bool.Parse(value); //no format
                 Type = PropertyType.Bool;
-            }//no format
+            }
             else if (elementType == typeof(byte))
             {
                 parseXmlValue = (string value) => byte.Parse(value, formatProvider);
@@ -294,6 +307,11 @@ namespace NAXB.BindingModel
                 parseXmlValue = (string value) => double.Parse(value, formatProvider);
                 Type = PropertyType.Number;
             }
+            else if (elementType == typeof(decimal))
+            {
+                parseXmlValue = (string value) => decimal.Parse(value, formatProvider);
+                Type = PropertyType.Number;
+            }
             else if (elementType == typeof(DateTime))
             {
                 Type = PropertyType.DateTime;
@@ -308,12 +326,107 @@ namespace NAXB.BindingModel
                     parseXmlValue = (string value) => DateTimeOffset.Parse(value, formatProvider);
                 else parseXmlValue = (string value) => DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider);
             }
-            else if (elementType == typeof(Guid))
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(string) })) != null)
             {
-                parseXmlValue = (string value) => new Guid(value); //No format for this
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { value });
                 Type = PropertyType.Text;
             }
-
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(char) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { char.Parse(value) });
+                Type = PropertyType.Text;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(decimal) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { decimal.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(double) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { double.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(float) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { float.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(long) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { long.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(ulong) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { ulong.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(int) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { int.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(uint) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { uint.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(short) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { short.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(ushort) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { ushort.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(byte) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { byte.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(sbyte) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { sbyte.Parse(value, formatProvider) });
+                Type = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(bool) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                parseXmlValue = (string value) => ctorDel(new object[] { bool.Parse(value) });
+                Type = PropertyType.Bool;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(DateTime) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                Type = PropertyType.DateTime;
+                if (String.IsNullOrEmpty(dateTimeFormat))
+                    parseXmlValue = (string value) => ctorDel(new object[] { DateTime.Parse(value, formatProvider) });
+                else parseXmlValue = (string value) => ctorDel(new object[] { DateTime.ParseExact(value, dateTimeFormat, formatProvider) });
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(DateTimeOffset) })) != null)
+            {
+                var ctorDel = reflector.BuildConstructor(ctor);
+                Type = PropertyType.DateTime;
+                if (String.IsNullOrEmpty(dateTimeFormat))
+                    parseXmlValue = (string value) => ctorDel(new object[] { DateTimeOffset.Parse(value, formatProvider) });
+                else parseXmlValue = (string value) => ctorDel(new object[] { DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider) });
+            }
+            //else it's some other type and it won't be assigned -- e.g. Complex Type
         }
         protected void BuildConvertEnumerableToProperty()
         {

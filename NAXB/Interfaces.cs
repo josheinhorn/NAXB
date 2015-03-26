@@ -156,7 +156,9 @@ namespace NAXB.Interfaces
         /// Initialize this Custom Formatting for use
         /// </summary>
         /// <param name="reflector">Reflector to help initialization</param>
-        void Initialize(IReflector reflector); //Initialize ctor of resolver or other stuff -- alternative to ctor since this is an attribute
+        /// <param name="propertyType">If a custom resolver is initialized, should return the expected type for the property.</param>
+        /// <returns>True if a Custom Binding Resolver was initialized, otherwise false.</returns>
+        bool InitializeResolver(IReflector reflector, out PropertyType propertyType); //Initialize ctor of resolver or other stuff -- alternative to ctor since this is an attribute
     }
 
     /// <summary>

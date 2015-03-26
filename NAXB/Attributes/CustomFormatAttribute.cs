@@ -83,15 +83,20 @@ namespace NAXB.Attributes
         /// Initialize the custom formatting
         /// </summary>
         /// <param name="reflector">Reflector</param>
-        public virtual void Initialize(IReflector reflector)
+        public virtual bool InitializeResolver(IReflector reflector, out PropertyType propertyType)
         {
+            propertyType = PropertyType.Text; //default
+            bool result = false;
             if (reflector == null) throw new ArgumentNullException("reflector");
             if (!isInitialized && CustomBindingResolverType != null)
             {
                 var defaultCtor = reflector.BuildDefaultConstructor(CustomBindingResolverType);
                 createResolver = () => (ICustomBindingResolver)defaultCtor();
+                result = true;
+                propertyType = PropertyType.XmlFragment;
             }
             isInitialized = true;
+            return result;
         }
     }
 }

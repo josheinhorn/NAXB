@@ -54,7 +54,7 @@
     <Compile Include="Xml\DefaultXPath.cs" />
     <Compile Include="Xml\XmlNamespace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BindingModel\PropertyInfo.cs" />
+    <Compile Include="BindingModel\XPropertyInfo.cs" />
     <Compile Include="Attributes\XmlModelAttribute.cs" />
     <Compile Include="BindingModel\XmlModelBinding.cs" />
     <Compile Include="BindingModel\XmlProperty.cs" />

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace NAXB.UnitTests.Mockups.Models
 {
@@ -18,6 +19,9 @@ namespace NAXB.UnitTests.Mockups.Models
 
         [XPath("ex:firstName")]
         public string FirstName { get; set; }
+
+        [XPath("ex:firstName")]
+        public HtmlString FirstNameAsHtml { get; set; }
 
         [XPath("lastName")]
         public string LastName { get; set; }

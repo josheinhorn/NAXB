@@ -73,22 +73,42 @@ public class Person
 A couple of things to note about using NAXB:
 +	No need to specify how each property should be parsed -- this is inferred based on the Type of the property or field
 +	Currently, the NAXB decorated class and all property/field Types must have parameterless constructors
-  +	Constructor does not need to be public
-  +	Doesn't apply to value types such as string, int, bool, etc.
+	+	Constructor does not need to be public
+	+	Doesn't apply to value types such as string, int, bool, etc.
 +	Properties must have a `set` method
 +	Properties/fields do not need to be public
 +	Custom property resolvers and formats can be specified
++	White space is trimmed from the ends of attribute/element values
 
 ### Supported Property/Field Types
 The below are supported "out of the box" types. NAXB can be extended using a Custom Resolver (discussed later).
 +	Nested NAXB models
-+	Concrete implementations of `ICollection<T>` (e.g. `List<T>`, `SortedList<T>`)
++	Concrete implementations of `ICollection<T>` (`List<T>`, `SortedList<T>`, etc.)
 +	Arrays (e.g. `Person[]`, `Automobile[]`)
 +	Nullable types (e.g. `bool?`, `Nullable<int>`)
 +	Enums
-+	Primitive types (e.g. `string`, `int`, `bool`)
++	All primitive types besides `object` (`string`, `char`, `int`, `bool`, etc.)
 +	`DateTime` and `DateTimeOffset`
-+	`Guid`
++	Types with a public constructor that take a single primitive type (or Date) parameter (e.g. `Guid`, `HtmlString`)
+	+	The *first* public constructor found is used. The order that NAXB looks for the single primitive type constructor:
+		1.	`string`
+		2.	`char`
+		3.	`decimal`
+		4.	`double`
+		5.	`float`
+		6.	`long`
+		7.	`ulong`
+		8.	`int`
+		9.	`uint`
+		10.	`short`
+		11.	`ushort`
+		12.	`byte`
+		13.	`sbyte`
+		14.	`bool`
+		15.	`DateTime` (not primitive but supported)
+		16.	`DateTimeOffset` (not primitive but supported)
+	+	Values from the XML are parsed into the appropriate type and then passed to the corresponding constructor.
+	+	If a different order is desired, use a Custom Binding Resolver.
 
 ### XPath Attribute
 The XPath attribute is the primary reason for using NAXB. It takes a single string argument representing an XPath expression that may be a node set selection or a function expression. Whether the XPath should be evaluated as a node set or function is determined by the property/field type. Only single text, numeric, and boolean values will be evaluated as functions while other types and collections will be evaluated as node sets.
