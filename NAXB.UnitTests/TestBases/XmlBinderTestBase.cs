@@ -56,6 +56,17 @@ namespace NAXB.UnitTests
             Assert.AreEqual("Samuel", person.MiddleName);
         }
 
+
+        [TestMethod]
+        public void Test_SetPropertyValue_WithNamespace_FirstName()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.FirstName);
+
+            Assert.AreEqual("Josh", person.FirstName);
+        }
+
         [TestMethod]
         public void Test_SetPropertyValue_MailingAddressLines()
         {

@@ -301,7 +301,7 @@ namespace NAXB.Interfaces
     {
         //Should compiled XPath be stored here? JSE: No, better off in the Property itself, not a binding which contains user input
         string XPath { get; }
-        bool IsFunction { get; }
+        //bool IsFunction { get; }
         //Are the below 2 necessary?
         //bool IsAttribute { get; }
         //bool IsElement { get; }

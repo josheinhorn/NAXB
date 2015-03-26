@@ -91,13 +91,15 @@ The below are supported "out of the box" types. NAXB can be extended using a Cus
 +	`Guid`
 
 ### XPath Attribute
-The XPath attribute is the primary reason for using NAXB. It takes a single string argument representing an XPath expression that may be a node set selection or a function expression. If the XPath is a function expression, you *must* specify this by using the `IsFunction` property of the attribute, or an exception will be thrown at run time.
+The XPath attribute is the primary reason for using NAXB. It takes a single string argument representing an XPath expression that may be a node set selection or a function expression. Whether the XPath should be evaluated as a node set or function is determined by the property/field type. Only single text, numeric, and boolean values will be evaluated as functions while other types and collections will be evaluated as node sets.
 ````C#
+//The below is evaluated as a node set since it's a complex type
 [XPath("xpath/goes/here")]
-protected string XPathedProperty { get; set; }
+protected ComplexType XPathedProperty { get; set; }
 
-[XPath("count(some/stuff)", IsFunction = true)]
-protected string FunctionExpression { get; set; }
+//This is evaluated as a function since the type is a single number
+[XPath("count(some/stuff)"]
+public int FunctionProperty { get; set; }
 ````
 
 ### XmlElement and XmlAttribute Attributes

@@ -36,9 +36,9 @@ namespace NAXB.Attributes
         //{
         //    get { return false; }
         //}
-        public bool IsFunction
-        {
-            get { return false; }
-        }
+        //public bool IsFunction
+        //{
+        //    get { return false; }
+        //}
     }
 }

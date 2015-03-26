@@ -22,7 +22,7 @@ namespace NAXB.BindingModel
         protected bool isInitialized = false;
         protected IReflector reflector;
         protected string xpath = null;
-
+        protected bool isFunction = false;
         private string CombineXPaths(string root, string xpath)
         {
             string result = null;
@@ -78,17 +78,25 @@ namespace NAXB.BindingModel
             //Get the first Property Binding attribute
             Binding = property.GetCustomAttributes(typeof(INAXBPropertyBinding), true).Cast<INAXBPropertyBinding>().FirstOrDefault();
             if (Binding == null) throw new BindingNotFoundException(this);
+            CustomFormatBinding = property.GetCustomAttributes(typeof(ICustomFormatBinding), true).Cast<ICustomFormatBinding>().FirstOrDefault();
+            if (CustomFormatBinding != null) CustomFormatBinding.Initialize(reflector);
 
-            if (!Binding.IsFunction && rootXPath != null)
+            Type = PropertyType.XmlFragment; //Initialize Type
+            BuildParseXmlValue(); //Build the parse simple XML delegate and also set the Property Type
+            isFunction = !PropertyInfo.IsEnumerable 
+                && (Type == PropertyType.Text || Type == PropertyType.Number || Type == PropertyType.Bool);
+
+            if (!isFunction && rootXPath != null)
             {
+                //Node set and there is a root XPath, combine XPaths
                 this.xpath = CombineXPaths(rootXPath, Binding.XPath);
             }
             else
             {
+                //It's either a function or there's no root XPath
                 this.xpath = Binding.XPath;
             }
-            CustomFormatBinding = property.GetCustomAttributes(typeof(ICustomFormatBinding), true).Cast<ICustomFormatBinding>().FirstOrDefault();
-            if (CustomFormatBinding != null) CustomFormatBinding.Initialize(reflector);
+            
         }
 
         public INAXBPropertyBinding Binding
@@ -117,13 +125,12 @@ namespace NAXB.BindingModel
             //Get complex binding, if any
             ComplexBinding = resolver.ResolveBinding(PropertyInfo.ElementType);
             //Build up the delegates that are used to get property value
-            BuildParseXmlValue();
             BuildConvertEnumerableToProperty();
             BuildConvertXmlListToEnumerable();
             BuildConvertXmlToProperty();
             try
             {
-                compiledXPath = xPathProcessor.CompileXPath(xpath, namespaces, Type, Binding.IsFunction); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
+                compiledXPath = xPathProcessor.CompileXPath(xpath, namespaces, Type,  isFunction); //We should pass in the Root Element Name from the Model here!! just a simple concat? modelDescription.RootElementName + this.Binding.XPath ??
             }
             catch (Exception)
             {

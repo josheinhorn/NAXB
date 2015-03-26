@@ -2,6 +2,7 @@
 using NAXB.Interfaces;
 using NAXB.UnitTests.Mockups;
 using NAXB.VtdXml;
+using NAXB.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace NAXB.UnitTests
                 {
                     SingleElement = new XPathTest
                     {
-                        XPath = "firstName",
+                        XPath = "ex:firstName",
                         ExpectedValue = "Josh"
                     },
                     SingleAttribute = new XPathTest
@@ -44,7 +45,7 @@ namespace NAXB.UnitTests
                     },
                     MultipleAttributes= new XPathTest
                     {
-                        XPath = "emails/email/@domain",
+                        XPath = "emails/email/emailAddress/@domain",
                         ExpectedValue = new List<string>
                         {
                             "josheinhorn.com", "gmail.com"
@@ -100,7 +101,7 @@ namespace NAXB.UnitTests
 
         protected override INamespace[] Namespaces
         {
-            get { return new INamespace[0]; }
+            get { return new INamespace[] { new XmlNamespace { Uri = "http://example.com", Prefix = "ex" } }; }
         }
 
         protected override MockXPathProvider XPathProvider

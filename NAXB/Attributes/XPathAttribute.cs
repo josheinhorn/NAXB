@@ -30,10 +30,10 @@ namespace NAXB.Attributes
         }
 
 
-        public bool IsFunction
-        {
-            get;
-            set;
-        }
+        //public bool IsFunction
+        //{
+        //    get;
+        //    set;
+        //}
     }
 }

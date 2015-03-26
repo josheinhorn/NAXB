@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<person role="boss">
-  <firstName>
+<ex:person role="boss" xmlns:ex="http://example.com">
+  <ex:firstName>
     Josh
-  </firstName>
+  </ex:firstName>
   <lastName>Einhorn</lastName>
   <middleName>Samuel</middleName>
   <emails>
@@ -59,4 +59,4 @@
       </contacts>
     </person>
   </contacts>
-</person>
+</ex:person>
