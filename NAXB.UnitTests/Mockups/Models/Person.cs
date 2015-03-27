@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Web;
 
@@ -13,6 +14,9 @@ namespace NAXB.UnitTests.Mockups.Models
     {
         [XPath("count(contacts/person)")]
         public int NumberOfContacts { get; set; }
+
+        [XPath("count(contacts/person)")]
+        public BigInteger BigNumberOfContacts { get; set; }
 
         [XPath("count(contacts/person)=count(emails/email)")]
         public bool? ContactsEqualToEmails;

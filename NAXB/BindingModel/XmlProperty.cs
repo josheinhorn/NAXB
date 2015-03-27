@@ -216,12 +216,24 @@ namespace NAXB.BindingModel
             else //simple type
             {
                 convertXmlListToEnumerable = (IEnumerable<IXmlData> data, IXmlModelBinder binder) =>
-                    data.Select(xml =>
+                    {
+                        var result = new List<object>();
+                        foreach (var xml in data)
                         {
-                            try { return parseXmlValue(xml.Value); }
-                            catch (Exception) { return null; } //Just return null if the value couldn't be parsed
-                        })
-                        .Where(value => value != null); //filter out any values that couldn't be parsed
+                                try
+                                { 
+                                    result.Add(parseXmlValue(xml.Value));
+                                }
+                                catch (Exception) { } 
+                        }
+                        return result;
+                    };
+                    //data.Select(xml =>
+                    //    {
+                    //        try { return parseXmlValue(xml.Value); }
+                    //        catch (Exception) { return null; } //Just return null if the value couldn't be parsed
+                    //    })
+                    //    .Where(value => value != null); //filter out any values that couldn't be parsed
             }
         }
         protected void BuildParseXmlValue()
@@ -332,12 +344,12 @@ namespace NAXB.BindingModel
                 parseXmlValue = (string value) => ctorDel(new object[] { value });
                 Type = PropertyType.Text;
             }
-            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(char) })) != null)
-            {
-                var ctorDel = reflector.BuildConstructor(ctor);
-                parseXmlValue = (string value) => ctorDel(new object[] { char.Parse(value) });
-                Type = PropertyType.Text;
-            }
+            //else if ((ctor = elementType.GetConstructor(new Type[] { typeof(Char) })) != null)
+            //{
+            //    var ctorDel = reflector.BuildConstructor(ctor);
+            //    parseXmlValue = (string value) => ctorDel(new object[] { char.Parse(value) });
+            //    Type = PropertyType.Text;
+            //}
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(decimal) })) != null)
             {
                 var ctorDel = reflector.BuildConstructor(ctor);

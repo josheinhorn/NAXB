@@ -6,6 +6,7 @@ using NAXB.UnitTests.Mockups.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace NAXB.UnitTests
@@ -62,6 +63,19 @@ namespace NAXB.UnitTests
             var instance = ctor(new object[] { new char[] { 'a', 'b', 'c' } });
 
             Assert.IsInstanceOfType(instance, expectedType);
+        }
+
+        [TestMethod]
+        public void Test_BuildConstructor_BigIntegerFromDecimal()
+        {
+            Type expectedType = typeof(BigInteger);
+            var ctorInfo = expectedType.GetConstructor(new Type[] { typeof(decimal) });
+
+            decimal arg = 2;
+            var ctor = reflector.BuildConstructor(ctorInfo);
+            var instance = ctor(new object[] { arg });
+
+            Assert.AreEqual(new BigInteger(arg), instance);
         }
 
         [TestMethod]

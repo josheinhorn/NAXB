@@ -181,7 +181,7 @@ The out of the box implementation of this interface is `CustomFormatAttribute`. 
 #### Custom Binding Resolver
 In order to completely override the base functionality for resolving a single property/field, you can provide a custom binding resolver by implementing `ICustomBindingResolver`. 
 
-An example for a reason to do this is to read XML "Yes"/"No" values into boolean values since the base implementation uses strict boolean parsing so only "true"/"false" would be converted to `true` and `false` out of the box.
+An example for a reason to do this is to read encrypted XML element/attribute values into their actual value in the model instead of performing the decryption at a later point in the application.
 
 ### Performing Runtime XML Binding
 So after you've properly decorated your class, you need to actually generate your CLR object using XML Data. This is where the XML Factory, XML Binder, and XML Binding Resolvers come in. Below is an example that uses all the base implementations. Note that the below does not use a singleton instance (e.g. through dependency injection), which is **required to reap the performance benefits of NAXB**.
@@ -207,29 +207,3 @@ Person model = Binder.BindToModel<Person>(personXmlData);
 ...
 ````
 So as you can see, you need to pass in an array of Assemblies. These Assemblies must contain all the NAXB Models that you wish to use (such as `Person` and `Email` in the examples). The Binding Resolver processes all the Types in the Assemblies and assembles the NAXB bindings based on the attributes discussed earlier. Note that this is a very CPU intensive process and is the source of all runtime optimizations, so a **singleton instance of the XML Binder object is high encouraged**.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

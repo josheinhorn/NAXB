@@ -17,42 +17,46 @@ namespace NAXB.VtdXml
             if (data != null && xpath != null && data is VtdXmlData)
             {
                 var vtdData = data as VtdXmlData;
-                var nav = vtdData.Navigator;
-                AutoPilot ap = null;
-                if (xpath.UnderlyingObject is AutoPilot)
+                lock (vtdData.Navigator)
                 {
-                    ap = xpath.UnderlyingObject as AutoPilot;
-                }
-                else
-                {
-                    ap = new AutoPilot();
-                    AddNamespaces(ap, xpath.Namespaces);
-                    ap.selectXPath(xpath.XPathAsString);
-                }
-                ap.bind(nav);
-                //Question -- is the XPath evaluated relative to the current Cursor location or relative to the entire document?
-                //Answer -- it is relative to the current Cursor position:
-                //"If the navigation you want to perform is more complicated, you can in fact nest XPath queries" - http://www.codeproject.com/Articles/28237/Programming-XPath-with-VTD-XML
-
-                //We rely on developer to give the correct Type for a function expression
-                if (!xpath.IsFunction) //It's a node set
-                {
-                    while (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
+                    var nav = vtdData.Navigator;
+                    AutoPilot ap = null;
+                    if (xpath.UnderlyingObject is AutoPilot)
                     {
-                        BookMark bookMark = new BookMark(nav);
-                        //Record the current position navigated to by the AutoPilot
-                        bookMark.recordCursorPosition();
-                        //Add new XML Data with the recorded position
-                        result.Add(new VtdXmlData(bookMark));
+                        ap = xpath.UnderlyingObject as AutoPilot;
                     }
+                    else
+                    {
+                        ap = new AutoPilot();
+                        AddNamespaces(ap, xpath.Namespaces);
+                        ap.selectXPath(xpath.XPathAsString);
+                    }
+                    ap.bind(nav);
+                    //Question -- is the XPath evaluated relative to the current Cursor location or relative to the entire document?
+                    //Answer -- it is relative to the current Cursor position:
+                    //"If the navigation you want to perform is more complicated, you can in fact nest XPath queries" - http://www.codeproject.com/Articles/28237/Programming-XPath-with-VTD-XML
+
+                    //We rely on developer to give the correct Type for a function expression
+                    if (!xpath.IsFunction) //It's a node set
+                    {
+                        while (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
+                        {
+                            BookMark bookMark = new BookMark(nav);
+                            //Record the current position navigated to by the AutoPilot
+                            bookMark.recordCursorPosition();
+                            //Add new XML Data with the recorded position
+                            result.Add(new VtdXmlData(bookMark));
+                        }
+                    }
+                    else //it is a function!
+                    {
+                        //XPath is actually a function, evaluate to single string
+                        string evaluatedValue = ap.evalXPathToString().Trim(); //Always evaluate to string, parse to real property type later
+                        result.Add(new VtdXmlData(evaluatedValue));
+                    }
+                    ap.resetXPath();
                 }
-                else //it is a function!
-                {
-                    //XPath is actually a function, evaluate to single string
-                    string evaluatedValue = ap.evalXPathToString().Trim(); //Always evaluate to string, parse to real property type later
-                    result.Add(new VtdXmlData(evaluatedValue));
-                }
-                ap.resetXPath();
+               
             }
             return result;
         }

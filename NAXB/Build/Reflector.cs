@@ -198,6 +198,8 @@ namespace NAXB.Build
             return result;
         }
 
+        public delegate object ConstructorWithParams(params object[] args);
+
         public virtual Func<object[], object> BuildConstructor(ConstructorInfo ctorInfo)
         {
             //Create dynamic method with correct method signature:
@@ -206,9 +208,19 @@ namespace NAXB.Build
             //if (ctorInfo.ContainsGenericParameters) throw new ArgumentException("Constructor must be of a non-generic type for this method.", "ctorInfo");
             //For generics would the return type of this method be Func<Type[], object[], object>?
 
-            DynamicMethod dynamicMethod =
-                new DynamicMethod("Create_" + ctorInfo.Name,
-                ctorInfo.DeclaringType, new Type[] { typeof(object[]) });
+
+            DynamicMethod dynamicMethod = null;
+            if (ctorInfo.DeclaringType.IsValueType)
+            {
+                //Value 
+                dynamicMethod =
+                    new DynamicMethod("Create_" + ctorInfo.DeclaringType.Name,
+                    typeof(object), new Type[] { typeof(object[]) });
+            }
+            else
+                dynamicMethod =
+                    new DynamicMethod("Create_" + ctorInfo.DeclaringType.Name,
+                    ctorInfo.DeclaringType, new Type[] { typeof(object[]) });
 
             // Generate the intermediate language.       
             ILGenerator ilgen = dynamicMethod.GetILGenerator();
@@ -218,7 +230,7 @@ namespace NAXB.Build
             //Exceptions for the delegate that mean the above weren't satisfied: InvalidCastException, IndexOutOfRangeException
             for (int i = 0; i < ctorParams.Length; i++)
             {
-                ilgen.Emit(OpCodes.Ldarg_0); //Push Object array
+                ilgen.Emit(OpCodes.Ldarg_0); //Push Object array (at position 0 because this is a static method)
                 ilgen.Emit(OpCodes.Ldc_I4, i); //Push the index to access
                 ilgen.Emit(OpCodes.Ldelem_Ref); //Push the element at the previously loaded index
                 CastOrUnbox(ilgen, ctorParams[i].ParameterType); //Cast or Box the object to the appropriate Ctor Parameter Type
@@ -227,9 +239,13 @@ namespace NAXB.Build
             try
             {
                 ilgen.Emit(OpCodes.Newobj, ctorInfo); //Call the Ctor, all values on the stack are passed to the Ctor
+                if (ctorInfo.DeclaringType.IsValueType)
+                {
+                    ilgen.Emit(OpCodes.Box, ctorInfo.DeclaringType); //Required to return as object
+                }
                 ilgen.Emit(OpCodes.Ret); //Return the new object
                 result = (Func<object[], object>)dynamicMethod
-                .CreateDelegate(typeof(Func<object[], object>));
+                    .CreateDelegate(typeof(Func<object[], object>));
             }
             catch (Exception e)
             {
@@ -292,7 +308,9 @@ namespace NAXB.Build
         protected void CastOrUnbox(ILGenerator ilgen, Type type)
         {
             if (type.IsValueType)
+            {
                 ilgen.Emit(OpCodes.Unbox_Any, type);
+            }
             else
                 ilgen.Emit(OpCodes.Castclass, type);
         }

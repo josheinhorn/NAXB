@@ -30,12 +30,12 @@ namespace NAXB.VtdXml
         public VtdXmlData(byte[] xml)
         {
             VTDGen gen = new VTDGen();
-            gen.setDoc(xml); //is this the right method? what about the Encoding?
+            gen.setDoc(xml); 
             gen.parse(true);
             nav = gen.getNav();
             byteArray = xml;
             VTDBookMark = new BookMark(nav);
-            VTDBookMark.recordCursorPosition(); //Should be equivalent to .getCurrentIndex()
+            VTDBookMark.recordCursorPosition();
             //Lazy load other properties...
         }
 
@@ -74,14 +74,17 @@ namespace NAXB.VtdXml
             {
                 if (byteArray == null)
                 {
-                    if (VTDBookMark.setCursorPosition())
+                    lock (nav) //Lock on the VTDNav for thread safety if we use multi-threading in future
                     {
-                        var elementToken = nav.getElementFragment();
-                        int length = (int)(elementToken >> 32);
-                        int offset = (int)elementToken;
-                        nav.getXML().getBytes(offset, length);
+                        if (VTDBookMark.setCursorPosition())
+                        {
+                            var elementToken = nav.getElementFragment();
+                            int length = (int)(elementToken >> 32);
+                            int offset = (int)elementToken;
+                            nav.getXML().getBytes(offset, length);
+                        }
+                        else byteArray = new byte[0];
                     }
-                    else byteArray = new byte[0];
                 }
                 return byteArray;
             }
@@ -93,14 +96,17 @@ namespace NAXB.VtdXml
             {
                 if (xmlString == null)
                 {
-                    if (VTDBookMark.setCursorPosition())
+                    lock (nav) //Lock on the VTDNav for thread safety if we use multi-threading in future
                     {
-                        long elementToken = nav.getElementFragment();
-                        int length = (int)(elementToken >> 32);
-                        int offset = (int)elementToken;
-                        xmlString = nav.toString(offset, length);
+                        if (VTDBookMark.setCursorPosition())
+                        {
+                            long elementToken = nav.getElementFragment();
+                            int length = (int)(elementToken >> 32);
+                            int offset = (int)elementToken;
+                            xmlString = nav.toString(offset, length);
+                        }
+                        else xmlString = string.Empty;
                     }
-                    else xmlString = string.Empty;
                 }
                 return xmlString;
             }
@@ -112,19 +118,22 @@ namespace NAXB.VtdXml
             {
                 if (value == null)
                 {
-                    if (VTDBookMark.setCursorPosition())
+                    lock (nav) //Lock on the VTDNav for thread safety if we use multi-threading in future
                     {
-                        int index = -1;
-                        if ((index = nav.getText()) == -1) //no text, assumed an attribute
+                        if (VTDBookMark.setCursorPosition())
                         {
-                            var name = nav.toString(nav.getCurrentIndex());
-                            index = nav.getAttrVal(name);
+                            int index = -1;
+                            if ((index = nav.getText()) == -1) //no text, assumed an attribute
+                            {
+                                var name = nav.toString(nav.getCurrentIndex());
+                                index = nav.getAttrVal(name);
+                            }
+                            //If index is still -1, there is no value (e.g. self closing element)
+                            if (index != -1) value = nav.toNormalizedString(index).Trim();
+                            else value = string.Empty;
                         }
-                        //If index is still -1, there is no value (e.g. self closing element)
-                        if (index != -1) value = nav.toNormalizedString(index).Trim();
-                        else value = string.Empty;
+                        else value = String.Empty;
                     }
-                    else value = String.Empty;
                 }
                 return value;
             }

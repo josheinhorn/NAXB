@@ -7,6 +7,7 @@ using NAXB.Build;
 using NAXB.Interfaces;
 using NAXB.UnitTests.Mockups.Models;
 using NAXB.Exceptions;
+using System.Numerics;
 
 namespace NAXB.UnitTests
 {
@@ -116,6 +117,18 @@ namespace NAXB.UnitTests
 
             Assert.AreEqual(2, person.NumberOfContacts);
         }
+
+        [TestMethod]
+        public void Test_SetPropertyValue_DecimalCtor_BigNumberOfContacts()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.BigNumberOfContacts);
+
+            Assert.AreEqual(new BigInteger(2), person.BigNumberOfContacts);
+        }
+
+        
         [TestMethod]
         public void Test_SetPropertyValue_XPathFunction_ContactsEqualToEmails()
         {

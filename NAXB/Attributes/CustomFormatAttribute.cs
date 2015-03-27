@@ -17,8 +17,8 @@ namespace NAXB.Attributes
         protected Type customBindingResolverType = null;
         bool isInitialized = false;
         /// <summary>
-        /// The type of Custom Binding Resolver to use for this Property/Field. 
-        /// Must implement ICustomBindingResolver;
+        /// The type of Custom Binding Resolver to use for this Property/Field. If this is specified, the XPath will only be evaluated as a node set.
+        /// Must implement ICustomBindingResolver.
         /// </summary>
         /// <exception cref="ArgumentException">Thrown if the Type does not implement ICustomBindingResolver</exception>
         public Type CustomBindingResolverType
