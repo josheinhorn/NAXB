@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Mockups\Models\EmailAddress.cs" />
     <Compile Include="Mockups\Models\EmailProvider.cs" />
+    <Compile Include="Mockups\Models\FirstLastContactCount.cs" />
     <Compile Include="Mockups\Models\RoleEnum.cs" />
     <Compile Include="TestBases\BindingResolverTestBase.cs" />
     <Compile Include="BindingResolverWithVtdTests.cs" />

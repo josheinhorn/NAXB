@@ -195,5 +195,15 @@ namespace NAXB.UnitTests
 
             Assert.AreEqual(2, person.PersonByEmail.Count);
         }
+
+        [TestMethod]
+        public void Test_SetProperty_Tuple_string_string_short()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.TupleTest);
+
+            Assert.IsNotNull(person.TupleTest.FirstName);
+        }
     }
 }

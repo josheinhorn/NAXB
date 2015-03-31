@@ -86,7 +86,7 @@ The below are supported "out of the box" types. NAXB can be extended using a Cus
 	+	`T` can be any of the other supported non-enumerable Types listed in this section
 +	Concrete implementations of `IDictionary<TKey, TValue>`
 	+	This requires special "nested" XPaths in order to select a set of Key Value Pairs, see **XPath Attribute** section
-	+	Both `TKey` and `TValue~ can be any of the other supported non-enumerable Types listed in this section
+	+	Both `TKey` and `TValue` can be any of the other supported non-enumerable Types listed in this section
 +	Arrays (e.g. `Person[]`, `Automobile[]`)
 	+	Array element Type can be any of the other supported non-enumerable Types listed in this section
 +	Nullable types (e.g. `bool?`, `Nullable<int>`)
