@@ -123,7 +123,7 @@ namespace NAXB.Interfaces
 
         void Initialize(IXmlBindingResolver resolver, IXPathProcessor xPathProcessor, INamespace[] namespaces); //Needs to be called to initialize complex binding and compiled XPath
 
-        IXmlModelBinding ComplexBinding { get; } //returns null if it either hasn't been set yet, or the property type is not complex
+        //IXmlModelBinding ComplexBinding { get; } //returns null if it either hasn't been set yet, or the property type is not complex
 
         ICustomFormatBinding CustomFormatBinding { get; }
 

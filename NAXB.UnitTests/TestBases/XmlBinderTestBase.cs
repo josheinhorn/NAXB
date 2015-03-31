@@ -185,5 +185,15 @@ namespace NAXB.UnitTests
                 person.Emails
                 ));
         }
+
+        [TestMethod]
+        public void Test_SetProperty_Dictionary_EmailAddress_Provider()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.PersonByEmail);
+
+            Assert.AreEqual(2, person.PersonByEmail.Count);
+        }
     }
 }

@@ -6,17 +6,14 @@ using NAXB.Attributes;
 
 namespace NAXB.UnitTests.Mockups.Models
 {
-    [XmlModelBinding(RootXPath = "emailAddress")]
+    [XmlModelBinding()]
     [NamespaceDeclaration(Uri = "http://example.com", Prefix = "ex")]
-    public class Email
+    public class EmailAddress
     {
         [XPath("@domain")]
         public string Domain { get; set; }
         [XmlAttribute("name")]
         internal string Name { get; set; }
-
-        [XPath("../provider")] //Demonstrating navigating to Parent node
-        public EmailProvider Provider;
 
         public string FullAddress
         {

@@ -327,10 +327,10 @@ namespace NAXB.Build
                     , argCount, elementType.FullName));
             }
             var ctorInfo = ctors.FirstOrDefault();
-            
+
             var parameters = ctorInfo.GetParameters();
             propertyTypes = new PropertyType[parameters.Length];
-            var parsers = new Func<string,object>[parameters.Length];
+            var parsers = new Func<string, object>[parameters.Length];
             for (int i = 0; i < parameters.Length; i++)
             {
                 parsers[i] = BuildSingleParser(parameters[i].ParameterType,
@@ -384,94 +384,168 @@ namespace NAXB.Build
             }
             else if (elementType == typeof(char))
             {
-                result = (string value) => char.Parse(value); //no format
+                result = (string value) =>
+                {
+                    try { return char.Parse(value); } //no format
+                    catch { return default(char); }
+                };
                 propertyType = PropertyType.Text;
             }
             else if (elementType.IsEnum)
             {
-                result = (string value) => Enum.Parse(elementType, value, ignoreCase);
+                result = (string value) =>
+                {
+                    try { return Enum.Parse(elementType, value, ignoreCase); }
+                    catch { return null; }
+                };
                 propertyType = PropertyType.Enum;
             }
             else if (elementType == typeof(bool))
             {
-                result = (string value) => bool.Parse(value); //no format
+                result = (string value) =>
+                    {
+                        try { return bool.Parse(value); } //no format
+                        catch { return default(bool); }
+                    };
                 propertyType = PropertyType.Bool;
             }
             else if (elementType == typeof(byte))
             {
-                result = (string value) => byte.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return byte.Parse(value, formatProvider); }
+                        catch { return default(byte); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(sbyte))
             {
-                result = (string value) => sbyte.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return sbyte.Parse(value, formatProvider); }
+                        catch { return default(sbyte); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(short))
             {
-                result = (string value) => short.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return short.Parse(value, formatProvider); }
+                        catch { return default(short); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(ushort))
             {
-                result = (string value) => ushort.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return ushort.Parse(value, formatProvider); }
+                        catch { return default(ushort); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(int))
             {
-                result = (string value) => int.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return int.Parse(value, formatProvider); }
+                        catch { return default(int); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(uint))
             {
-                result = (string value) => uint.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return uint.Parse(value, formatProvider); }
+                        catch { return default(uint); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(long))
             {
-                result = (string value) => long.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return long.Parse(value, formatProvider); }
+                        catch { return default(long); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(ulong))
             {
-                result = (string value) => ulong.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return ulong.Parse(value, formatProvider); }
+                        catch { return default(ulong); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(float))
             {
-                result = (string value) => float.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return float.Parse(value, formatProvider); }
+                        catch { return default(float); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(double))
             {
-                result = (string value) => double.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return double.Parse(value, formatProvider); }
+                        catch { return default(double); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(decimal))
             {
-                result = (string value) => decimal.Parse(value, formatProvider);
+                result = (string value) =>
+                    {
+                        try { return decimal.Parse(value, formatProvider); }
+                        catch { return default(decimal); }
+                    };
                 propertyType = PropertyType.Number;
             }
             else if (elementType == typeof(DateTime))
             {
                 propertyType = PropertyType.DateTime;
                 if (String.IsNullOrEmpty(dateTimeFormat))
-                    result = (string value) => DateTime.Parse(value, formatProvider);
-                else result = (string value) => DateTime.ParseExact(value, dateTimeFormat, formatProvider);
+                    result = (string value) =>
+                        {
+                            try { return DateTime.Parse(value, formatProvider); }
+                            catch { return default(DateTime); }
+                        };
+                else result = (string value) =>
+                    {
+                        try { return DateTime.ParseExact(value, dateTimeFormat, formatProvider); }
+                        catch { return default(DateTime); }
+                    };
             }
             else if (elementType == typeof(DateTimeOffset))
             {
                 propertyType = PropertyType.DateTime;
                 if (String.IsNullOrEmpty(dateTimeFormat))
-                    result = (string value) => DateTimeOffset.Parse(value, formatProvider);
-                else result = (string value) => DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider);
+                    result = (string value) =>
+                        {
+                            try { return DateTimeOffset.Parse(value, formatProvider); }
+                            catch { return default(DateTimeOffset); }
+                        };
+                else result = (string value) =>
+                    {
+                        try { return DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider); }
+                        catch { return default(DateTimeOffset); }
+                    };
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(string) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { value });
-                propertyType = PropertyType.Text;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { value });
+                //propertyType = PropertyType.Text;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
+            //char ends up creating ambiguity for getting a constructor (because of byte?)
             //else if ((ctor = elementType.GetConstructor(new Type[] { typeof(Char) })) != null)
             //{
             //    var ctorDel = BuildConstructor(ctor);
@@ -480,95 +554,116 @@ namespace NAXB.Build
             //}
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(decimal) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { decimal.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { decimal.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(double) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { double.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { double.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(float) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { float.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { float.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(long) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { long.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { long.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(ulong) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { ulong.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { ulong.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(int) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { int.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //var singleParser = BuildSingleParser(ctor.GetParameters()[0].ParameterType, format, out propertyType);
+                //result = (string value) => ctorDel(new object[] { singleParser(value) });
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(uint) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { uint.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { uint.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(short) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { short.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { short.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(ushort) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { ushort.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { ushort.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(byte) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { byte.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { byte.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(sbyte) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { sbyte.Parse(value, formatProvider) });
-                propertyType = PropertyType.Number;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { sbyte.Parse(value, formatProvider) });
+                //propertyType = PropertyType.Number;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(bool) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                result = (string value) => ctorDel(new object[] { bool.Parse(value) });
-                propertyType = PropertyType.Bool;
+                //var ctorDel = BuildConstructor(ctor);
+                //result = (string value) => ctorDel(new object[] { bool.Parse(value) });
+                //propertyType = PropertyType.Bool;
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(DateTime) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                propertyType = PropertyType.DateTime;
-                if (String.IsNullOrEmpty(dateTimeFormat))
-                    result = (string value) => ctorDel(new object[] { DateTime.Parse(value, formatProvider) });
-                else result = (string value) => ctorDel(new object[] { DateTime.ParseExact(value, dateTimeFormat, formatProvider) });
+                //var ctorDel = BuildConstructor(ctor);
+                //propertyType = PropertyType.DateTime;
+                //if (String.IsNullOrEmpty(dateTimeFormat))
+                //    result = (string value) => ctorDel(new object[] { DateTime.Parse(value, formatProvider) });
+                //else result = (string value) => ctorDel(new object[] { DateTime.ParseExact(value, dateTimeFormat, formatProvider) });
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(DateTimeOffset) })) != null)
             {
-                var ctorDel = BuildConstructor(ctor);
-                propertyType = PropertyType.DateTime;
-                if (String.IsNullOrEmpty(dateTimeFormat))
-                    result = (string value) => ctorDel(new object[] { DateTimeOffset.Parse(value, formatProvider) });
-                else result = (string value) => ctorDel(new object[] { DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider) });
+                //var ctorDel = BuildConstructor(ctor);
+                //propertyType = PropertyType.DateTime;
+                //if (String.IsNullOrEmpty(dateTimeFormat))
+                //    result = (string value) => ctorDel(new object[] { DateTimeOffset.Parse(value, formatProvider) });
+                //else result = (string value) => ctorDel(new object[] { DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider) });
+                result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             return result;
         }
 
+        private Func<string, object> GetSingleParserFromCtor(ConstructorInfo ctor, ICustomFormatBinding format, out PropertyType propertyType)
+        {
+            var ctorDel = BuildConstructor(ctor);
+            //Recursively call BuildSingleParser (once)
+            var singleParser = BuildSingleParser(ctor.GetParameters()[0].ParameterType, format, out propertyType);
+            return (string value) => ctorDel(new object[] { singleParser(value) });
+        }
 
         public bool IsGenericDictionary(Type type, out Type keyType, out Type valueType)
         {
@@ -629,7 +724,7 @@ namespace NAXB.Build
                 };
             }
             else throw new ArgumentException("The type (" + dictionaryType.Name + ") must implement IDictionary<,>", "dictionaryType");
-            
+
             return result;
 
         }
@@ -679,7 +774,7 @@ namespace NAXB.Build
         //        ilGen.Emit(OpCodes.Call, toDictionaryMethod);
         //        ilGen.Emit(OpCodes.Ret);
 
-                
+
 
         //        var source = Expression.Parameter(sourceType, "source");
         //        var lambdaParam = Expression.Parameter(kvpType, "kvp");

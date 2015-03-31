@@ -129,32 +129,29 @@ namespace NAXB.VtdXml
             IEnumerable<IXmlData[]> result = null;
             if (data != null && root != null && data is VtdXmlData)
             {
-                var vtdData = data as VtdXmlData;
-                lock (vtdData.Navigator)
+                if (xpaths == null || xpaths.Length == 0)
                 {
-                    var nav = vtdData.Navigator;
-                    if (xpaths == null || xpaths.Length == 0)
+                    result = ProcessSingleXPath(data, root).Select(x => new IXmlData[] { x });
+                }
+                else
+                {
+                    var vtdData = data as VtdXmlData;
+                    lock (vtdData.Navigator)
                     {
-                        result = ProcessSingleXPath(data, root).Select(x => new IXmlData[] { x });
-                    }
-                    else
-                    {
+                        var nav = vtdData.Navigator;
                         var ap = GetAutoPilot(root, nav);
                         var list = new List<IXmlData[]>();
                         while (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
                         {
-                            //nav.push();
-
                             var arr = new IXmlData[xpaths.Length];
                             for (int i = 0; i < xpaths.Length; i++)
                             {
-                                nav.push();
+                                nav.push(); //Save the current cursor position
                                 IXPath xpath = xpaths[i];
                                 var auto = GetAutoPilot(xpath, nav);
                                 arr[i] = EvaluateSingleXPath(auto, nav, xpath.IsFunction);
-                                nav.pop();
+                                nav.pop(); //Restore the cursor position
                             }
-                            //nav.pop();
                             list.Add(arr);
                         }
                         ap.resetXPath();

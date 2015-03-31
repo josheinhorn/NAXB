@@ -94,9 +94,9 @@ namespace NAXB.BindingModel
             childXPaths = Binding.XPaths; //initial setup
             BuildParseXmlValue(); //Build the parse XML delegate and set the Property Type
             //Evaluate as function if it is a single text, number, or boolean value -- could easily break for custom binding resolvers though
-            
+
             bool hasChildXPaths = Binding.XPaths != null && Binding.XPaths.Length > 0;
-            
+
             if (hasChildXPaths)// && rootXPath != null)
             {
                 //Node set and there is a root XPath, combine XPaths
@@ -184,6 +184,7 @@ namespace NAXB.BindingModel
         {
             //Get complex binding, if any
             ComplexBinding = resolver.ResolveBinding(PropertyInfo.ElementType);
+            KeyComplexBinding = PropertyInfo.KeyType == null ? null : resolver.ResolveBinding(PropertyInfo.KeyType);
             //Build up the delegates that are used to get property value
             BuildConvertEnumerableToProperty();
             BuildConvertXmlListToEnumerable();
@@ -202,7 +203,6 @@ namespace NAXB.BindingModel
                         compiledXPaths[i] = xPathProcessor.CompileXPath(xpath, namespaces, propType, isFunction);
                     }
                 }
-                //What should the Property Type and IsFunction actually be for each XPath?
             }
             catch (Exception)
             {
@@ -211,11 +211,18 @@ namespace NAXB.BindingModel
             isInitialized = true;
         }
 
-        public IXmlModelBinding ComplexBinding
+        protected IXmlModelBinding ComplexBinding
         {
             get;
-            protected set;
+            set;
         }
+
+        protected IXmlModelBinding KeyComplexBinding
+        {
+            get;
+            set;
+        }
+
 
         public virtual object GetPropertyValue(IXmlData data, IXPathProcessor xPathProcessor, IXmlModelBinder binder)
         {
@@ -269,21 +276,41 @@ namespace NAXB.BindingModel
             }
         }
 
+        private Func<IXmlData, IXmlModelBinder, object> GetSingleValueDelegate(IXmlModelBinding complexBinding, Type type)
+        {
+            Func<IXmlData, IXmlModelBinder, object> result = null;
+            if (complexBinding != null)
+            {
+                result = (IXmlData data, IXmlModelBinder binder) =>
+                {
+                    return data != null ? binder.BindToModel(complexBinding, data) : null;
+                };
+            }
+            else
+            {
+                PropertyType temp;
+                var parseKey = reflector.BuildSingleParser(type, CustomFormatBinding, out temp);
+                result = (IXmlData data, IXmlModelBinder binder) =>
+                {
+                    return data != null ? parseKey(data.Value) : null;
+                };
+            }
+            return result;
+        }
+
         protected void BuildConvertXmlListToEnumerable()
         {
-            if (PropertyInfo.IsDictionary && ComplexBinding != null)
+            if (PropertyInfo.IsDictionary)
             {
-                //If it's a Dictionary AND Complex, parse the key as a string and the value as a model
-                PropertyType temp;
-                var parseKey = reflector.BuildSingleParser(PropertyInfo.KeyType, CustomFormatBinding, out temp);
+                Func<IXmlData, IXmlModelBinder, object> getKey = GetSingleValueDelegate(KeyComplexBinding, PropertyInfo.KeyType);
+                Func<IXmlData, IXmlModelBinder, object> getValue = GetSingleValueDelegate(ComplexBinding, PropertyInfo.ElementType);
                 convertXmlListToEnumerable = (IEnumerable<IXmlData[]> data, IXmlModelBinder binder) =>
                     {
                         return data.Select(xml =>
                             {
-                                var key = xml[0] != null ? parseKey(xml[0].Value) : null;
-
-                                var value = xml[1] != null ? binder.BindToModel(ComplexBinding, xml[1])
-                                    : null;
+                                var key = getKey(xml[0], binder);
+                                var value = getValue(xml[1], binder);
+                                
                                 if (key != null && value != null)
                                 {
                                     return new KeyValuePair<object, object>(key, value);
@@ -309,7 +336,7 @@ namespace NAXB.BindingModel
                 //    })
                 //        .Where(value => value != null); //filter out any values that couldn't be parsed
 
-                //The below is (almost) functionally equivalent and allows us to actually Debug paseXmlValue
+                //The below is (almost) functionally equivalent and allows us to actually Debug paseXmlValues
                 //if ever needed
                 convertXmlListToEnumerable = (IEnumerable<IXmlData[]> data, IXmlModelBinder binder) =>
                {
@@ -330,6 +357,7 @@ namespace NAXB.BindingModel
 
         protected void BuildParseXmlValue()
         {
+            //TODO: Make this method more transparent -- it is modifying property type and also building the Parsing delegate
             var elementType = PropertyInfo.ElementType;
             PropertyType temp;
             if (childXPaths == null || childXPaths.Length < 2)
@@ -337,7 +365,7 @@ namespace NAXB.BindingModel
                 var parseXmlValue = reflector.BuildSingleParser(elementType, CustomFormatBinding, out temp);
                 parseXmlValues = (string[] values) => values.Length > 0 ? parseXmlValue(values[0]) : null;
                 if (temp != PropertyType.XmlFragment) Type = temp;
-                if (childXPaths != null && childXPaths.Length == 1)
+                if (childXPaths != null && childXPaths.Length == 1) //If it's a single child XPath, treat it as if it is the root
                 {
                     nestedPropertyTypes = new PropertyType[] { temp };
                 }
@@ -360,12 +388,11 @@ namespace NAXB.BindingModel
                         return result;
                     };
             }
-            else 
+            else
             {
                 parseXmlValues = reflector.BuildMultiParser(elementType, CustomFormatBinding,
                     childXPaths.Length, out nestedPropertyTypes);
             }
-
             //Exception if user violated the rules
             if (nestedPropertyTypes != null && (childXPaths == null || childXPaths.Length != nestedPropertyTypes.Length))
             {
