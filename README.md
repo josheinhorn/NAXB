@@ -84,7 +84,12 @@ A couple of things to note about using NAXB:
 The below are supported "out of the box" types. NAXB can be extended using a Custom Resolver (discussed later).
 +	Nested NAXB models
 +	Concrete implementations of `ICollection<T>` (`List<T>`, `SortedList<T>`, etc.)
+	+	`T` can be any of the other supported non-enumerable Types listed in this section
++	Concrete implementations of `IDictionary<TKey, TValue>`
+	+	This requires special "nested" XPaths in order to select a set of Key Value Pairs, see **XPath Attribute** section
+	+	Both `TKey` and `TValue~ can be any of the other supported non-enumerable Types listed in this section
 +	Arrays (e.g. `Person[]`, `Automobile[]`)
+	+	Array element Type can be any of the other supported non-enumerable Types listed in this section
 +	Nullable types (e.g. `bool?`, `Nullable<int>`)
 +	Enums
 +	All primitive types besides `object` (`string`, `char`, `int`, `bool`, etc.)
@@ -108,6 +113,9 @@ The below are supported "out of the box" types. NAXB can be extended using a Cus
 		15.	`DateTimeOffset` (not primitive but supported)
 	+	Values from the XML are parsed into the appropriate type and then passed to the corresponding constructor.
 	+	If a different order is desired, use a Custom Binding Resolver.
++	Types with a public constructor that unambiguously takes a specified number of primitive type arguments
+	+	These are the same Types listed in the single primitive type constructor bullet point
+	+	This requires multiple nested XPaths (see **XPath Attribute**) which determine the number of constructor arguments to search for.
 
 ### XPath Attribute
 The XPath attribute is the primary reason for using NAXB. It takes a single string argument representing an XPath expression that may be a node set selection or a function expression. Whether the XPath should be evaluated as a node set or function is determined by the property/field type. Only single text, numeric, and boolean values will be evaluated as functions while other types and collections will be evaluated as node sets.
@@ -120,6 +128,40 @@ protected ComplexType XPathedProperty { get; set; }
 [XPath("count(some/stuff)"]
 public int FunctionProperty { get; set; }
 ````
+The XPath attribute also allows for something called Nested XPaths. Nested XPaths are for selecting *multiple* values from the same node set. To use this, you specify the node set to iterate on, and then any number of nested XPath expressions that are evaluated on the root node set.
+
+#### Dictionaries with Nested XPaths
+````C#
+[XPath("contacts/person", "concat(firstName, ' ', lastName)", "emails/email")]
+public Dictionary<string, Email> EmailsByName;
+````
+In the above example, the `contacts/person` XPath will be iterated on and Key Value Pairs of the combined first and last name and associated Email (first) will be extracted from the resulting node set. Note that the `TValue` Type is a complex NAXB decorated type (`Email`), and the same can apply the Key type as well (though not in the above example). Also, it is *required* that an `IDictionary` Property/Field Type have exactly 2 Nested XPaths - the first for the Key and the second for the Value. Currently, Key conflicts will be resolved on a strict first-key-takes-precedence basis. Future versions will allow this to be configurable.
+
+#### Multi-argument Constructor Types with Nested XPaths
+````C#
+[XPath("contacts/person", "@id", "emails/email[1]/@address", "count(paymentTypes/creditCard)", "DOB")]
+public List<Contact> Contacts;
+````
+````C#
+public struct Contact
+{
+	public Contact(int id, 
+		string primaryEmailAddress,
+		short numberOfCreditCards,
+		DateTime dateOfBirth)
+	{
+		Id = id;
+		PrimaryEmailAddress = primaryEmailAddress;
+		NumberOfCreditCards = numberOfCreditCards;
+		DateOfBirth = dateOfBirth;
+	}
+	public int Id { get; private set; }
+	public string PrimaryEmailAddress { get; private set; }
+	public short NumberOfCreditCards { get; private set; }
+	public DateTime DateOfBirth { get; private set; }
+}
+````
+The above example demonstrates that `XPathAttribute` also supports Types with constructors that take multiple primitive type arguments instead of being decorated with NAXB Attributes. It is important to note that there must not be more than one constructor with the same number of arguments such as `public Contact(int id, string name)` and `public Contact(Guid id, string name)`. The number of constructor arguments must also exactly match the number of Nested XPaths (4 in the example above). Remember that the number of Nested XPaths does not include the initial node set XPath.
 
 ### XmlElement and XmlAttribute Attributes
 For simpler readability and maintainability, you may also specify XML Element or Attribute properties. These are functionally equivalent to using the XPath attribute, though are more semantic.
