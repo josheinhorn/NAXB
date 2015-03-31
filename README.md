@@ -72,9 +72,8 @@ public class Person
 ````
 A couple of things to note about using NAXB:
 +	No need to specify how each property should be parsed -- this is inferred based on the Type of the property or field
-+	Currently, the NAXB decorated class and all property/field Types must have parameterless constructors
++	Currently, the NAXB decorated classes must have parameterless constructors
 	+	Constructor does not need to be public
-	+	Doesn't apply to value types such as string, int, bool, etc.
 +	Properties must have a `set` method
 +	Properties/fields do not need to be public
 +	Custom property resolvers and formats can be specified
@@ -92,29 +91,30 @@ The below are supported "out of the box" types. NAXB can be extended using a Cus
 	+	Array element Type can be any of the other supported non-enumerable Types listed in this section
 +	Nullable types (e.g. `bool?`, `Nullable<int>`)
 +	Enums
-+	All primitive types besides `object` (`string`, `char`, `int`, `bool`, etc.)
-+	`DateTime` and `DateTimeOffset`
-+	Types with a public constructor that take a single primitive type (or Date) parameter (e.g. `Guid`, `HtmlString`)
-	+	The *first* public constructor found is used. The order that NAXB looks for the single primitive type constructor:
-		1.	`string`
-		2.	`decimal`
-		3.	`double`
-		4.	`float`
-		5.	`long`
-		6.	`ulong`
-		7.	`int`
-		8.	`uint`
-		9.	`short`
-		10.	`ushort`
-		11.	`byte`
-		12.	`sbyte`
-		13.	`bool`
-		14.	`DateTime` (not primitive but supported)
-		15.	`DateTimeOffset` (not primitive but supported)
-	+	Values from the XML are parsed into the appropriate type and then passed to the corresponding constructor.
-	+	If a different order is desired, use a Custom Binding Resolver.
-+	Types with a public constructor that unambiguously takes a specified number of primitive type arguments
-	+	These are the same Types listed in the single primitive type constructor bullet point
++	**Simple Types**
+	+	All primitive types besides `object` (`string`, `char`, `int`, `bool`, etc.)
+	+	`DateTime` and `DateTimeOffset`
+	+	Types with a public constructor that take a single primitive type (or Date) parameter (e.g. `Guid`, `HtmlString`, `BigInteger`)
+		+	The *first* public constructor found is used. The order that NAXB looks for the single primitive type constructor:
+			1.	`string`
+			2.	`decimal`
+			3.	`double`
+			4.	`float`
+			5.	`long`
+			6.	`ulong`
+			7.	`int`
+			8.	`uint`
+			9.	`short`
+			10.	`ushort`
+			11.	`byte`
+			12.	`sbyte`
+			13.	`bool`
+			14.	`DateTime` (not primitive but supported)
+			15.	`DateTimeOffset` (not primitive but supported)
+		+	Values from the XML are parsed into the appropriate type and then passed to the corresponding constructor.
+		+	If a different order is desired, use a Custom Binding Resolver.
+		+	Note: `char` was specifically excluded due to causing conflicts when retrieving constructors.
++	Types with a public constructor that unambiguously takes a specified number of Simple Type arguments (see above)
 	+	This requires multiple nested XPaths (see **XPath Attribute**) which determine the number of constructor arguments to search for.
 
 ### XPath Attribute
