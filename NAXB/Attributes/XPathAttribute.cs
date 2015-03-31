@@ -16,24 +16,23 @@ namespace NAXB.Attributes
         /// <summary>
         /// Marks a Property/Field to be bound to an XPath expression evaluated on the current context. 
         /// </summary>
-        /// <param name="xpath">XPath expression. This may be a function expression or a node set selection.</param>
-        public XPathAttribute(string xpath)
+        /// <param name="childXPaths">XPath expression. This may be a function expression or a node set selection.</param>
+        public XPathAttribute(string xpath, params string[] childXPaths)
         {
-            XPath = xpath;
+            RootXPath = xpath;
+            XPaths = childXPaths;
         }
         /// <summary>
         /// XPath expression
         /// </summary>
-        public string XPath
+        public string RootXPath
         {
             get; set;
         }
-
-
-        //public bool IsFunction
-        //{
-        //    get;
-        //    set;
-        //}
+        public string[] XPaths
+        {
+            get;
+            private set;
+        }
     }
 }

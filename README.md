@@ -92,21 +92,20 @@ The below are supported "out of the box" types. NAXB can be extended using a Cus
 +	Types with a public constructor that take a single primitive type (or Date) parameter (e.g. `Guid`, `HtmlString`)
 	+	The *first* public constructor found is used. The order that NAXB looks for the single primitive type constructor:
 		1.	`string`
-		2.	`char`
-		3.	`decimal`
-		4.	`double`
-		5.	`float`
-		6.	`long`
-		7.	`ulong`
-		8.	`int`
-		9.	`uint`
-		10.	`short`
-		11.	`ushort`
-		12.	`byte`
-		13.	`sbyte`
-		14.	`bool`
-		15.	`DateTime` (not primitive but supported)
-		16.	`DateTimeOffset` (not primitive but supported)
+		2.	`decimal`
+		3.	`double`
+		4.	`float`
+		5.	`long`
+		6.	`ulong`
+		7.	`int`
+		8.	`uint`
+		9.	`short`
+		10.	`ushort`
+		11.	`byte`
+		12.	`sbyte`
+		13.	`bool`
+		14.	`DateTime` (not primitive but supported)
+		15.	`DateTimeOffset` (not primitive but supported)
 	+	Values from the XML are parsed into the appropriate type and then passed to the corresponding constructor.
 	+	If a different order is desired, use a Custom Binding Resolver.
 

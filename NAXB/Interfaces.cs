@@ -67,8 +67,10 @@ namespace NAXB.Interfaces
         bool IsGenericCollection { get; }
         bool IsEnumerable { get; }
         bool IsEnum { get; } //Enumerated type
+        bool IsDictionary { get; }
         Type PropertyType { get; }
-        Type ElementType { get; } //T for ICollection<T>, T[] or same as PropertyType. IEnumerable<T> not supported -- would have to rely entirely on Linq to build property
+        Type KeyType { get; } //For Dictionary
+        Type ElementType { get; } //T for ICollection<T>, T[], IDictionary<TKey, T> or same as PropertyType. IEnumerable<T> not supported -- would have to rely entirely on Linq to build property
         Type DeclaringType { get; }
         /// <summary>
         /// Gets a delegate that takes an IEnumerable&lt;T&gt; and populates an ICollection&lt;T&gt; where T is ElementType
@@ -80,6 +82,7 @@ namespace NAXB.Interfaces
         /// </summary>
         /// <remarks>This is necessary because the actual generic is unknown.</remarks>
         Array ToArray(IEnumerable enumerable);
+        void PopulateDictionary(IEnumerable<KeyValuePair<object, object>> kvps, object dictionary);
     }
     public interface IBindableCollection //Future use: can use this if Array or ICollection<T> isn't sufficient
     {
@@ -174,8 +177,8 @@ namespace NAXB.Interfaces
         /// <param name="data">XML Data</param>
         /// <param name="binder">Model Binder</param>
         /// <returns>Property value</returns>
-        object GetPropertyValue(IEnumerable<IXmlData> data, IXmlModelBinder binder); //Should IXmlProperty be passed?
-        bool TryGetPropertyValue(IEnumerable<IXmlData> data, IXmlModelBinder binder, out object propertyValue);  //Should IXmlProperty be passed?
+        object GetPropertyValue(IEnumerable<IXmlData[]> data, IXmlModelBinder binder); //Should IXmlProperty be passed?
+        bool TryGetPropertyValue(IEnumerable<IXmlData[]> data, IXmlModelBinder binder, out object propertyValue);  //Should IXmlProperty be passed?
     }
 
     #region Reflection
@@ -279,6 +282,20 @@ namespace NAXB.Interfaces
         Func<object, object> BuildGetField(FieldInfo field);
 
         Type GetFieldOrPropertyType(MemberInfo member);
+
+        Func<string, object> BuildSingleParser(
+            Type elementType,
+            ICustomFormatBinding format,
+            out PropertyType propertyType);
+
+        Func<string[], object> BuildMultiParser(
+            Type elementType,
+            ICustomFormatBinding format,
+            int argCount,
+            out PropertyType[] propertyTypes);
+
+        bool IsGenericDictionary(Type type, out Type keyType, out Type valueType);
+        Action<IEnumerable<KeyValuePair<object, object>>, object> BuildPopulateDictionary(Type dictionaryType);
     }
     //public interface IMethodSignature
     //{
@@ -302,7 +319,8 @@ namespace NAXB.Interfaces
     public interface INAXBPropertyBinding  //Can't use generic because this will be used as Custom Attribute
     {
         //Should compiled XPath be stored here? JSE: No, better off in the Property itself, not a binding which contains user input
-        string XPath { get; }
+        string RootXPath { get; }
+        string[] XPaths { get; }
         //bool IsFunction { get; }
         //Are the below 2 necessary?
         //bool IsAttribute { get; }
@@ -328,7 +346,9 @@ namespace NAXB.Interfaces
 
     public interface IXPathProcessor
     { 
-        IEnumerable<IXmlData> ProcessXPath(IXmlData data, IXPath xpath);
+        IEnumerable<IXmlData> ProcessSingleXPath(IXmlData data, IXPath xpath);
+
+        IEnumerable<IXmlData[]> ProcessXPath(IXmlData data, IXPath root, IXPath[] xpath);
         IXPath CompileXPath(string xpath, INamespace[] namespaces, PropertyType propertyType, bool isFunction); 
     }
 

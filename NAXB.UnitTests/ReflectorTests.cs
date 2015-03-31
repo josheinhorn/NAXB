@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Web;
 
 namespace NAXB.UnitTests
 {
@@ -284,6 +285,84 @@ namespace NAXB.UnitTests
             var result = reflector.IsNullableType(test, out actual);
 
             Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Test_BuildSingleParser_Int()
+        {
+            PropertyType temp;
+            var parser = reflector.BuildSingleParser(typeof(int), null, out temp);
+
+            Assert.AreEqual((int)2, parser("2"));
+        }
+
+        [TestMethod]
+        public void Test_BuildSingleParser_Double()
+        {
+            PropertyType temp;
+            var parser = reflector.BuildSingleParser(typeof(double), null, out temp);
+
+            Assert.AreEqual((double)2, parser("2"));
+        }
+
+        [TestMethod]
+        public void Test_BuildSingleParser_HtmlString()
+        {
+            PropertyType temp;
+            var parser = reflector.BuildSingleParser(typeof(HtmlString), null, out temp);
+
+            Assert.IsInstanceOfType(parser("2"), typeof(HtmlString));
+        }
+
+        [TestMethod]
+        public void Test_BuildSingleParser_DateTime()
+        {
+            PropertyType temp;
+            var parser = reflector.BuildSingleParser(typeof(DateTime), null, out temp);
+            
+            var result = parser("02-02-2002");
+            Assert.IsInstanceOfType(result, typeof(DateTime));
+        }
+
+        [TestMethod]
+        public void Test_BuildMultiParser_Tuple_Decimal_Byte_String()
+        {
+            var expected = typeof(Tuple<decimal, byte, string>);
+            PropertyType[] temp;
+            var parser = reflector.BuildMultiParser(expected, null, 3, out temp);
+
+            var result = parser(new string[] { "2", "2", "Hello world!" });
+
+            Assert.IsInstanceOfType(result, expected);
+        }
+
+        [TestMethod]
+        public void Test_IsGenericDictionary_Dictionary_Int_String()
+        {
+            var expected = typeof(Dictionary<int, string>);
+            Type v;
+            Type k;
+            bool result = reflector.IsGenericDictionary(expected, out k, out v);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Test_PopulateDictionary_Dictionary_Int_String()
+        {
+            var expected = typeof(Dictionary<int, string>);
+
+            var populate = reflector.BuildPopulateDictionary(expected);
+
+            var kvps = new List<KeyValuePair<object, object>>
+            {
+                new KeyValuePair<object,object>((int)2, "2"),
+                new KeyValuePair<object,object>((int)3, "3")
+            };
+            var dict = new Dictionary<int, string>();
+            populate(kvps, dict);
+
+            Assert.AreEqual(2, dict.Count);
         }
     }
 }

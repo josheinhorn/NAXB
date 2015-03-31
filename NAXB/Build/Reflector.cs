@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using NAXB.Interfaces;
+using System.Globalization;
 
 namespace NAXB.Build
 {
@@ -208,19 +209,9 @@ namespace NAXB.Build
             //if (ctorInfo.ContainsGenericParameters) throw new ArgumentException("Constructor must be of a non-generic type for this method.", "ctorInfo");
             //For generics would the return type of this method be Func<Type[], object[], object>?
 
-
-            DynamicMethod dynamicMethod = null;
-            if (ctorInfo.DeclaringType.IsValueType)
-            {
-                //Value 
-                dynamicMethod =
-                    new DynamicMethod("Create_" + ctorInfo.DeclaringType.Name,
-                    typeof(object), new Type[] { typeof(object[]) });
-            }
-            else
-                dynamicMethod =
-                    new DynamicMethod("Create_" + ctorInfo.DeclaringType.Name,
-                    ctorInfo.DeclaringType, new Type[] { typeof(object[]) });
+            DynamicMethod dynamicMethod =
+                new DynamicMethod("Create_" + ctorInfo.DeclaringType.Name,
+                typeof(object), new Type[] { typeof(object[]) });
 
             // Generate the intermediate language.       
             ILGenerator ilgen = dynamicMethod.GetILGenerator();
@@ -241,7 +232,13 @@ namespace NAXB.Build
                 ilgen.Emit(OpCodes.Newobj, ctorInfo); //Call the Ctor, all values on the stack are passed to the Ctor
                 if (ctorInfo.DeclaringType.IsValueType)
                 {
-                    ilgen.Emit(OpCodes.Box, ctorInfo.DeclaringType); //Required to return as object
+                    //Required to return as an object
+                    ilgen.Emit(OpCodes.Box, ctorInfo.DeclaringType);
+                }
+                else
+                {
+                    //Required explicit cast to object to use the delegate
+                    ilgen.Emit(OpCodes.Castclass, typeof(Object));
                 }
                 ilgen.Emit(OpCodes.Ret); //Return the new object
                 result = (Func<object[], object>)dynamicMethod
@@ -305,6 +302,337 @@ namespace NAXB.Build
             return result;
         }
 
+        public Func<string[], object> BuildMultiParser(
+            Type elementType,
+            ICustomFormatBinding format,
+            int argCount,
+            out PropertyType[] propertyTypes)
+        {
+            IFormatProvider formatProvider = CultureInfo.InvariantCulture;
+            string dateTimeFormat = null;
+            bool ignoreCase = false;
+            //ConstructorInfo ctor = null;
+            if (format != null)
+            {
+                formatProvider = format.GetFormatProvider() ?? CultureInfo.InvariantCulture;
+                dateTimeFormat = format.DateTimeFormat;
+                ignoreCase = format.IgnoreCase;
+            }
+            Func<string[], object> result = null;
+            var ctors = elementType.GetConstructors().Where(x => x.GetParameters().Count() == argCount);
+            if (ctors.Count() != 1)
+            {
+                throw new ArgumentException(
+                    String.Format("The number of arguments specified ({0}) does not unambiguously match the number of arguments of a single constructor for Type '{1}'."
+                    , argCount, elementType.FullName));
+            }
+            var ctorInfo = ctors.FirstOrDefault();
+            
+            var parameters = ctorInfo.GetParameters();
+            propertyTypes = new PropertyType[parameters.Length];
+            var parsers = new Func<string,object>[parameters.Length];
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                parsers[i] = BuildSingleParser(parameters[i].ParameterType,
+                    format, out propertyTypes[i]);
+            }
+            //PropertyType temp;
+            //var parsers = ctorInfo.GetParameters()
+            //    .Select(x => BuildSingleParser(x.ParameterType, formatProvider, dateTimeFormat, ignoreCase, out temp))
+            //    .ToArray();
+            var ctor = BuildConstructor(ctorInfo);
+            result = (string[] values) =>
+                {
+                    if (values.Length != argCount)
+                    {
+                        throw new ArgumentException(
+                            String.Format("The number of string values ({0}) does not match the number of constructor arguments ({1}) for Type '{2}'."
+                            , values.Length, argCount, elementType.FullName));
+                    }
+                    object[] args = new object[argCount];
+                    for (int i = 0; i < argCount; i++)
+                    {
+                        args[i] = parsers[i](values[i]);
+                    }
+                    return ctor(args);
+                };
+            return result;
+        }
+
+        public Func<string, object> BuildSingleParser(
+            Type elementType,
+             ICustomFormatBinding format,
+            out PropertyType propertyType)
+        {
+            IFormatProvider formatProvider = CultureInfo.InvariantCulture;
+            string dateTimeFormat = null;
+            bool ignoreCase = false;
+            //ConstructorInfo ctor = null;
+            if (format != null)
+            {
+                formatProvider = format.GetFormatProvider() ?? CultureInfo.InvariantCulture;
+                dateTimeFormat = format.DateTimeFormat;
+                ignoreCase = format.IgnoreCase;
+            }
+            Func<string, object> result = null;
+            ConstructorInfo ctor = null;
+            propertyType = PropertyType.XmlFragment;
+            if (elementType == typeof(string))
+            {
+                result = (string value) => value; //no format
+                propertyType = PropertyType.Text;
+            }
+            else if (elementType == typeof(char))
+            {
+                result = (string value) => char.Parse(value); //no format
+                propertyType = PropertyType.Text;
+            }
+            else if (elementType.IsEnum)
+            {
+                result = (string value) => Enum.Parse(elementType, value, ignoreCase);
+                propertyType = PropertyType.Enum;
+            }
+            else if (elementType == typeof(bool))
+            {
+                result = (string value) => bool.Parse(value); //no format
+                propertyType = PropertyType.Bool;
+            }
+            else if (elementType == typeof(byte))
+            {
+                result = (string value) => byte.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(sbyte))
+            {
+                result = (string value) => sbyte.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(short))
+            {
+                result = (string value) => short.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(ushort))
+            {
+                result = (string value) => ushort.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(int))
+            {
+                result = (string value) => int.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(uint))
+            {
+                result = (string value) => uint.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(long))
+            {
+                result = (string value) => long.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(ulong))
+            {
+                result = (string value) => ulong.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(float))
+            {
+                result = (string value) => float.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(double))
+            {
+                result = (string value) => double.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(decimal))
+            {
+                result = (string value) => decimal.Parse(value, formatProvider);
+                propertyType = PropertyType.Number;
+            }
+            else if (elementType == typeof(DateTime))
+            {
+                propertyType = PropertyType.DateTime;
+                if (String.IsNullOrEmpty(dateTimeFormat))
+                    result = (string value) => DateTime.Parse(value, formatProvider);
+                else result = (string value) => DateTime.ParseExact(value, dateTimeFormat, formatProvider);
+            }
+            else if (elementType == typeof(DateTimeOffset))
+            {
+                propertyType = PropertyType.DateTime;
+                if (String.IsNullOrEmpty(dateTimeFormat))
+                    result = (string value) => DateTimeOffset.Parse(value, formatProvider);
+                else result = (string value) => DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider);
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(string) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { value });
+                propertyType = PropertyType.Text;
+            }
+            //else if ((ctor = elementType.GetConstructor(new Type[] { typeof(Char) })) != null)
+            //{
+            //    var ctorDel = BuildConstructor(ctor);
+            //    result = (string value) => ctorDel(new object[] { char.Parse(value) });
+            //    propertyType = PropertyType.Text;
+            //}
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(decimal) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { decimal.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(double) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { double.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(float) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { float.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(long) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { long.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(ulong) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { ulong.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(int) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { int.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(uint) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { uint.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(short) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { short.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(ushort) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { ushort.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(byte) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { byte.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(sbyte) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { sbyte.Parse(value, formatProvider) });
+                propertyType = PropertyType.Number;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(bool) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                result = (string value) => ctorDel(new object[] { bool.Parse(value) });
+                propertyType = PropertyType.Bool;
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(DateTime) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                propertyType = PropertyType.DateTime;
+                if (String.IsNullOrEmpty(dateTimeFormat))
+                    result = (string value) => ctorDel(new object[] { DateTime.Parse(value, formatProvider) });
+                else result = (string value) => ctorDel(new object[] { DateTime.ParseExact(value, dateTimeFormat, formatProvider) });
+            }
+            else if ((ctor = elementType.GetConstructor(new Type[] { typeof(DateTimeOffset) })) != null)
+            {
+                var ctorDel = BuildConstructor(ctor);
+                propertyType = PropertyType.DateTime;
+                if (String.IsNullOrEmpty(dateTimeFormat))
+                    result = (string value) => ctorDel(new object[] { DateTimeOffset.Parse(value, formatProvider) });
+                else result = (string value) => ctorDel(new object[] { DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider) });
+            }
+            return result;
+        }
+
+
+        public bool IsGenericDictionary(Type type, out Type keyType, out Type valueType)
+        {
+            keyType = null;
+            valueType = null;
+            bool result = false;
+            var generics = type.GetGenericArguments();
+            if (generics.Length == 2 && typeof(IDictionary<,>).MakeGenericType(generics).IsAssignableFrom(type))
+            {
+                keyType = generics[0];
+                valueType = generics[1];
+                result = true;
+            }
+            return result;
+        }
+
+        public Action<IEnumerable<KeyValuePair<object, object>>, object> BuildPopulateDictionary(Type dictionaryType)
+        {
+            Action<IEnumerable<KeyValuePair<object, object>>, object> result = null;
+            Type keyType;
+            Type valueType;
+            if (IsGenericDictionary(dictionaryType, out keyType, out valueType)) //It has a generic type param and it implements IDictionary<T>
+            {
+                var dictionaryParam = Expression.Parameter(typeof(object), "dictionary");
+                var keyParam = Expression.Parameter(typeof(object), "key");
+                var valueParam = Expression.Parameter(typeof(object), "item");
+
+                MethodInfo addMethod = dictionaryType.GetMethod("Add", new Type[] { keyType, valueType }); //The Add method for ICollection<T>
+
+                //Build the Call which casts the inputs to the appropriate type and calls the add method expression
+                var addCall = Expression.Call(
+                                    Expression.Convert(dictionaryParam, dictionaryType), addMethod,
+                                    Expression.Convert(keyParam, keyType),
+                                    Expression.Convert(valueParam, valueType));
+
+                var addToDictionary = Expression.Lambda<Action<object, object, object>>(addCall, dictionaryParam, keyParam, valueParam).Compile();
+                //addToCollection equivalent to:
+                /*delegate (object dictionary, object item)
+                {
+                    ((CollectionType)dictionary).Add((GenericType)item);   
+                }*/
+
+                var containsKeyMethod = dictionaryType.GetMethod("ContainsKey");
+                var containsKeyCall = Expression.Call(
+                    Expression.Convert(dictionaryParam, dictionaryType), containsKeyMethod,
+                    Expression.Convert(keyParam, keyType));
+
+                var containsKey = Expression.Lambda<Func<object, object, bool>>(containsKeyCall, dictionaryParam, keyParam).Compile();
+
+                //Build the final delegate function with loops through the enumerable and adds items to the dictionary
+                result = (IEnumerable<KeyValuePair<object, object>> kvps, object dictionary) =>
+                {
+                    foreach (var kvp in kvps)
+                    {
+                        if (!containsKey(dictionary, kvp.Key)) //Make the behavior configurable here
+                            addToDictionary(dictionary, kvp.Key, kvp.Value);
+                    }
+                };
+            }
+            else throw new ArgumentException("The type (" + dictionaryType.Name + ") must implement IDictionary<,>", "dictionaryType");
+            
+            return result;
+
+        }
         protected void CastOrUnbox(ILGenerator ilgen, Type type)
         {
             if (type.IsValueType)
@@ -314,5 +642,55 @@ namespace NAXB.Build
             else
                 ilgen.Emit(OpCodes.Castclass, type);
         }
+
+        //var kvpType = typeof(KeyValuePair<object,object>);
+        //        var getKey = kvpType.GetProperty("Key").GetGetMethod();
+        //        var getValue = kvpType.GetProperty("Value").GetGetMethod();
+        //        var sourceType = typeof(IEnumerable<KeyValuePair<object, object>>);
+        //        var selectKeyType = typeof(Func<,>).MakeGenericType(new Type[] { sourceType, keyType});
+        //        var selectValueType = typeof(Func<,>).MakeGenericType(new Type[] { sourceType, valueType});
+
+        //        //var toDictionaryMethod = typeof(Enumerable).GetMethod("ToDictionary", new Type[] { 
+        //            //typeof(IEnumerable<>), typeof(Func<,>), typeof(Func<,>) });
+        //        var enumerableType = typeof(Enumerable);
+        //        var toDictionaryMethod =
+        //        (
+        //            from m in enumerableType.GetMethods(BindingFlags.Static | BindingFlags.Public)
+        //            where m.Name == "ToDictionary"
+        //            let p = m.GetParameters()
+        //            where p.Length == 3
+        //                && p[0].ParameterType.IsGenericType
+        //                && p[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
+        //                && p[1].ParameterType.IsGenericType
+        //                && p[1].ParameterType.GetGenericTypeDefinition() == typeof(Func<,>)
+        //                && p[2].ParameterType.IsGenericType
+        //                && p[2].ParameterType.GetGenericTypeDefinition() == typeof(Func<,>)
+        //            select m
+        //        ).SingleOrDefault();
+
+        //        var parameterTypes = new Type[] { typeof(object), selectKeyType, selectValueType };
+        //        var dynamicToDict = new DynamicMethod("toDictionary", typeof(object), new Type[] { typeof(object), selectKeyType, selectValueType });
+
+        //        var ilGen = dynamicToDict.GetILGenerator();
+
+        //        ilGen.Emit(OpCodes.Ldarg_0); //source
+        //        ilGen.Emit(OpCodes.Ldarg_1); //select Key
+        //        ilGen.Emit(OpCodes.Ldarg_2); //select Value
+        //        ilGen.Emit(OpCodes.Call, toDictionaryMethod);
+        //        ilGen.Emit(OpCodes.Ret);
+
+                
+
+        //        var source = Expression.Parameter(sourceType, "source");
+        //        var lambdaParam = Expression.Parameter(kvpType, "kvp");
+
+        //        //(KeyValuePair<object,object> kvp) => (KeyType)kvp.Key
+        //        var selectKey = Expression.Convert(Expression.Call(lambdaParam, getKey), keyType);
+        //        //(KeyValuePair<object,object> kvp) => (ValueType)kvp.Value
+        //        var selectValue = Expression.Convert(Expression.Call(lambdaParam, getValue), valueType);
+        //        //source.ToDictionary<KvpType, KeyType, ValueType>(selectKey, selectValue);
+        //        var toDict = Expression.Call(typeof(Enumerable), "ToDictionary", new Type[1], null); //Can't use this because there are 2 methods with same # of generics
+        //        //var toDict = Expression.Call(toDictionaryMethod, source, selectKey, selectValue);
+        //        result = Expression.Lambda<Func<IEnumerable<KeyValuePair<object, object>>, object>>(toDict, source).Compile();
     }
 }

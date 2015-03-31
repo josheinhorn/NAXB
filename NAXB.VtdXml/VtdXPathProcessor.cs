@@ -11,7 +11,7 @@ namespace NAXB.VtdXml
 {
     public class VtdXPathProcessor : IXPathProcessor
     {
-        public IEnumerable<IXmlData> ProcessXPath(IXmlData data, IXPath xpath)
+        public IEnumerable<IXmlData> ProcessSingleXPath(IXmlData data, IXPath xpath)
         {
             var result = new List<IXmlData>();
             if (data != null && xpath != null && data is VtdXmlData)
@@ -20,18 +20,7 @@ namespace NAXB.VtdXml
                 lock (vtdData.Navigator)
                 {
                     var nav = vtdData.Navigator;
-                    AutoPilot ap = null;
-                    if (xpath.UnderlyingObject is AutoPilot)
-                    {
-                        ap = xpath.UnderlyingObject as AutoPilot;
-                    }
-                    else
-                    {
-                        ap = new AutoPilot();
-                        AddNamespaces(ap, xpath.Namespaces);
-                        ap.selectXPath(xpath.XPathAsString);
-                    }
-                    ap.bind(nav);
+                    AutoPilot ap = GetAutoPilot(xpath, nav);
                     //Question -- is the XPath evaluated relative to the current Cursor location or relative to the entire document?
                     //Answer -- it is relative to the current Cursor position:
                     //"If the navigation you want to perform is more complicated, you can in fact nest XPath queries" - http://www.codeproject.com/Articles/28237/Programming-XPath-with-VTD-XML
@@ -56,8 +45,31 @@ namespace NAXB.VtdXml
                     }
                     ap.resetXPath();
                 }
-               
+
             }
+            return result;
+        }
+        private IXmlData EvaluateSingleXPath(AutoPilot ap, VTDNav nav, bool isFunction)
+        {
+            IXmlData result = null;
+            if (!isFunction) //It's a node
+            {
+                if (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
+                {
+                    BookMark bookMark = new BookMark(nav);
+                    //Record the current position navigated to by the AutoPilot
+                    bookMark.recordCursorPosition();
+                    //Add new XML Data with the recorded position
+                    result = new VtdXmlData(bookMark);
+                }
+            }
+            else //it is a function!
+            {
+                //XPath is actually a function, evaluate to single string
+                string evaluatedValue = ap.evalXPathToString().Trim(); //Always evaluate to string, parse to real property type later
+                result = new VtdXmlData(evaluatedValue);
+            }
+            ap.resetXPath();
             return result;
         }
         protected void AddNamespaces(AutoPilot ap, INamespace[] namespaces)
@@ -109,6 +121,65 @@ namespace NAXB.VtdXml
                 Type = type,
                 IsFunction = isFunction
             };
+        }
+
+
+        public IEnumerable<IXmlData[]> ProcessXPath(IXmlData data, IXPath root, IXPath[] xpaths)
+        {
+            IEnumerable<IXmlData[]> result = null;
+            if (data != null && root != null && data is VtdXmlData)
+            {
+                var vtdData = data as VtdXmlData;
+                lock (vtdData.Navigator)
+                {
+                    var nav = vtdData.Navigator;
+                    if (xpaths == null || xpaths.Length == 0)
+                    {
+                        result = ProcessSingleXPath(data, root).Select(x => new IXmlData[] { x });
+                    }
+                    else
+                    {
+                        var ap = GetAutoPilot(root, nav);
+                        var list = new List<IXmlData[]>();
+                        while (ap.evalXPath() != -1) //Evaluated relative to the current cursor of the VTDNav object
+                        {
+                            //nav.push();
+
+                            var arr = new IXmlData[xpaths.Length];
+                            for (int i = 0; i < xpaths.Length; i++)
+                            {
+                                nav.push();
+                                IXPath xpath = xpaths[i];
+                                var auto = GetAutoPilot(xpath, nav);
+                                arr[i] = EvaluateSingleXPath(auto, nav, xpath.IsFunction);
+                                nav.pop();
+                            }
+                            //nav.pop();
+                            list.Add(arr);
+                        }
+                        ap.resetXPath();
+                        result = list;
+                    }
+                }
+            }
+            return result;
+        }
+
+        private AutoPilot GetAutoPilot(IXPath xpath, VTDNav nav)
+        {
+            AutoPilot ap = null;
+            if (xpath.UnderlyingObject is AutoPilot)
+            {
+                ap = xpath.UnderlyingObject as AutoPilot;
+            }
+            else
+            {
+                ap = new AutoPilot();
+                AddNamespaces(ap, xpath.Namespaces);
+                ap.selectXPath(xpath.XPathAsString);
+            }
+            ap.bind(nav);
+            return ap;
         }
     }
 }

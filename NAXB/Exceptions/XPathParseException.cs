@@ -10,7 +10,7 @@ namespace NAXB.Exceptions
     {
         public XPathCompilationException(IXmlProperty property) 
             : base(String.Format("Failed to compile XPath '{0}' on Property '{1}'."
-            , property.Binding.XPath
+            , property.Binding.RootXPath
             , property.PropertyInfo.FullName))
         { }
     }

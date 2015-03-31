@@ -29,7 +29,7 @@ namespace NAXB.UnitTests
         {
             var compiled = Processor.CompileXPath(XPathProvider.SingleElement.XPath, Namespaces, PropertyType.Text, false);
 
-            var result = Processor.ProcessXPath(XmlData, compiled);
+            var result = Processor.ProcessSingleXPath(XmlData, compiled);
 
             Assert.AreEqual(XPathProvider.SingleElement.ExpectedValue, result.FirstOrDefault().Value);
         }
@@ -39,7 +39,7 @@ namespace NAXB.UnitTests
         {
             var compiled = Processor.CompileXPath(XPathProvider.SingleAttribute.XPath, Namespaces, PropertyType.Text, false);
 
-            var result = Processor.ProcessXPath(XmlData, compiled);
+            var result = Processor.ProcessSingleXPath(XmlData, compiled);
 
             Assert.AreEqual(XPathProvider.SingleAttribute.ExpectedValue, result.FirstOrDefault().Value);
         }
@@ -49,7 +49,7 @@ namespace NAXB.UnitTests
         {
             var compiled = Processor.CompileXPath(XPathProvider.MultipleElements.XPath, Namespaces, PropertyType.Text, false);
 
-            var result = Processor.ProcessXPath(XmlData, compiled);
+            var result = Processor.ProcessSingleXPath(XmlData, compiled);
             Assert.IsTrue(TestUtils.EnumerablesAreEqual((IEnumerable<string>)XPathProvider.MultipleElements.ExpectedValue
                 , result.Select(x => x.Value)));
         }
@@ -59,7 +59,7 @@ namespace NAXB.UnitTests
         {
             var compiled = Processor.CompileXPath(XPathProvider.MultipleAttributes.XPath, Namespaces, PropertyType.Text, false);
 
-            var result = Processor.ProcessXPath(XmlData, compiled);
+            var result = Processor.ProcessSingleXPath(XmlData, compiled);
             Assert.IsTrue(TestUtils.EnumerablesAreEqual((IEnumerable<string>)XPathProvider.MultipleAttributes.ExpectedValue
                 , result.Select(x => x.Value)));
         }
@@ -73,7 +73,7 @@ namespace NAXB.UnitTests
             {
                 var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text, false);
                 
-                result = Processor.ProcessXPath(parent, compiled);
+                result = Processor.ProcessSingleXPath(parent, compiled);
 
                 parent = result.FirstOrDefault();
             }
@@ -90,7 +90,7 @@ namespace NAXB.UnitTests
             {
                 var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text, false);
 
-                result = Processor.ProcessXPath(parent, compiled);
+                result = Processor.ProcessSingleXPath(parent, compiled);
 
                 parent = result.FirstOrDefault();
             }
@@ -120,6 +120,12 @@ namespace NAXB.UnitTests
                 , results));
         }
 
+        [TestMethod]
+        public void Test_ProcessXPaths_()
+        {
+
+        }
+
         protected void RecurseXPaths(List<string> results, IXmlData parent, Queue<XPathTest> xpts)
         {
             if (xpts.Count == 1)
@@ -127,7 +133,7 @@ namespace NAXB.UnitTests
                 //the last one
                 var xpt = xpts.Dequeue();
                 var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text, false);
-                var processed = Processor.ProcessXPath(parent, compiled);
+                var processed = Processor.ProcessSingleXPath(parent, compiled);
                 results.AddRange(processed.Select(x => x.Value));
                 //Stop recursing
             }
@@ -135,7 +141,7 @@ namespace NAXB.UnitTests
             {
                 var xpt = xpts.Dequeue();
                 var compiled = Processor.CompileXPath(xpt.XPath, Namespaces, PropertyType.Text, false);
-                var processed = Processor.ProcessXPath(parent, compiled);
+                var processed = Processor.ProcessSingleXPath(parent, compiled);
                 foreach (var xml in processed)
                 {
                     RecurseXPaths(results, xml, new Queue<XPathTest>(xpts));

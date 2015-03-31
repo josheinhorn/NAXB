@@ -12,6 +12,12 @@ namespace NAXB.UnitTests.Mockups.Models
     [NamespaceDeclaration(Uri = "http://example.com", Prefix = "ex")]
     public class Person
     {
+        [XPath("contacts/person", "firstName", "count(emails/email)")]
+        public Dictionary<string, decimal> EmailCountsByName { get; private set; }
+
+        [XPath("contacts/person", "concat(firstName, ' ', lastName)", "emails/email")]
+        public Dictionary<string, Email> EmailsByName;
+
         [XPath("count(contacts/person)")]
         public int NumberOfContacts { get; set; }
 

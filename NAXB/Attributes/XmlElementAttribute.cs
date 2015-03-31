@@ -18,8 +18,9 @@ namespace NAXB.Attributes
         public XmlElementAttribute(string elementName)
         {
             ElementName = elementName;
+            XPaths = null;
         }
-        public string XPath
+        public string RootXPath
         {
             get
             {
@@ -27,22 +28,16 @@ namespace NAXB.Attributes
             }
         }
 
+        public string[] XPaths
+        {
+            get;
+            private set;
+        }
         public string ElementName { get; protected set; }
 
-        //public bool IsAttribute
-        //{
-        //    get { return false; }
-        //}
-
-        //public bool IsElement
-        //{
-        //    get { return true; }
-        //}
-
-
-        //public bool IsFunction
-        //{
-        //    get { return false; }
-        //}
+        public int ArgumentCount
+        {
+            get { return 1; }
+        }
     }
 }

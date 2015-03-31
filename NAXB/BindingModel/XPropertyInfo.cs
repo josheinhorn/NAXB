@@ -13,6 +13,7 @@ namespace NAXB.BindingModel
         protected Action<System.Collections.IEnumerable, object> populateCollection;
         protected Func<System.Collections.IEnumerable, Array> toArray;
         protected readonly Func<object> defaultConstructor;
+        protected Action<IEnumerable<KeyValuePair<object, object>>, object> populateDictionary;
         public XPropertyInfo(MemberInfo property, IReflector reflector)
         {
             Name = property.Name;
@@ -22,14 +23,22 @@ namespace NAXB.BindingModel
             IsEnumerable = false;
             IsArray = false;
             IsGenericCollection = false;
-            
+            Type keyType;
             Type temp;
             if (IsArray = reflector.IsArray(PropertyType, out temp))
             {
                 IsEnumerable = true;
                 ElementType = temp;
                 toArray = reflector.BuildToArray(ElementType);
-                
+
+            }
+            else if (IsDictionary = reflector.IsGenericDictionary(PropertyType, out keyType, out temp))
+            {
+                IsEnumerable = true;
+                ElementType = temp;
+                KeyType = keyType;
+                populateDictionary = reflector.BuildPopulateDictionary(PropertyType);
+                //build a populateDictionary
             }
             else if (IsGenericCollection = reflector.IsGenericCollection(PropertyType, out temp))
             {
@@ -106,7 +115,7 @@ namespace NAXB.BindingModel
         {
             populateCollection(enumerable, collection);
         }
-        
+
         public Array ToArray(IEnumerable enumerable)
         {
             return toArray(enumerable);
@@ -135,6 +144,25 @@ namespace NAXB.BindingModel
         {
             get;
             protected set;
+        }
+
+
+        public bool IsDictionary
+        {
+            get;
+            protected set;
+        }
+
+
+        public Type KeyType
+        {
+            get;
+            protected set;
+        }
+
+        public void PopulateDictionary(IEnumerable<KeyValuePair<object, object>> kvps, object dictionary)
+        {
+            populateDictionary(kvps, dictionary);
         }
     }
 }

@@ -22,5 +22,18 @@ namespace NAXB.UnitTests.Mockups.Models
                 return Name + "@" + Domain;
             }
         }
+
+        //Override equals for testing purposes only
+        public override bool Equals(object obj)
+        {
+            bool result = false;
+            if (obj != null && obj is Email)
+            {
+                var email = obj as Email;
+                result = this.Domain == email.Domain
+                    && this.Name == email.Name;
+            }
+            return result;
+        }
     }
 }

@@ -149,5 +149,41 @@ namespace NAXB.UnitTests
             Assert.AreEqual(Role.Boss, person.Role);
         }
         
+        [TestMethod]
+        public void Test_SetProperty_Dictionary_string_decimal()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.EmailCountsByName);
+
+            Assert.AreEqual(2, person.EmailCountsByName.Count);
+        }
+
+        [TestMethod]
+        public void Test_SetProperty_Dictionary_string_Email()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.EmailsByName);
+
+            Assert.AreEqual(2, person.EmailsByName.Count);
+        }
+
+        [TestMethod]
+        public void Test_SetProperty_Emails()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.Emails);
+
+            Assert.IsTrue(TestUtils.EnumerablesAreEqual(
+                new List<Email>
+                {
+                    new Email { Domain = "josheinhorn.com", Name = "josh" },
+                    new Email { Domain = "gmail.com", Name = "josh.einhorn"}
+                },
+                person.Emails
+                ));
+        }
     }
 }
