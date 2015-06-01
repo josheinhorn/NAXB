@@ -19,6 +19,7 @@ namespace NAXB.VtdXml
                 var vtdData = data as VtdXmlData;
                 lock (vtdData.Navigator)
                 {
+                    vtdData.ResetCursor();
                     var nav = vtdData.Navigator;
                     AutoPilot ap = GetAutoPilot(xpath, nav);
                     //Question -- is the XPath evaluated relative to the current Cursor location or relative to the entire document?
@@ -138,6 +139,7 @@ namespace NAXB.VtdXml
                     var vtdData = data as VtdXmlData;
                     lock (vtdData.Navigator)
                     {
+                        vtdData.ResetCursor();
                         var nav = vtdData.Navigator;
                         var ap = GetAutoPilot(root, nav);
                         var list = new List<IXmlData[]>();
@@ -173,7 +175,7 @@ namespace NAXB.VtdXml
             {
                 ap = new AutoPilot();
                 AddNamespaces(ap, xpath.Namespaces);
-                ap.selectXPath(xpath.XPathAsString);
+                ap.selectXPath(xpath.XPathAsString); //super resource heavy operation
             }
             ap.bind(nav);
             return ap;

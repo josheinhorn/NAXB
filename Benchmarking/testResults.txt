@@ -1,0 +1,4 @@
+Total Elapsed time for 1 repetitions using NAXB: 131 ms
+Average time for each repetition using NAXB: 131 ms
+Total Elapsed time for 1 repetitions using MS XML Serializer: 37 ms
+Average time for each repetition using MS XML Serializer: 37 ms

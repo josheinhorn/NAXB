@@ -1,0 +1,369 @@
+<?xml version="1.0"?>
+<Climber xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApeIndex="130" Name="Name8e8c79e9-8ffa-4b24-abca-6556a885b420" DateOfBirth="2016-10-21T12:39:25.2101857" Height="28710">
+  <Gear>
+    <Shoes ToeAngle="10508" Manufacturer="Manufacturer77c4494d-fc10-4155-9c4f-701f238340d4" RubberStrength="4480" Size="28" />
+    <Shoes ToeAngle="11255" Manufacturer="Manufacturerfd22cd9e-f87e-43d6-9e7d-7c7209a315dd" RubberStrength="21546" Size="106" />
+    <Shoes ToeAngle="17052" Manufacturer="Manufacturer50251093-5373-4f8e-9c88-23baa2c64200" RubberStrength="30080" Size="55" />
+    <Shoes ToeAngle="15841" Manufacturer="Manufacturer2cd3b87e-8626-4b2d-981e-c0d20af15fc4" RubberStrength="805" Size="83" />
+    <Shoes ToeAngle="9403" Manufacturer="Manufacturer892f59b4-e87e-45ed-af89-75e4abf281b3" RubberStrength="3170" Size="238" />
+    <Shoes ToeAngle="26139" Manufacturer="Manufacturerbb6faafa-c7cf-4d52-9d4c-5d131d9220b5" RubberStrength="7977" Size="12" />
+    <Shoes ToeAngle="15670" Manufacturer="Manufacturerab70e104-2bfa-4df2-bc2a-557604c893cf" RubberStrength="6841" Size="177" />
+    <Shoes ToeAngle="30351" Manufacturer="Manufacturer9bd300c7-e70b-4f67-a545-e21d6d01839c" RubberStrength="458" Size="29" />
+    <Shoes ToeAngle="2814" Manufacturer="Manufacturer8ac54c5f-e7aa-4c05-9742-0844aa56ea24" RubberStrength="24110" Size="255" />
+    <Shoes ToeAngle="21396" Manufacturer="Manufacturerfc552392-4b45-477b-8028-0dd013b1f4e4" RubberStrength="31266" Size="63" />
+    <Shoes ToeAngle="17505" Manufacturer="Manufacturer39cf5d8c-6cfa-44d7-b262-8a178e815c0d" RubberStrength="28938" Size="206" />
+    <Shoes ToeAngle="15581" Manufacturer="Manufacturer663e06a6-280a-4420-982b-d5eb37c52bbd" RubberStrength="11548" Size="188" />
+    <Shoes ToeAngle="27060" Manufacturer="Manufacturer4ecb7c50-aa67-471a-9b58-4d71a8e90670" RubberStrength="9267" Size="169" />
+    <Shoes ToeAngle="9637" Manufacturer="Manufacturercebd29ec-6183-4b4e-9450-94ed938aff98" RubberStrength="16461" Size="12" />
+    <Shoes ToeAngle="30082" Manufacturer="Manufacturer5d0be297-05e5-436e-8368-a1309c60fa89" RubberStrength="2273" Size="84" />
+    <Shoes ToeAngle="4138" Manufacturer="Manufacturerf214872a-466d-44ef-9378-196a55f98f28" RubberStrength="17582" Size="249" />
+    <Shoes ToeAngle="22833" Manufacturer="Manufactureraf91b079-3a2b-41c1-bf56-3bc4bc6c7bba" RubberStrength="15898" Size="255" />
+    <Shoes ToeAngle="8671" Manufacturer="Manufacturerfb859c1c-1c47-4246-824d-9e3486a3f40a" RubberStrength="21487" Size="113" />
+    <Shoes ToeAngle="3582" Manufacturer="Manufacturer91a14e84-15e3-486c-9f8c-fa9cdce0abc1" RubberStrength="2798" Size="181" />
+    <Shoes ToeAngle="2667" Manufacturer="Manufacturer5e302967-d81e-41c6-9fc6-2afa14a13487" RubberStrength="12925" Size="252" />
+    <Ropes TensileStrength="18468" FallRating="194" Length="27120" Diameter="91" />
+    <Ropes TensileStrength="16813" FallRating="178" Length="2681" Diameter="5" />
+    <Ropes TensileStrength="28499" FallRating="6" Length="4798" Diameter="228" />
+    <Ropes TensileStrength="18868" FallRating="34" Length="23420" Diameter="236" />
+    <Ropes TensileStrength="14915" FallRating="139" Length="1380" Diameter="254" />
+    <Ropes TensileStrength="10565" FallRating="42" Length="20115" Diameter="30" />
+    <Ropes TensileStrength="23497" FallRating="179" Length="30159" Diameter="56" />
+    <Ropes TensileStrength="22725" FallRating="14" Length="12657" Diameter="233" />
+    <Ropes TensileStrength="28782" FallRating="59" Length="20857" Diameter="159" />
+    <Ropes TensileStrength="32419" FallRating="43" Length="16716" Diameter="211" />
+    <Ropes TensileStrength="24801" FallRating="58" Length="12981" Diameter="106" />
+    <Ropes TensileStrength="20499" FallRating="73" Length="1534" Diameter="63" />
+    <Ropes TensileStrength="24510" FallRating="90" Length="24982" Diameter="100" />
+    <Ropes TensileStrength="23144" FallRating="210" Length="22806" Diameter="248" />
+    <Ropes TensileStrength="17906" FallRating="65" Length="11030" Diameter="249" />
+    <Ropes TensileStrength="19520" FallRating="212" Length="11324" Diameter="250" />
+    <Ropes TensileStrength="5261" FallRating="220" Length="2590" Diameter="69" />
+    <Ropes TensileStrength="4821" FallRating="144" Length="19070" Diameter="121" />
+    <Ropes TensileStrength="25045" FallRating="41" Length="9051" Diameter="24" />
+    <Ropes TensileStrength="7979" FallRating="37" Length="23357" Diameter="11" />
+    <Quickdraws WeightCapacity="165" FallRating="51">
+      <Carabiners CarabinerType="Quickdraw" Height="28" Length="76" Width="57" TensileStrength="17" />
+      <Carabiners CarabinerType="Gated" Height="146" Length="189" Width="44" TensileStrength="29" />
+      <Carabiners CarabinerType="Quickdraw" Height="50" Length="213" Width="118" TensileStrength="12" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="182" FallRating="225">
+      <Carabiners CarabinerType="Gated" Height="52" Length="195" Width="153" TensileStrength="33" />
+      <Carabiners CarabinerType="Quickdraw" Height="148" Length="135" Width="152" TensileStrength="108" />
+      <Carabiners CarabinerType="Gated" Height="239" Length="36" Width="31" TensileStrength="103" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="181" FallRating="226">
+      <Carabiners CarabinerType="Quickdraw" Height="1" Length="110" Width="156" TensileStrength="180" />
+      <Carabiners CarabinerType="Gated" Height="19" Length="231" Width="122" TensileStrength="74" />
+      <Carabiners CarabinerType="Quickdraw" Height="248" Length="191" Width="169" TensileStrength="56" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="241" FallRating="188">
+      <Carabiners CarabinerType="Gated" Height="40" Length="21" Width="69" TensileStrength="105" />
+      <Carabiners CarabinerType="Quickdraw" Height="158" Length="39" Width="87" TensileStrength="251" />
+      <Carabiners CarabinerType="Gated" Height="138" Length="230" Width="134" TensileStrength="55" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="175" FallRating="203">
+      <Carabiners CarabinerType="Quickdraw" Height="106" Length="71" Width="125" TensileStrength="170" />
+      <Carabiners CarabinerType="Gated" Height="198" Length="48" Width="233" TensileStrength="218" />
+      <Carabiners CarabinerType="Quickdraw" Height="221" Length="128" Width="193" TensileStrength="208" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="206" FallRating="199">
+      <Carabiners CarabinerType="Gated" Height="140" Length="184" Width="187" TensileStrength="8" />
+      <Carabiners CarabinerType="Quickdraw" Height="185" Length="183" Width="162" TensileStrength="137" />
+      <Carabiners CarabinerType="Gated" Height="16" Length="123" Width="37" TensileStrength="77" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="173" FallRating="200">
+      <Carabiners CarabinerType="Quickdraw" Height="47" Length="252" Width="238" TensileStrength="214" />
+      <Carabiners CarabinerType="Gated" Height="32" Length="43" Width="60" TensileStrength="190" />
+      <Carabiners CarabinerType="Quickdraw" Height="66" Length="10" Width="209" TensileStrength="97" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="58" FallRating="25">
+      <Carabiners CarabinerType="Gated" Height="20" Length="78" Width="242" TensileStrength="61" />
+      <Carabiners CarabinerType="Quickdraw" Height="101" Length="159" Width="90" TensileStrength="139" />
+      <Carabiners CarabinerType="Gated" Height="11" Length="172" Width="132" TensileStrength="246" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="42" FallRating="7">
+      <Carabiners CarabinerType="Quickdraw" Height="254" Length="2" Width="247" TensileStrength="115" />
+      <Carabiners CarabinerType="Gated" Height="14" Length="91" Width="49" TensileStrength="149" />
+      <Carabiners CarabinerType="Quickdraw" Height="249" Length="177" Width="161" TensileStrength="131" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="95" FallRating="100">
+      <Carabiners CarabinerType="Gated" Height="3" Length="224" Width="217" TensileStrength="229" />
+      <Carabiners CarabinerType="Quickdraw" Height="92" Length="73" Width="129" TensileStrength="99" />
+      <Carabiners CarabinerType="Gated" Height="164" Length="157" Width="145" TensileStrength="253" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="154" FallRating="171">
+      <Carabiners CarabinerType="Quickdraw" Height="147" Length="54" Width="109" TensileStrength="211" />
+      <Carabiners CarabinerType="Gated" Height="107" Length="167" Width="53" TensileStrength="194" />
+      <Carabiners CarabinerType="Quickdraw" Height="136" Length="223" Width="237" TensileStrength="119" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="32751" FallRating="17528">
+      <Carabiners CarabinerType="Gated" Height="850" Length="15236" Width="863" TensileStrength="255" />
+      <Carabiners CarabinerType="Quickdraw" Height="21765" Length="23229" Width="4361" TensileStrength="12217" />
+      <Carabiners CarabinerType="Gated" Height="2361" Length="31167" Width="12677" TensileStrength="8412" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="23285" FallRating="23668">
+      <Carabiners CarabinerType="Quickdraw" Height="804" Length="25046" Width="11078" TensileStrength="4210" />
+      <Carabiners CarabinerType="Gated" Height="22325" Length="946" Width="25221" TensileStrength="28974" />
+      <Carabiners CarabinerType="Quickdraw" Height="19389" Length="26357" Width="19095" TensileStrength="28738" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="19806" FallRating="14448">
+      <Carabiners CarabinerType="Gated" Height="1882" Length="5538" Width="17317" TensileStrength="6753" />
+      <Carabiners CarabinerType="Quickdraw" Height="31866" Length="1706" Width="6655" TensileStrength="2919" />
+      <Carabiners CarabinerType="Gated" Height="18983" Length="24198" Width="4749" TensileStrength="9591" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="21342" FallRating="23093">
+      <Carabiners CarabinerType="Quickdraw" Height="20885" Length="17170" Width="15914" TensileStrength="31360" />
+      <Carabiners CarabinerType="Gated" Height="21815" Length="14192" Width="20040" TensileStrength="13972" />
+      <Carabiners CarabinerType="Quickdraw" Height="19543" Length="26642" Width="18541" TensileStrength="29198" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="16078" FallRating="30323">
+      <Carabiners CarabinerType="Gated" Height="28615" Length="7273" Width="25889" TensileStrength="4880" />
+      <Carabiners CarabinerType="Quickdraw" Height="32329" Length="30376" Width="6785" TensileStrength="31248" />
+      <Carabiners CarabinerType="Gated" Height="14106" Length="10013" Width="1141" TensileStrength="29590" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="9731" FallRating="19480">
+      <Carabiners CarabinerType="Quickdraw" Height="6318" Length="19648" Width="24481" TensileStrength="23980" />
+      <Carabiners CarabinerType="Gated" Height="19265" Length="26628" Width="8108" TensileStrength="2775" />
+      <Carabiners CarabinerType="Quickdraw" Height="10698" Length="5379" Width="1725" TensileStrength="2474" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="16840" FallRating="24830">
+      <Carabiners CarabinerType="Gated" Height="18763" Length="23443" Width="17146" TensileStrength="5452" />
+      <Carabiners CarabinerType="Quickdraw" Height="11380" Length="2031" Width="13744" TensileStrength="10779" />
+      <Carabiners CarabinerType="Gated" Height="31076" Length="6269" Width="20245" TensileStrength="11965" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="29232" FallRating="29539">
+      <Carabiners CarabinerType="Quickdraw" Height="3320" Length="6156" Width="13087" TensileStrength="24062" />
+      <Carabiners CarabinerType="Gated" Height="16637" Length="28828" Width="23135" TensileStrength="5993" />
+      <Carabiners CarabinerType="Quickdraw" Height="2416" Length="16022" Width="2332" TensileStrength="32663" />
+    </Quickdraws>
+    <Quickdraws WeightCapacity="28548" FallRating="10492">
+      <Carabiners CarabinerType="Gated" Height="29343" Length="20766" Width="29778" TensileStrength="26396" />
+      <Carabiners CarabinerType="Quickdraw" Height="11151" Length="1589" Width="11083" TensileStrength="22853" />
+      <Carabiners CarabinerType="Gated" Height="25635" Length="23129" Width="4954" TensileStrength="23430" />
+    </Quickdraws>
+    <Carabiners CarabinerType="Quickdraw" Height="133" Length="26" Width="75" TensileStrength="120" />
+    <Carabiners CarabinerType="Gated" Height="38" Length="62" Width="65" TensileStrength="113" />
+    <Carabiners CarabinerType="Quickdraw" Height="126" Length="244" Width="179" TensileStrength="130" />
+    <Carabiners CarabinerType="Gated" Height="150" Length="13" Width="22" TensileStrength="151" />
+    <Carabiners CarabinerType="Quickdraw" Height="144" Length="227" Width="82" TensileStrength="34" />
+    <Carabiners CarabinerType="Gated" Height="88" Length="235" Width="174" TensileStrength="163" />
+    <Carabiners CarabinerType="Quickdraw" Height="166" Length="83" Width="93" TensileStrength="18" />
+    <Carabiners CarabinerType="Gated" Height="204" Length="215" Width="30" TensileStrength="116" />
+    <Carabiners CarabinerType="Quickdraw" Height="86" Length="250" Width="27" TensileStrength="59" />
+    <Carabiners CarabinerType="Gated" Height="207" Length="222" Width="141" TensileStrength="70" />
+    <Carabiners CarabinerType="Quickdraw" Height="94" Length="201" Width="24" TensileStrength="232" />
+    <Carabiners CarabinerType="Gated" Height="216" Length="63" Width="197" TensileStrength="236" />
+    <Carabiners CarabinerType="Quickdraw" Height="104" Length="212" Width="45" TensileStrength="89" />
+    <Carabiners CarabinerType="Gated" Height="96" Length="127" Width="234" TensileStrength="155" />
+    <Carabiners CarabinerType="Quickdraw" Height="176" Length="9" Width="117" TensileStrength="15" />
+    <Carabiners CarabinerType="Gated" Height="219" Length="192" Width="5" TensileStrength="64" />
+    <Carabiners CarabinerType="Quickdraw" Height="121" Length="4" Width="81" TensileStrength="196" />
+    <Carabiners CarabinerType="Gated" Height="142" Length="111" Width="102" TensileStrength="72" />
+    <Carabiners CarabinerType="Quickdraw" Height="205" Length="228" Width="80" TensileStrength="41" />
+    <Carabiners CarabinerType="Gated" Height="168" Length="79" Width="46" TensileStrength="243" />
+    <Harnesses WeightCapacity="202" Manufacturer="Manufacturerea8b85f8-2a53-42d9-a55d-6f447475ba73" Size="Size6982859c-0dbb-4d86-b4b5-c2e5f67e83da" />
+    <Harnesses WeightCapacity="85" Manufacturer="Manufacturer1870213a-a0a2-4119-b61f-b6358d848805" Size="Size29ece0a6-48b7-49ba-81f5-fcd96c244412" />
+    <Harnesses WeightCapacity="84" Manufacturer="Manufacturer0420723c-8ef2-4a30-8543-81cb150d9cf9" Size="Size4e518d7c-25e4-4bc2-8fd6-8ea78d08dd5c" />
+    <Harnesses WeightCapacity="186" Manufacturer="Manufacturerd0953280-fd16-42ef-87bd-bcd3fe6b7da5" Size="Size491d55d5-3ba4-4b09-b6f9-0832962e344b" />
+    <Harnesses WeightCapacity="220" Manufacturer="Manufacturer351ee5bf-ba64-4f11-b3a8-29e1bd1042bf" Size="Sizeb0b1ce63-b34e-495f-8c7e-e9ca3e8a4d51" />
+    <Harnesses WeightCapacity="98" Manufacturer="Manufacturer1ef0936a-e1be-494f-b403-cb87ceff71f4" Size="Sizee41bbd44-c411-49da-8d0b-fdb91d0874b0" />
+    <Harnesses WeightCapacity="6" Manufacturer="Manufacturer8400d6b6-608b-41e0-bd2f-5ab8bad62aad" Size="Size3798cc44-2453-43ca-8428-4abdf567c364" />
+    <Harnesses WeightCapacity="143" Manufacturer="Manufacturer8dc7cc32-97c2-475c-9c14-91cda1f73db1" Size="Sizee1931fd2-3722-4599-8777-467a4abb2d10" />
+    <Harnesses WeightCapacity="178" Manufacturer="Manufacturera8e01263-4eb8-43b3-8e9f-c934677760ca" Size="Sizea81e7b19-19b6-4aaf-97ab-97bed4d7e30d" />
+    <Harnesses WeightCapacity="240" Manufacturer="Manufacturereb2ca61e-a682-4377-85bd-c53f8f63a96c" Size="Sizefb339262-6b5b-4b31-a38e-0a3558a5e19e" />
+    <Harnesses WeightCapacity="210" Manufacturer="Manufacturer20d6255c-f9ab-4691-8d22-64e63cb26903" Size="Size32985ce6-5ea5-492c-aead-646906fb6ed3" />
+    <Harnesses WeightCapacity="114" Manufacturer="Manufacturer54442a00-317f-4b64-b621-2ff14f3026f5" Size="Sizec6b42a07-3bb5-4894-beae-1b8e75c41f04" />
+    <Harnesses WeightCapacity="35" Manufacturer="Manufacturer4d1631f4-c461-4e0d-8c8b-2665589a4d12" Size="Size865b50ca-1d7e-4fac-b118-cd84c2fb099b" />
+    <Harnesses WeightCapacity="68" Manufacturer="Manufacturerf9cc749e-ac31-42a1-ae5f-e56be30e81ff" Size="Size11bdd1a8-209e-4185-a8a0-6c250335d835" />
+    <Harnesses WeightCapacity="160" Manufacturer="Manufacturer496d73a4-fb54-4596-92f7-9b0ac3c990b6" Size="Size4edd5287-ce55-49f8-885b-772a8ac8f45e" />
+    <Harnesses WeightCapacity="245" Manufacturer="Manufacturer35618b33-27af-4956-9387-b4783277c1bf" Size="Size2842b1c0-8897-4016-bd5e-c619ec082faf" />
+    <Harnesses WeightCapacity="23" Manufacturer="Manufacturerefcd6950-09ec-4113-874f-9c3547f082de" Size="Size63908532-5eef-47fe-9b52-3e8b1c776afa" />
+    <Harnesses WeightCapacity="67" Manufacturer="Manufacturer399f8116-ef08-4144-8417-5086ba42f52a" Size="Size26c40c6d-9c18-46a5-bbc7-a5aea8616feb" />
+    <Harnesses WeightCapacity="124" Manufacturer="Manufacturer9209a77f-247c-4709-a032-f0e5128f8733" Size="Sizee80eeb50-8e66-4a9c-adc1-69efc2800814" />
+    <Harnesses WeightCapacity="112" Manufacturer="Manufacturer99bf9fea-b7a8-4acb-96b3-b25b67b3ccf3" Size="Size9d9fa444-8c1c-4619-a158-1ef899406577" />
+  </Gear>
+  <Belayer ApeIndex="86" Name="Name48acf404-0151-4b71-a5ca-05249c868c31" DateOfBirth="2013-08-25T01:03:27.1858158" Height="13411">
+    <Gear>
+      <Shoes ToeAngle="13593" Manufacturer="Manufacturer22bc8f64-923d-4e34-8a3c-c1d1a1c2f1e7" RubberStrength="3415" Size="85" />
+      <Shoes ToeAngle="19879" Manufacturer="Manufacturer337cea48-7fc8-4017-866f-0bcea0ff27e2" RubberStrength="5122" Size="174" />
+      <Shoes ToeAngle="19083" Manufacturer="Manufacturer4c9cb08c-9cfa-47b5-88ae-547f675251c2" RubberStrength="12247" Size="79" />
+      <Shoes ToeAngle="24573" Manufacturer="Manufacturera600fc44-1ab7-49ee-a074-366ae1b70cfc" RubberStrength="23918" Size="129" />
+      <Shoes ToeAngle="345" Manufacturer="Manufacturerb577cb3e-0d70-4028-9b41-a10b136eac2b" RubberStrength="21340" Size="68" />
+      <Shoes ToeAngle="8658" Manufacturer="Manufacturerabff244e-9dd5-41b2-842e-5a7f8abbf508" RubberStrength="12953" Size="20" />
+      <Shoes ToeAngle="29680" Manufacturer="Manufacturer83305562-65fe-4154-839c-6a16d394ad6e" RubberStrength="1476" Size="14" />
+      <Shoes ToeAngle="29562" Manufacturer="Manufacturer440fe73c-e38f-4602-b814-752d9542541f" RubberStrength="1789" Size="184" />
+      <Shoes ToeAngle="4742" Manufacturer="Manufacturer521197a0-47e5-40aa-af4f-b23bb7b3e123" RubberStrength="13194" Size="137" />
+      <Shoes ToeAngle="23141" Manufacturer="Manufacturere250b401-83e3-42f8-9963-ba61a728362a" RubberStrength="20489" Size="192" />
+      <Shoes ToeAngle="26381" Manufacturer="Manufacturer71850242-8688-4675-a736-4b29d646fdb8" RubberStrength="18185" Size="50" />
+      <Shoes ToeAngle="1325" Manufacturer="Manufacturer3792c7ae-a386-4ceb-a919-e76df5dfe4ef" RubberStrength="17632" Size="2" />
+      <Shoes ToeAngle="18139" Manufacturer="Manufacturer8f4a0314-c869-4954-a72d-c609a55ebb83" RubberStrength="3844" Size="133" />
+      <Shoes ToeAngle="32503" Manufacturer="Manufacturer64823929-0e1f-4098-ae79-f67a502256cb" RubberStrength="19282" Size="220" />
+      <Shoes ToeAngle="1083" Manufacturer="Manufacturer35f61239-ce69-4bf6-9c59-6bf76c61bf83" RubberStrength="25752" Size="86" />
+      <Shoes ToeAngle="18136" Manufacturer="Manufacturer6b108a35-6634-431f-a607-36703e509d2d" RubberStrength="1430" Size="117" />
+      <Shoes ToeAngle="7824" Manufacturer="Manufacturerd9c4e6cd-10ce-4a2d-b103-93bbd6f84380" RubberStrength="18891" Size="118" />
+      <Shoes ToeAngle="958" Manufacturer="Manufacturerf0c0c480-b67f-441e-b687-cd61fe28d9dc" RubberStrength="29967" Size="42" />
+      <Shoes ToeAngle="16799" Manufacturer="Manufacturer3ea40a4a-1703-45cd-8044-04cddb31e478" RubberStrength="1881" Size="157" />
+      <Shoes ToeAngle="15393" Manufacturer="Manufacturer3d3e8767-3857-4653-9985-b3b3ffb8067a" RubberStrength="24696" Size="37" />
+      <Ropes TensileStrength="21242" FallRating="222" Length="2967" Diameter="186" />
+      <Ropes TensileStrength="29806" FallRating="179" Length="20103" Diameter="16" />
+      <Ropes TensileStrength="875" FallRating="60" Length="19150" Diameter="96" />
+      <Ropes TensileStrength="25797" FallRating="55" Length="9887" Diameter="255" />
+      <Ropes TensileStrength="22838" FallRating="226" Length="13731" Diameter="13" />
+      <Ropes TensileStrength="7530" FallRating="29" Length="26180" Diameter="166" />
+      <Ropes TensileStrength="23512" FallRating="22" Length="3698" Diameter="202" />
+      <Ropes TensileStrength="23084" FallRating="231" Length="3436" Diameter="198" />
+      <Ropes TensileStrength="8060" FallRating="190" Length="17938" Diameter="115" />
+      <Ropes TensileStrength="12569" FallRating="124" Length="13407" Diameter="106" />
+      <Ropes TensileStrength="15387" FallRating="6" Length="25776" Diameter="223" />
+      <Ropes TensileStrength="31259" FallRating="128" Length="6472" Diameter="56" />
+      <Ropes TensileStrength="5828" FallRating="125" Length="27584" Diameter="82" />
+      <Ropes TensileStrength="11044" FallRating="240" Length="8768" Diameter="59" />
+      <Ropes TensileStrength="29292" FallRating="188" Length="18000" Diameter="221" />
+      <Ropes TensileStrength="8711" FallRating="51" Length="20792" Diameter="70" />
+      <Ropes TensileStrength="1835" FallRating="130" Length="5251" Diameter="41" />
+      <Ropes TensileStrength="25401" FallRating="243" Length="16903" Diameter="216" />
+      <Ropes TensileStrength="31588" FallRating="138" Length="4281" Diameter="50" />
+      <Ropes TensileStrength="14137" FallRating="175" Length="16227" Diameter="212" />
+      <Quickdraws WeightCapacity="24963" FallRating="23568">
+        <Carabiners CarabinerType="Quickdraw" Height="15209" Length="28396" Width="16452" TensileStrength="32537" />
+        <Carabiners CarabinerType="Gated" Height="14269" Length="17062" Width="3936" TensileStrength="2168" />
+        <Carabiners CarabinerType="Quickdraw" Height="17425" Length="5961" Width="22667" TensileStrength="3629" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="15321" FallRating="3156">
+        <Carabiners CarabinerType="Gated" Height="16081" Length="5045" Width="3399" TensileStrength="11884" />
+        <Carabiners CarabinerType="Quickdraw" Height="27733" Length="18681" Width="10885" TensileStrength="9711" />
+        <Carabiners CarabinerType="Gated" Height="17386" Length="15262" Width="1520" TensileStrength="18233" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="2819" FallRating="13029">
+        <Carabiners CarabinerType="Quickdraw" Height="23326" Length="19384" Width="16141" TensileStrength="22843" />
+        <Carabiners CarabinerType="Gated" Height="9578" Length="6778" Width="3113" TensileStrength="18828" />
+        <Carabiners CarabinerType="Quickdraw" Height="1283" Length="10584" Width="15741" TensileStrength="26731" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="21908" FallRating="29744">
+        <Carabiners CarabinerType="Gated" Height="4819" Length="25061" Width="3276" TensileStrength="11266" />
+        <Carabiners CarabinerType="Quickdraw" Height="18725" Length="26574" Width="3075" TensileStrength="1392" />
+        <Carabiners CarabinerType="Gated" Height="11486" Length="12777" Width="30928" TensileStrength="24956" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="22118" FallRating="4017">
+        <Carabiners CarabinerType="Quickdraw" Height="1446" Length="903" Width="31715" TensileStrength="11265" />
+        <Carabiners CarabinerType="Gated" Height="13860" Length="13070" Width="30808" TensileStrength="14161" />
+        <Carabiners CarabinerType="Quickdraw" Height="4095" Length="17045" Width="9027" TensileStrength="22587" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="31137" FallRating="23653">
+        <Carabiners CarabinerType="Gated" Height="26737" Length="25169" Width="5908" TensileStrength="25582" />
+        <Carabiners CarabinerType="Quickdraw" Height="13670" Length="25092" Width="12242" TensileStrength="32386" />
+        <Carabiners CarabinerType="Gated" Height="29364" Length="9349" Width="20024" TensileStrength="383" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="6779" FallRating="2729">
+        <Carabiners CarabinerType="Quickdraw" Height="6306" Length="11418" Width="17638" TensileStrength="4910" />
+        <Carabiners CarabinerType="Gated" Height="15721" Length="32605" Width="9937" TensileStrength="6136" />
+        <Carabiners CarabinerType="Quickdraw" Height="21425" Length="31936" Width="30964" TensileStrength="16794" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="18940" FallRating="21971">
+        <Carabiners CarabinerType="Gated" Height="18520" Length="1935" Width="17803" TensileStrength="31948" />
+        <Carabiners CarabinerType="Quickdraw" Height="21195" Length="3173" Width="17517" TensileStrength="13724" />
+        <Carabiners CarabinerType="Gated" Height="25275" Length="22290" Width="16330" TensileStrength="20375" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="4179" FallRating="15900">
+        <Carabiners CarabinerType="Quickdraw" Height="2606" Length="5068" Width="26604" TensileStrength="775" />
+        <Carabiners CarabinerType="Gated" Height="7410" Length="17933" Width="30557" TensileStrength="14701" />
+        <Carabiners CarabinerType="Quickdraw" Height="32175" Length="3146" Width="6653" TensileStrength="4477" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="20736" FallRating="20161">
+        <Carabiners CarabinerType="Gated" Height="4000" Length="6740" Width="1677" TensileStrength="10199" />
+        <Carabiners CarabinerType="Quickdraw" Height="22619" Length="13062" Width="14631" TensileStrength="7146" />
+        <Carabiners CarabinerType="Gated" Height="24313" Length="6555" Width="10198" TensileStrength="27685" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="17564" FallRating="1646">
+        <Carabiners CarabinerType="Quickdraw" Height="18910" Length="28115" Width="22574" TensileStrength="18698" />
+        <Carabiners CarabinerType="Gated" Height="10889" Length="9418" Width="14443" TensileStrength="29548" />
+        <Carabiners CarabinerType="Quickdraw" Height="5588" Length="16519" Width="32137" TensileStrength="16612" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="18911" FallRating="7689">
+        <Carabiners CarabinerType="Gated" Height="2528" Length="14913" Width="7327" TensileStrength="14298" />
+        <Carabiners CarabinerType="Quickdraw" Height="7573" Length="16631" Width="18791" TensileStrength="17272" />
+        <Carabiners CarabinerType="Gated" Height="9439" Length="29089" Width="9165" TensileStrength="20868" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="1408" FallRating="17926">
+        <Carabiners CarabinerType="Quickdraw" Height="4759" Length="19441" Width="30539" TensileStrength="13523" />
+        <Carabiners CarabinerType="Gated" Height="18335" Length="13339" Width="9872" TensileStrength="12114" />
+        <Carabiners CarabinerType="Quickdraw" Height="6738" Length="28524" Width="20155" TensileStrength="26057" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="7503" FallRating="13391">
+        <Carabiners CarabinerType="Gated" Height="5310" Length="11671" Width="589" TensileStrength="7777" />
+        <Carabiners CarabinerType="Quickdraw" Height="9655" Length="31995" Width="25693" TensileStrength="25412" />
+        <Carabiners CarabinerType="Gated" Height="12843" Length="2323" Width="375" TensileStrength="952" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="1830" FallRating="30223">
+        <Carabiners CarabinerType="Quickdraw" Height="1980" Length="23274" Width="7009" TensileStrength="714" />
+        <Carabiners CarabinerType="Gated" Height="18051" Length="12016" Width="12951" TensileStrength="3345" />
+        <Carabiners CarabinerType="Quickdraw" Height="22299" Length="28731" Width="30981" TensileStrength="19792" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="11833" FallRating="18745">
+        <Carabiners CarabinerType="Gated" Height="13557" Length="11817" Width="29244" TensileStrength="23982" />
+        <Carabiners CarabinerType="Quickdraw" Height="1918" Length="24035" Width="30262" TensileStrength="3197" />
+        <Carabiners CarabinerType="Gated" Height="15045" Length="4123" Width="21076" TensileStrength="18578" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="27593" FallRating="18285">
+        <Carabiners CarabinerType="Quickdraw" Height="10047" Length="18215" Width="29580" TensileStrength="17952" />
+        <Carabiners CarabinerType="Gated" Height="9414" Length="24333" Width="16232" TensileStrength="32716" />
+        <Carabiners CarabinerType="Quickdraw" Height="17065" Length="16124" Width="6166" TensileStrength="21770" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="9447" FallRating="4485">
+        <Carabiners CarabinerType="Gated" Height="4626" Length="27199" Width="8081" TensileStrength="22139" />
+        <Carabiners CarabinerType="Quickdraw" Height="1966" Length="20162" Width="1282" TensileStrength="2028" />
+        <Carabiners CarabinerType="Gated" Height="15504" Length="4561" Width="11729" TensileStrength="5846" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="30092" FallRating="22815">
+        <Carabiners CarabinerType="Quickdraw" Height="24732" Length="31990" Width="29742" TensileStrength="4952" />
+        <Carabiners CarabinerType="Gated" Height="26974" Length="2096" Width="12508" TensileStrength="438" />
+        <Carabiners CarabinerType="Quickdraw" Height="1657" Length="21064" Width="32417" TensileStrength="10771" />
+      </Quickdraws>
+      <Quickdraws WeightCapacity="16926" FallRating="4456">
+        <Carabiners CarabinerType="Gated" Height="1769" Length="29798" Width="7092" TensileStrength="12434" />
+        <Carabiners CarabinerType="Quickdraw" Height="8378" Length="14207" Width="20614" TensileStrength="6005" />
+        <Carabiners CarabinerType="Gated" Height="19303" Length="10122" Width="31350" TensileStrength="28810" />
+      </Quickdraws>
+      <Carabiners CarabinerType="Quickdraw" Height="31582" Length="30712" Width="28423" TensileStrength="8697" />
+      <Carabiners CarabinerType="Gated" Height="6021" Length="31103" Width="24390" TensileStrength="4634" />
+      <Carabiners CarabinerType="Quickdraw" Height="26589" Length="31477" Width="30562" TensileStrength="9521" />
+      <Carabiners CarabinerType="Gated" Height="23148" Length="17060" Width="6289" TensileStrength="31847" />
+      <Carabiners CarabinerType="Quickdraw" Height="10953" Length="525" Width="6783" TensileStrength="30952" />
+      <Carabiners CarabinerType="Gated" Height="31444" Length="15623" Width="12607" TensileStrength="32518" />
+      <Carabiners CarabinerType="Quickdraw" Height="7707" Length="604" Width="9090" TensileStrength="31331" />
+      <Carabiners CarabinerType="Gated" Height="3079" Length="12254" Width="29110" TensileStrength="9005" />
+      <Carabiners CarabinerType="Quickdraw" Height="24649" Length="8019" Width="9134" TensileStrength="5549" />
+      <Carabiners CarabinerType="Gated" Height="6617" Length="2618" Width="24317" TensileStrength="11692" />
+      <Carabiners CarabinerType="Quickdraw" Height="14514" Length="27384" Width="22077" TensileStrength="19247" />
+      <Carabiners CarabinerType="Gated" Height="25038" Length="22408" Width="11013" TensileStrength="19210" />
+      <Carabiners CarabinerType="Quickdraw" Height="29276" Length="6092" Width="25397" TensileStrength="24378" />
+      <Carabiners CarabinerType="Gated" Height="23677" Length="2916" Width="10021" TensileStrength="12656" />
+      <Carabiners CarabinerType="Quickdraw" Height="18360" Length="29860" Width="29695" TensileStrength="16214" />
+      <Carabiners CarabinerType="Gated" Height="22269" Length="15640" Width="6698" TensileStrength="5672" />
+      <Carabiners CarabinerType="Quickdraw" Height="2623" Length="25269" Width="7454" TensileStrength="14590" />
+      <Carabiners CarabinerType="Gated" Height="8182" Length="27364" Width="24591" TensileStrength="15384" />
+      <Carabiners CarabinerType="Quickdraw" Height="8976" Length="20304" Width="18259" TensileStrength="8591" />
+      <Carabiners CarabinerType="Gated" Height="26314" Length="26165" Width="6548" TensileStrength="4315" />
+      <Harnesses WeightCapacity="18066" Manufacturer="Manufacturere922f458-d344-4e8f-bdfc-c1092e45d06c" Size="Sizea2c8171c-225b-4709-9f6e-5776f831a8e1" />
+      <Harnesses WeightCapacity="22359" Manufacturer="Manufacturerabc4436b-3653-4f1f-a2bf-ac88cfbc2138" Size="Sizecb5e2add-c3c6-46de-962e-ebee6462614a" />
+      <Harnesses WeightCapacity="17480" Manufacturer="Manufacturerad33db54-3121-497b-92d1-185cdb271a36" Size="Size9e4f313b-5cf4-4495-b942-9e83806eb40d" />
+      <Harnesses WeightCapacity="12497" Manufacturer="Manufacturer3f369d4f-593d-4b0d-a8cb-dfc5165f98f4" Size="Size831a1ccd-f952-4716-a823-98efeace6b8b" />
+      <Harnesses WeightCapacity="29754" Manufacturer="Manufacturer040e5313-9b48-407c-bf1a-80cb70d6f944" Size="Sized918d200-a46e-41df-adaa-92516cc1246f" />
+      <Harnesses WeightCapacity="19625" Manufacturer="Manufacturerddd09d74-267b-4052-96c1-90670f839cac" Size="Sized33a3cb5-c2c9-41f7-9b75-2beb811ab326" />
+      <Harnesses WeightCapacity="16709" Manufacturer="Manufacturerc35e4d46-2985-4127-b089-1ff44f964716" Size="Size34a85c1a-4ead-4f9d-8549-4a85a3c98334" />
+      <Harnesses WeightCapacity="14640" Manufacturer="Manufacturerd9ff2798-f850-40a4-b443-def007467bfc" Size="Size4fdc4346-817a-4c42-bd2b-a9fe81aef5bf" />
+      <Harnesses WeightCapacity="21988" Manufacturer="Manufacturerccd3c865-b12f-4ba7-b14b-15297854cc44" Size="Size54796bdb-bacf-40e7-a7f2-d8816ae6dc35" />
+      <Harnesses WeightCapacity="30766" Manufacturer="Manufacturer305fa99c-f86e-4665-95a6-875f68149b34" Size="Sizeb7010b47-d216-4193-8be8-51bbbca848d0" />
+      <Harnesses WeightCapacity="25687" Manufacturer="Manufacturer3f2807fe-a0da-48ba-af74-e01bd5186833" Size="Size2006459b-5d38-4532-81f6-1261e3764abf" />
+      <Harnesses WeightCapacity="26100" Manufacturer="Manufacturer8f48c46a-a432-4c2b-8e21-19f562605533" Size="Sizec6665819-016f-4081-b130-c2b83170b08d" />
+      <Harnesses WeightCapacity="9525" Manufacturer="Manufacturer72c66411-4207-4d19-a210-fb0cc34b027a" Size="Size38bbd0b2-2546-4915-9e52-cccb90442da6" />
+      <Harnesses WeightCapacity="5691" Manufacturer="Manufacturer8b991452-e083-4494-b71f-60a84f87500c" Size="Size207fa2b1-1883-4e3c-97f2-37c4d8520baa" />
+      <Harnesses WeightCapacity="18900" Manufacturer="Manufacturer55529bd5-54a6-4f6a-8309-ad504b428810" Size="Size39afa3c4-2df0-4fa3-8cc0-726d06e32695" />
+      <Harnesses WeightCapacity="29745" Manufacturer="Manufacturer5173f57e-7353-4bdc-9655-a6d8704f66b5" Size="Sizeb3a82ef0-1d24-4aaa-bbc5-7734f0986357" />
+      <Harnesses WeightCapacity="31642" Manufacturer="Manufacturer7f6c405a-dd01-41c5-9059-22c122cd985f" Size="Sizebb79e828-4331-446c-b90c-4bb742d479e9" />
+      <Harnesses WeightCapacity="20942" Manufacturer="Manufacturerc0504f99-8df0-42b5-957a-bb0744e0da94" Size="Sizea71bd6f9-731d-4b67-926d-e18a67419c28" />
+      <Harnesses WeightCapacity="7742" Manufacturer="Manufacturer81201116-c08a-4646-a1c9-16cd9677ac6f" Size="Sized49d65f6-281d-4dfa-90dd-7ae157be8552" />
+      <Harnesses WeightCapacity="16842" Manufacturer="Manufacturer196162b4-20e1-4358-86a3-0c39265640ad" Size="Size7e7b23ab-d919-440e-8fb3-64d6ee243987" />
+    </Gear>
+  </Belayer>
+</Climber>

@@ -103,7 +103,7 @@ namespace NAXB.Build
         public virtual bool IsNullableType(Type type, out Type elementType)
         {
             var generics = type.GetGenericArguments();
-            elementType = generics.Length > 0 ? generics[0] : null;
+            elementType = generics.Length == 1 && generics[0].IsValueType ? generics[0] : null;
             return (elementType != null
                && typeof(Nullable<>).MakeGenericType(elementType).IsAssignableFrom(type));
         }
@@ -178,28 +178,28 @@ namespace NAXB.Build
             ConstructorInfo ctor = type.GetConstructor(
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null, new Type[0], null); //Get parameterless constructor -- there better be one!
-
-            // Generate the intermediate language.       
-            ILGenerator ilgen = dynamicMethod.GetILGenerator();
-            try
+            if (ctor != null)
             {
-                //Do nothing with the object array right now -- in the future could process them and choose an appropriate constructor
-                ilgen.Emit(OpCodes.Newobj, ctor);
-                ilgen.Emit(OpCodes.Ret);
-                //Create delegate, cast and return
-                result = (Func<object>)dynamicMethod
-                    .CreateDelegate(typeof(Func<object>));
-            }
-            catch (Exception e)
-            {
-                throw new TargetException(
-                String.Format("Failed to create a parameterless constructor for Type '{0}'." +
-                "See inner exception for more details", type.FullName), e);
+                // Generate the intermediate language.       
+                ILGenerator ilgen = dynamicMethod.GetILGenerator();
+                try
+                {
+                    //Do nothing with the object array right now -- in the future could process them and choose an appropriate constructor
+                    ilgen.Emit(OpCodes.Newobj, ctor);
+                    ilgen.Emit(OpCodes.Ret);
+                    //Create delegate, cast and return
+                    result = (Func<object>)dynamicMethod
+                        .CreateDelegate(typeof(Func<object>));
+                }
+                catch (Exception e)
+                {
+                    throw new TargetException(
+                    String.Format("Failed to create a parameterless constructor for Type '{0}'." +
+                    "See inner exception for more details", type.FullName), e);
+                }
             }
             return result;
         }
-
-        public delegate object ConstructorWithParams(params object[] args);
 
         public virtual Func<object[], object> BuildConstructor(ConstructorInfo ctorInfo)
         {
@@ -241,6 +241,7 @@ namespace NAXB.Build
                     ilgen.Emit(OpCodes.Castclass, typeof(Object));
                 }
                 ilgen.Emit(OpCodes.Ret); //Return the new object
+                //Create delegate, cast and return
                 result = (Func<object[], object>)dynamicMethod
                     .CreateDelegate(typeof(Func<object[], object>));
             }
@@ -250,7 +251,7 @@ namespace NAXB.Build
                     String.Format("Failed to create the specified constructor for Type '{0}'." +
                     "See inner exception for more details", ctorInfo.DeclaringType.FullName), e);
             }
-            //Create delegate, cast and return
+            
             return result;
         }
 
@@ -317,7 +318,7 @@ namespace NAXB.Build
                 formatProvider = format.GetFormatProvider() ?? CultureInfo.InvariantCulture;
                 dateTimeFormat = format.DateTimeFormat;
                 ignoreCase = format.IgnoreCase;
-            }
+            }   
             Func<string[], object> result = null;
             var ctors = elementType.GetConstructors().Where(x => x.GetParameters().Count() == argCount);
             if (ctors.Count() != 1)
@@ -386,8 +387,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                 {
-                    try { return char.Parse(value); } //no format
-                    catch { return default(char); }
+                    char ret;
+                    return char.TryParse(value, out ret) ? ret : default(char);
                 };
                 propertyType = PropertyType.Text;
             }
@@ -395,6 +396,7 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                 {
+                    //There is no Try version of Enum that
                     try { return Enum.Parse(elementType, value, ignoreCase); }
                     catch { return null; }
                 };
@@ -404,8 +406,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return bool.Parse(value); } //no format
-                        catch { return default(bool); }
+                        bool ret;
+                        return bool.TryParse(value, out ret) && ret;
                     };
                 propertyType = PropertyType.Bool;
             }
@@ -413,8 +415,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return byte.Parse(value, formatProvider); }
-                        catch { return default(byte); }
+                        byte ret;
+                        return byte.TryParse(value, NumberStyles.Any,formatProvider, out ret) ? ret : default(byte);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -422,8 +424,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return sbyte.Parse(value, formatProvider); }
-                        catch { return default(sbyte); }
+                        sbyte ret;
+                        return sbyte.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(sbyte);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -431,8 +433,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return short.Parse(value, formatProvider); }
-                        catch { return default(short); }
+                        short ret;
+                        return short.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(short);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -440,8 +442,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return ushort.Parse(value, formatProvider); }
-                        catch { return default(ushort); }
+                        ushort ret;
+                        return ushort.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(ushort);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -449,8 +451,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return int.Parse(value, formatProvider); }
-                        catch { return default(int); }
+                        int ret;
+                        return int.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(int);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -458,8 +460,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return uint.Parse(value, formatProvider); }
-                        catch { return default(uint); }
+                        uint ret;
+                        return uint.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(uint);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -467,8 +469,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return long.Parse(value, formatProvider); }
-                        catch { return default(long); }
+                        long ret;
+                        return long.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(long);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -476,8 +478,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return ulong.Parse(value, formatProvider); }
-                        catch { return default(ulong); }
+                        ulong ret;
+                        return ulong.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(ulong);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -485,8 +487,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return float.Parse(value, formatProvider); }
-                        catch { return default(float); }
+                        float ret;
+                        return float.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(float);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -494,8 +496,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return double.Parse(value, formatProvider); }
-                        catch { return default(double); }
+                        double ret;
+                        return double.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(double);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -503,8 +505,8 @@ namespace NAXB.Build
             {
                 result = (string value) =>
                     {
-                        try { return decimal.Parse(value, formatProvider); }
-                        catch { return default(decimal); }
+                        decimal ret;
+                        return decimal.TryParse(value, NumberStyles.Any, formatProvider, out ret) ? ret : default(decimal);
                     };
                 propertyType = PropertyType.Number;
             }
@@ -514,11 +516,12 @@ namespace NAXB.Build
                 if (String.IsNullOrEmpty(dateTimeFormat))
                     result = (string value) =>
                         {
-                            try { return DateTime.Parse(value, formatProvider); }
-                            catch { return default(DateTime); }
+                            DateTime ret;
+                            return DateTime.TryParse(value, formatProvider,  DateTimeStyles.None, out ret) ? ret : default(DateTime);
                         };
                 else result = (string value) =>
                     {
+                        //No TryParse overload accepting DateTimeFormat string
                         try { return DateTime.ParseExact(value, dateTimeFormat, formatProvider); }
                         catch { return default(DateTime); }
                     };
@@ -529,8 +532,9 @@ namespace NAXB.Build
                 if (String.IsNullOrEmpty(dateTimeFormat))
                     result = (string value) =>
                         {
-                            try { return DateTimeOffset.Parse(value, formatProvider); }
-                            catch { return default(DateTimeOffset); }
+                            //No TryParse overload accepting DateTimeFormat string
+                            DateTimeOffset ret;
+                            return DateTimeOffset.TryParse(value, formatProvider, DateTimeStyles.None, out ret) ? ret : default(DateTimeOffset);
                         };
                 else result = (string value) =>
                     {
@@ -554,104 +558,58 @@ namespace NAXB.Build
             //}
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(decimal) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { decimal.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(double) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { double.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(float) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { float.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(long) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { long.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(ulong) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { ulong.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(int) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //var singleParser = BuildSingleParser(ctor.GetParameters()[0].ParameterType, format, out propertyType);
-                //result = (string value) => ctorDel(new object[] { singleParser(value) });
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(uint) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { uint.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(short) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { short.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(ushort) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { ushort.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(byte) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { byte.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(sbyte) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { sbyte.Parse(value, formatProvider) });
-                //propertyType = PropertyType.Number;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(bool) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //result = (string value) => ctorDel(new object[] { bool.Parse(value) });
-                //propertyType = PropertyType.Bool;
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(DateTime) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //propertyType = PropertyType.DateTime;
-                //if (String.IsNullOrEmpty(dateTimeFormat))
-                //    result = (string value) => ctorDel(new object[] { DateTime.Parse(value, formatProvider) });
-                //else result = (string value) => ctorDel(new object[] { DateTime.ParseExact(value, dateTimeFormat, formatProvider) });
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             else if ((ctor = elementType.GetConstructor(new Type[] { typeof(DateTimeOffset) })) != null)
             {
-                //var ctorDel = BuildConstructor(ctor);
-                //propertyType = PropertyType.DateTime;
-                //if (String.IsNullOrEmpty(dateTimeFormat))
-                //    result = (string value) => ctorDel(new object[] { DateTimeOffset.Parse(value, formatProvider) });
-                //else result = (string value) => ctorDel(new object[] { DateTimeOffset.ParseExact(value, dateTimeFormat, formatProvider) });
                 result = GetSingleParserFromCtor(ctor, format, out propertyType);
             }
             return result;

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using NAXB.Interfaces;
 using NAXB.Exceptions;
+using System.Threading.Tasks;
 
 namespace NAXB.BindingModel
 {
@@ -310,8 +311,8 @@ namespace NAXB.BindingModel
                             {
                                 var key = getKey(xml[0], binder);
                                 var value = getValue(xml[1], binder);
-                                
-                                if (key != null && value != null)
+
+                                if (key != null)
                                 {
                                     return new KeyValuePair<object, object>(key, value);
                                 }
@@ -329,6 +330,9 @@ namespace NAXB.BindingModel
             else //simple type or Dictionary of simple types
             {
                 //convertXmlListToEnumerable = (IEnumerable<IXmlData[]> data, IXmlModelBinder binder) =>
+                //    data.Select(xml => parseXmlValues(xml.Select(x => x.Value).ToArray()));
+
+                //convertXmlListToEnumerable = (IEnumerable<IXmlData[]> data, IXmlModelBinder binder) =>
                 //    data.Select(xml =>
                 //    {
                 //        try { return parseXmlValues(xml.Select(x => x.Value).ToArray()); }
@@ -339,18 +343,14 @@ namespace NAXB.BindingModel
                 //The below is (almost) functionally equivalent and allows us to actually Debug paseXmlValues
                 //if ever needed
                 convertXmlListToEnumerable = (IEnumerable<IXmlData[]> data, IXmlModelBinder binder) =>
-               {
-                   var result = new List<object>();
-                   foreach (var xml in data)
-                   {
-                       try
-                       {
-                           result.Add(parseXmlValues(xml.Select(x => x.Value).ToArray()));
-                       }
-                       catch (Exception) { }
-                   }
-                   return result;
-               };
+                    {
+                        var result = new List<object>();
+                        foreach (var xml in data)
+                        {
+                            result.Add(parseXmlValues(xml.Select(x => x.Value).ToArray()));
+                        }
+                        return result;
+                    };
 
             }
         }

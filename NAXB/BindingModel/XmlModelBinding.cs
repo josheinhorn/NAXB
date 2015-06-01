@@ -27,7 +27,7 @@ namespace NAXB.BindingModel
             //Try to create the ctor -- will throw exception if doesn't work
             defaultConstructor = reflector.BuildDefaultConstructor(type);
             //Get namespaces from Type's Custom Attributes
-            Namespaces = ModelType.GetCustomAttributes(typeof(INamespaceBinding), true)
+             Namespaces = ModelType.GetCustomAttributes(typeof(INamespaceBinding), true)
                 .Cast<INamespaceBinding>()
                 .Select(binding => new XmlNamespace { Prefix = binding.Prefix, Uri = binding.Uri })
                 .ToArray();

@@ -116,6 +116,7 @@ The below are supported "out of the box" types. NAXB can be extended using a Cus
 		+	Note: `char` was specifically excluded due to causing conflicts when retrieving constructors.
 +	Types with a public constructor that unambiguously takes a specified number of Simple Type arguments (see above)
 	+	This requires multiple nested XPaths (see **XPath Attribute**) which determine the number of constructor arguments to search for.
++	Does not yet support Generic types (besides IList, IDictionary, and Nullable)
 
 ### XPath Attribute
 The XPath attribute is the primary reason for using NAXB. It takes a single string argument representing an XPath expression that may be a node set selection or a function expression. Whether the XPath should be evaluated as a node set or function is determined by the property/field type. Only single text, numeric, and boolean values will be evaluated as functions while other types and collections will be evaluated as node sets.

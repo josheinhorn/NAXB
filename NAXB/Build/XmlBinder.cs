@@ -8,6 +8,7 @@ using NAXB.Interfaces;
 using System.Reflection;
 using NAXB.Exceptions;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace NAXB.Build
 {
@@ -16,8 +17,8 @@ namespace NAXB.Build
         protected readonly IXmlBindingResolver bindingResolver;
         protected readonly IReflector reflector;
         protected readonly IXPathProcessor xPathProcessor;
-        public XmlBinder(IXmlBindingResolver bindingResolver, 
-            IXPathProcessor xPathProcessor, 
+        public XmlBinder(IXmlBindingResolver bindingResolver,
+            IXPathProcessor xPathProcessor,
             IReflector reflector)
         {
             if (bindingResolver == null) throw new ArgumentNullException("bindingResolver");
@@ -27,7 +28,7 @@ namespace NAXB.Build
             this.xPathProcessor = xPathProcessor;
             this.reflector = reflector;
         }
-        
+
         public virtual object BindToModel(IXmlData xmlData)
         {
             throw new NotImplementedException();
@@ -39,7 +40,7 @@ namespace NAXB.Build
             if (xmlData == null) throw new ArgumentNullException("xmlData");
             var binding = bindingResolver.ResolveBinding(modelType);
             if (binding == null) throw new BindingNotFoundException(modelType);
-            return BindToModel(binding, xmlData); 
+            return SerialBindToModel(binding, xmlData);
         }
 
         public virtual void SetPropertyValue(object model, IXmlData xmlData, IXmlProperty property)
@@ -53,7 +54,13 @@ namespace NAXB.Build
                 {
                     propValue = property.GetPropertyValue(xmlData, xPathProcessor, this); //All work happens in the Property
                     if (propValue != null) //Don't bother with null values
-                        property.Set(model, propValue);
+                    {
+                        lock (model)
+                        {
+                            property.Set(model, propValue);
+                        }
+                    }
+
                 }
                 catch (Exception e)
                 {
@@ -85,7 +92,21 @@ namespace NAXB.Build
         {
             if (binding == null) throw new ArgumentNullException("binding");
             if (xmlData == null) throw new ArgumentNullException("xmlData");
-            object model = binding.CreateInstance(); //Is it possible to ever use this with Ctor params as opposed to parameterless ctor?
+            //Is it possible to ever use this with Ctor params as opposed to parameterless ctor?
+            return SerialBindToModel(binding, xmlData);
+        }
+
+        private object ParallelBindToModel(IXmlModelBinding binding, IXmlData xmlData)
+        {
+            //Using this actually SLOWS down the process due to multi-threading overhead
+            object model = binding.CreateInstance();
+            Parallel.ForEach(binding.Properties, property => SetPropertyValue(model, xmlData, property));
+            return model;
+        }
+
+        private object SerialBindToModel(IXmlModelBinding binding, IXmlData xmlData)
+        {
+            object model = binding.CreateInstance();
             foreach (var property in binding.Properties)
             {
                 SetPropertyValue(model, xmlData, property);

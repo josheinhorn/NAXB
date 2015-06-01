@@ -1,0 +1,5 @@
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB\bin\Release\NAXB.dll
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB\bin\Release\NAXB.pdb
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB\obj\Release\NAXB.dll
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB\obj\Release\NAXB.pdb
+C:\Users\Josh Einhorn\Documents\Visual Studio 2013\Projects\NAXB\NAXB\obj\Release\NAXB.csprojResolveAssemblyReference.cache

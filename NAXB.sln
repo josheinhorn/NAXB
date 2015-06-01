@@ -9,6 +9,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAXB", "NAXB\NAXB.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAXB.UnitTests", "NAXB.UnitTests\NAXB.UnitTests.csproj", "{B5CE0BC6-1B29-46CE-8D37-E88C1CB44C3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAXB.Benchmarks", "NAXB.Benchmarks\NAXB.Benchmarks.csproj", "{CC37007A-D1C2-4E65-9B48-B951D953E594}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FF24E5E0-F736-427B-A7C4-C09FA41F9AF3}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarking", "Benchmarking", "{8C32000D-BD95-4DE3-9D38-11E006AC4529}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParsingDelegateBenchmark", "DelegateBenchmark\ParsingDelegateBenchmark.csproj", "{B60080E8-2AE8-411F-9E40-3D08C9AD1A80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopulateCollectionBenchmark", "PopulateCollectionBenchmark\PopulateCollectionBenchmark.csproj", "{D26A28F3-1E0A-4F3E-892D-C90FDB5A4554}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConstructorBenchmark", "ConstructorBenchmark\ConstructorBenchmark.csproj", "{E124841B-2815-4B68-9439-61C0E08BD60D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopulateDictionaryBenchmark", "PopulateDictionaryBenchmark\PopulateDictionaryBenchmark.csproj", "{847DB97F-0453-457B-9A9F-BE66B15CC8FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +44,37 @@ Global
 		{B5CE0BC6-1B29-46CE-8D37-E88C1CB44C3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5CE0BC6-1B29-46CE-8D37-E88C1CB44C3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5CE0BC6-1B29-46CE-8D37-E88C1CB44C3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC37007A-D1C2-4E65-9B48-B951D953E594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC37007A-D1C2-4E65-9B48-B951D953E594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC37007A-D1C2-4E65-9B48-B951D953E594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC37007A-D1C2-4E65-9B48-B951D953E594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B60080E8-2AE8-411F-9E40-3D08C9AD1A80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B60080E8-2AE8-411F-9E40-3D08C9AD1A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B60080E8-2AE8-411F-9E40-3D08C9AD1A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B60080E8-2AE8-411F-9E40-3D08C9AD1A80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D26A28F3-1E0A-4F3E-892D-C90FDB5A4554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D26A28F3-1E0A-4F3E-892D-C90FDB5A4554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D26A28F3-1E0A-4F3E-892D-C90FDB5A4554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D26A28F3-1E0A-4F3E-892D-C90FDB5A4554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E124841B-2815-4B68-9439-61C0E08BD60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E124841B-2815-4B68-9439-61C0E08BD60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E124841B-2815-4B68-9439-61C0E08BD60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E124841B-2815-4B68-9439-61C0E08BD60D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{847DB97F-0453-457B-9A9F-BE66B15CC8FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{847DB97F-0453-457B-9A9F-BE66B15CC8FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{847DB97F-0453-457B-9A9F-BE66B15CC8FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{847DB97F-0453-457B-9A9F-BE66B15CC8FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B60080E8-2AE8-411F-9E40-3D08C9AD1A80} = {8C32000D-BD95-4DE3-9D38-11E006AC4529}
+		{D26A28F3-1E0A-4F3E-892D-C90FDB5A4554} = {8C32000D-BD95-4DE3-9D38-11E006AC4529}
+		{E124841B-2815-4B68-9439-61C0E08BD60D} = {8C32000D-BD95-4DE3-9D38-11E006AC4529}
+		{847DB97F-0453-457B-9A9F-BE66B15CC8FB} = {8C32000D-BD95-4DE3-9D38-11E006AC4529}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

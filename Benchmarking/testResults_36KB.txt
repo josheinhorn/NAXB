@@ -1,0 +1,4 @@
+Total Elapsed time (ms) for 10000 repetitions using NAXB: 5899
+Average time (ms) for each repetitions using NAXB: 0.5899
+Total Elapsed time (ms) for 10000 repetitions using MS XML Serializer: 6979
+Average time (ms) for each repetitions using MS XML Serializer: 0.6979

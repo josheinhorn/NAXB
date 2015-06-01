@@ -13,7 +13,10 @@ namespace NAXB.UnitTests.Mockups.Models
     public class Person
     {
         [XPath("contacts/person", "firstName", "lastName", "count(contacts/person)")]
-        public StringStringShort TupleTest { get; set; }
+        public Tuple<string,string,short> GenericTupleTest { get; set; }
+
+        [XPath("contacts/person", "firstName", "lastName", "count(contacts/person)")]
+        public StringStringShort ConstructorTest { get; set; }
 
         [XPath("emails/email", "emailAddress", "provider")]
         public Dictionary<EmailAddress, EmailProvider> PersonByEmail;

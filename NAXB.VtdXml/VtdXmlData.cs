@@ -41,6 +41,10 @@ namespace NAXB.VtdXml
 
         //public int VTDIndex { get; protected set; }
         public BookMark VTDBookMark { get; protected set; }
+        public void ResetCursor()
+        {
+            VTDBookMark.setCursorPosition();
+        }
         /// <summary>
         /// Returns the underlying VTDNav object with the Cursor position set to the point specified when this VtdXmlData object was created
         /// </summary>
@@ -48,7 +52,6 @@ namespace NAXB.VtdXml
         {
             get
             {
-                VTDBookMark.setCursorPosition();
                 return nav;
             }
         }

@@ -201,9 +201,19 @@ namespace NAXB.UnitTests
         {
             var person = new Person();
 
-            Binder.SetPropertyValue(person, PersonXmlData, p => p.TupleTest);
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.ConstructorTest);
 
-            Assert.IsNotNull(person.TupleTest.FirstName);
+            Assert.AreEqual(new StringStringShort("Joe", "Schmo", 1), person.ConstructorTest);
+        }
+
+        [TestMethod]
+        public void Test_SetProperty_GenericTuple()
+        {
+            var person = new Person();
+
+            Binder.SetPropertyValue(person, PersonXmlData, p => p.GenericTupleTest);
+
+            Assert.AreEqual(new Tuple<string, string, short>("Joe", "Schmo", 1), person.GenericTupleTest);
         }
     }
 }
